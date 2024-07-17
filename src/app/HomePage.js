@@ -112,19 +112,19 @@ function HomePage({ signOut, user }) {
         
     <Container component='section' maxWidth='xs'>
       {
-        status === 'loading' && <CircularProgress />
+        "enable" === 'loading' && <CircularProgress />
       }
         {
-         ( userRole =='admin' || status === 'enable') && page == 1 && <CreateOrExtend userRole={userRole} />
+         ( userRole =='admin' || "enable" === 'enable') && page == 1 && <CreateOrExtend userRole={userRole} />
         }
         {
-          ( userRole =='admin' || status === 'enable') && page == 2 && <ExtendUser userRole={userRole} />
+          ( userRole =='admin' || "enable" === 'enable') && page == 2 && <ExtendUser userRole={userRole} />
         }
         {
-          userRole =='admin' && page == 3 && <OpenCloseForm status={status}  />
+          userRole =='admin' && page == 3 && <OpenCloseForm status={"enable"}  />
         }
         {
-          status === 'disable' && userRole == 'user' && 
+          "enable" === 'disable' && userRole == 'user' && 
           (
             <Box
             sx={{

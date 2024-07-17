@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "prfformnext3d1b796f_identitypool_3d1b796f",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "prffor3d1b796f",
-    "userPoolName": "prfformnext3d1b796f_userpool_3d1b796f",
+    "identityPoolName": "hopefuelcb2124dc_identitypool_cb2124dc",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "hopefucb2124dc",
+    "userPoolName": "hopefuelcb2124dc_userpool_cb2124dc",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "prffor3d1b796f_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "hopefucb2124dc_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "3d1b796f",
-    "resourceName": "prfformnext3d1b796f",
+    "sharedId": "cb2124dc",
+    "resourceName": "hopefuelcb2124dc",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
@@ -43,20 +43,6 @@
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true,
-    "authRoleArn": {
-      "Fn::GetAtt": [
-        "AuthRole",
-        "Arn"
-      ]
-    },
-    "unauthRoleArn": {
-      "Fn::GetAtt": [
-        "UnauthRole",
-        "Arn"
-      ]
-    },
-    "breakCircularDependency": true,
-    "dependsOn": []
+    "useEnabledMfas": true
   }
 }
