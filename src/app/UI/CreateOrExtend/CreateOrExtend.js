@@ -17,7 +17,7 @@ const CreateOrExtend = ({userRole}) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-          PRFHQ Member Registration Form
+          Hope Member Registration Form
           </Typography>
           <CheckUser userRole={userRole}/>
         </Box>
