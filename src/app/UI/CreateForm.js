@@ -31,7 +31,7 @@ const CreateForm = ({userInfo, setloading}) => {
     //LOAD THE WALLETS
     const [wallets, setwallets] = useState()
     const [currency, setcurrency] = useState();
-    const [supportRegion, setsupportRegion] = useState('မြန်မာတနိုင်ငံလုံး')
+    const [supportRegion, setsupportRegion] = useState('choose your region')
     const [files, setfiles] = useState([])
 
     const [amountValidate, setAmountValidate] = useState(false)

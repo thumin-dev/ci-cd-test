@@ -17,7 +17,7 @@ export const ExtendOrNot = ({userInfo, sethasContinue}) => {
                         <TableRow>
                             <TableCell>Customer Name</TableCell>
                             <TableCell align="left">Email</TableCell>
-                            <TableCell align="left">PRF Card No</TableCell>
+                            <TableCell align="left">ID No</TableCell>
                             <TableCell align="left">Expire Date</TableCell>
                         </TableRow>
                         </TableHead>

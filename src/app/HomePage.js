@@ -53,7 +53,7 @@ function HomePage({ signOut, user }) {
   //It can be loading, enable, disable
   const [status, setStatus] = React.useState('loading')
   //User Role = admin | user
-  const [userRole, setUserRole] = React.useState('user')
+  const [userRole, setUserRole] = React.useState('admin')
   
   //Get the page is unable or not
   React.useEffect(() => {
@@ -80,25 +80,25 @@ function HomePage({ signOut, user }) {
 
 
   //Get user role
-  React.useEffect(
-    () => {
-      fetchAuthSession().then(
-        session =>
-        {
-          let accesstoken = session.tokens.accessToken;
-          let scope = accesstoken.payload['cognito:groups']
-          if(scope === undefined)
-          {
-            return;
-          }
-          if(scope.find(ele => ele === 'Admin'))
-          {
-            setUserRole('admin')
-          }
-        }
-      )
-    }
-  ,[])
+  // React.useEffect(
+    // () => {
+    //   fetchAuthSession().then(
+    //     session =>
+    //     {
+    //       let accesstoken = session.tokens.accessToken;
+    //       let scope = accesstoken.payload['cognito:groups']
+    //       if(scope === undefined)
+    //       {
+    //         return;
+    //       }
+    //       if(scope.find(ele => ele === 'Admin'))
+    //       {
+    //         setUserRole('admin')
+    //       }
+    //     }
+    //   )
+    // }
+  // ,[])
   
 
     
