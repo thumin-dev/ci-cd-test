@@ -58,6 +58,7 @@ export default async function filehandler(files, setFile, filesState) {
             let fileName = result.key;
             const respone = await getUrl({ key: fileName });
             const tmpURL = respone.url
+            console.log(tmpURL)
             url.push(tmpURL);
             
           } catch (error) {
