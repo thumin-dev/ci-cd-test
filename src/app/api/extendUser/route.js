@@ -1,29 +1,22 @@
 export const dynamic = 'force-dynamic' // defaults to force-static
+const db = require('../../utilites/db')
+
 
 export async function POST(request) {
 
     //get customer ID based on the PRF no  
     
 
-    const text = await request.text()
-    console.log(text);
-
-    var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Authorization", `Bearer ${process.env.AIRTABLE_TOKEN}`);
-// myHeaders.append("Cookie", "brw=brwb8tzTqMzSEOnxJ");
+    const obj = await request.json()
 
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: text,
-  redirect: 'follow'
-};
+  let now = new Date();
+    const rows = await db(
+      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, ScreenShot, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+      [obj['CustomerID'], obj['SupportRegionID'], obj['WalletID'], obj['Amount'], null, obj['AgentID'], false, null, obj['NoteID'], now, false]
+  );
 
-fetch("https://api.airtable.com/v0/appp80DDZ7FHxqCc1/tblm1UaS2JsGRqPrM", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-    return Response.json({})
+  return Response.json(rows)
+
+    
 }
