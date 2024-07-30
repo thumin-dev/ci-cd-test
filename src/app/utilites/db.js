@@ -26,6 +26,7 @@ export default async function db(query, value)
       return result;
     } catch (error) {
         console.log("[DB] query error");
+        console.error(error);
     }
    
     
