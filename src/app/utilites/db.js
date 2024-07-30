@@ -8,10 +8,10 @@ async function db(query, value)
     // const credentials = await getDatabaseCredentials();
     // Create the connection to database
     const connection = await mysql.createConnection({
-        host: "34.122.80.169",
-        user: "root",
-        database: "",
-        password: "",
+        host: process.env.DATABASEHOST,
+        user: process.env.DATABASEUSER,
+        database: process.env.DATABASE,
+        password: process.env.DATABASEPASSWORD,
         port: 3306,
         waitForConnections: true
     });
