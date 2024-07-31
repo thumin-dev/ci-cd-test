@@ -25,62 +25,127 @@ export default async function checkPrfSubmit(prfno ,setuserExist, setisChecking,
     let json = await result.json();
     let answer = json.message;
 
+    raw = JSON.stringify({
+        cardId: parseInt(prfno)
+        });
+
+    requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+    let res = await fetch('api/getCustomerFromCardID', requestOptions)
+    res = await res.json();
+    console.log(res);
+
     //if the data is not there
-    if(!answer)
+    if(!answer && !Object.hasOwn(res, 'Name'))
     {
         //handle the case
         setuserExist(false)
         setisChecking(false)
         return;
     }
-
-    //check if the user has permission
-    
-    var raw = JSON.stringify({
-    "name": json.name.trim(),
-    "email": json.email.trim()
-    });
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-    };
-
-    let response1 = await fetch("/api/checkPermission", requestOptions)
-    let bool = await response1.json()
-    if(!bool)
+    else if(Object.hasOwn(res, 'Name'))
     {
-        setisChecking(false)
-        setHasPermissonThisMonth(bool);
-        setuserExist(true);
-        if(userRole == 'admin')
-        {
+        // if mysql has the user
+        // check to see if the user has permission
+        var raw = JSON.stringify({
+            "name": res['Name'],
+            "email": res['Email']
+            });
+        
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+            };
+        
+            let response1 = await fetch("/api/checkolduserpermission", requestOptions)
+            let bool = await response1.json()
+
+            // if user don't have permission
+            if(!bool)
+                {
+                    setisChecking(false)
+                    setHasPermissonThisMonth(bool);
+                    setuserExist(true);
+                    if(userRole == 'admin')
+                    {
+                        setUserInfo({
+                            'name': res["Name"],
+                            'email': res["Email"],
+                            'prf_no': res["CardID"],
+                            'expire_date': res["ExpireDate"]
+                        })
+                    }
+            
+                    return;
+                }
+            //if user has permission
+            setHasPermissonThisMonth(true);
+            
+            setUserInfo({
+                'name': res["Name"],
+                'email': res["Email"],
+                'prf_no': res["CardID"],
+                'expire_date': res["ExpireDate"]
+            })
+        
+            setuserExist(true)
+            setisChecking(false)
+    }
+    else
+    {
+        //check if the user has permission  
+        var raw = JSON.stringify({
+            "name": json.name.trim(),
+            "email": json.email.trim()
+            });
+        
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+            };
+        
+            let response1 = await fetch("/api/checkPermission", requestOptions)
+            let bool = await response1.json()
+            if(!bool)
+            {
+                setisChecking(false)
+                setHasPermissonThisMonth(bool);
+                setuserExist(true);
+                if(userRole == 'admin')
+                {
+                    setUserInfo({
+                        'name': json.name,
+                        'email': json.email,
+                        'prf_no': json.prf_no,
+                        'expire_date': json.expire_date
+                    })
+                }
+        
+                return;
+            }
+            setHasPermissonThisMonth(true);
+            
             setUserInfo({
                 'name': json.name,
                 'email': json.email,
                 'prf_no': json.prf_no,
                 'expire_date': json.expire_date
             })
-        }
-
-        return;
+        
+            setuserExist(true)
+            setisChecking(false)
+            // set the user data
     }
-    setHasPermissonThisMonth(true);
-    
-    setUserInfo({
-        'name': json.name,
-        'email': json.email,
-        'prf_no': json.prf_no,
-        'expire_date': json.expire_date
-    })
 
-    setuserExist(true)
-    setisChecking(false)
-    // set the user data
-    
-    
 
     
     //if prfno don't exist, set the userDon't exsit
