@@ -37,14 +37,16 @@ export async function POST(request) {
             }
 
         
-        let answer = await checkPermission(name,email)
+        checkPermission(name,email).then(answer => {
 
-        return Response.json(answer)
+            return Response.json(answer)
+        })
+
 
 
     } catch (error) {
         console.error('Error checking user:', error);
-        return false; // Return false in case of an error
+        return  Response.json(false); // Return false in case of an error
     }
 }
 
