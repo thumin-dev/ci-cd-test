@@ -40,38 +40,119 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       setloading(false)
       return;
     }
-    var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-    console.log(window.location.hostname)
-var raw = JSON.stringify({
-  "records": [
-    {
-      "fields": {
-        "Name": userInfo.name,
-        "Email": userInfo.email,
-        "Status":  "၁ - ဖောင်တင်သွင်း",
-        "Currency":  currency,
-        "Amount": parseInt(amount),
-        "Month": parseInt(month),
-        "support_region": supportRegion,
-        "notes": notes,
-        "contact_person_link": contactLink,
-        "wallet": [wallet.id],
-        "screenshot": files.map((url) => {return {url: url.href}}),
-        "notion_form_filled_person": formFillingPerson,
-        "manychat_id": parseInt(manychat)
+
+    // check if the user exist in mysql
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+
+    let raw = JSON.stringify({
+      "name": userInfo.name,
+      "email": userInfo.email
+      });
+  
+      let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+
+    let res = await fetch('/api/InCustomerTable/', requestOptions)
+    let ans = await res.json()
+
+    // if the user already in mysql table
+    if(Object.hasOwn(ans, 'Name'))
+      {
+  
+        // create a note
+        raw = JSON.stringify({
+          "note": "hello",
+          "agentID": 1
+      })
+       requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+  
+        let note = await fetch('/api/insertNote/', requestOptions)
+        note = await note.json();
+  
+  
+        myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        console.log(ans)
+       raw = JSON.stringify(
+        {
+          "CustomerID": ans["CustomerID"],
+          "SupportRegionID": 1,
+          "WalletID": 1,
+          "Amount": amount,
+          "AgentID": 2,
+          "NoteID": note["id"],
+          "TransactionDate": new Date(),
+          "Month": month
       }
+      )
+      
+  
+  
+       requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+  
+        let response = await fetch(`/api/extendUser`, requestOptions)
+        location.reload()
+      }
+
+      else // treat this as new customer but get the requried user information from airtable
+    {
+      // // get customer information from airtable using name and email
+      // raw = JSON.stringify({
+      //   "name": userInfo.name, 
+      //   "email": userInfo.email
+      // })
+      // requestOptions = {
+      //   method: 'POST',
+      //   headers: myHeaders,
+      //   body: raw,
+      //   redirect: 'follow'
+      // };
+
+      // let response = await fetch('/api/checkuser' , requestOptions)
+      // response = response.json()
+  
+
+      
+
+      // submitpaymentinformation
+      raw = JSON.stringify({
+        "customerName": userInfo.name, 
+        "customerEmail": userInfo.email,
+        "agentID": 1,
+        "supportRegionID": 1,
+        "manyChatID": manychat,
+        "contactPhone": "123",
+        "amount": amount,
+        "month": month,
+        "note": notes,
+        "walletId": 1,
+        "Month": month
+      })
+      requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+      let answ = await fetch('/api/submitPayment/', requestOptions)
+      let {status} =  await answ.json()
+      console.log(status)
+      location.reload()
     }
-  ]
-});
-
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
-
-  let response = await fetch(`/api/createNewUser`, requestOptions)
-  location.reload();
 }

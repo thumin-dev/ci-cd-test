@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-const db = require('../../utilites/db')
+import db from "../../utilites/db";
 
 
 
@@ -33,7 +33,7 @@ export async function POST(request) {
 
                 let answer = (latestTransactionDate.getMonth() < currentMonth) || (latestTransactionDate.getFullYear() < currentYear)
 
-                return Response.json(answer)
+                return Response.json( answer)
             }
 
         
