@@ -9,7 +9,7 @@ export async function POST(request) {
 
     //get the customer data base
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer patur9N4mKx7GpWZv.da71f016c51cd75abbcea2d3efae8b4dcc2d73af79e75be47183822e8439def1");
+    myHeaders.append("Authorization", `Bearer ${process.env.AIRTABLE_TOKEN}`);
     // myHeaders.append("Cookie", "brw=brwb8tzTqMzSEOnxJ; AWSALB=q0M9u0z8adQoHf839TIv42MWfxs27RilDRAi9z1GULKpLzBj+OW1pgPIfs9tEtyfrKt48Z7hLNYC11hQ9rkfdml27PiOPeUDeuL9hycGodaQFHXJbIwdbGOU2CWr; AWSALBCORS=q0M9u0z8adQoHf839TIv42MWfxs27RilDRAi9z1GULKpLzBj+OW1pgPIfs9tEtyfrKt48Z7hLNYC11hQ9rkfdml27PiOPeUDeuL9hycGodaQFHXJbIwdbGOU2CWr");
 
     var requestOptions = {
