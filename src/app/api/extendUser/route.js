@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic' // defaults to force-static
-const db = require('../../utilites/db')
+import db from "../../utilites/db";
 
 
 export async function POST(request) {
@@ -12,8 +12,8 @@ export async function POST(request) {
 
   let now = new Date();
     const rows = await db(
-      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, ScreenShot, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-      [obj['CustomerID'], obj['SupportRegionID'], obj['WalletID'], obj['Amount'], null, obj['AgentID'], false, null, obj['NoteID'], now, false]
+      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, ScreenShot, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+      [obj['CustomerID'], obj['SupportRegionID'], obj['WalletID'], obj['Amount'], null, obj['AgentID'], false, null, obj['NoteID'], now, false, obj['Month']]
   );
 
   return Response.json(rows)
