@@ -55,29 +55,54 @@ export default async function checkUserSubmit(event, setUserExistState, setFinis
             //if user is admin, setUserInfo for just in case
             if(userRole == 'admin')
             {
-                setUserInfo({
-                    "name": name,
-                    "email": email,
-                    "prf_no": answer['prf_no'],
-                    "expire_date": answer['expire_date'][0]
-                });
+                if(userExist)
+                    {
+            
+                        setUserInfo({
+                            "name": name,
+                            "email": email,
+                            "prf_no": answer['prf_no'],
+                            "expire_date": answer['expire_date'][0]
+                        })
+                    }
+                    else if(Object.hasOwn(ans, 'Name'))
+                    {
+                        setUserInfo({
+                            "name": name,
+                            "email": email,
+                            "prf_no": ans['CardID'],
+                            "expire_date": ans['ExpireDate']
+                        })
+                    }
                 
             }
 
             return;
         }
-        setUserInfo({
-            "name": name,
-            "email": email,
-            "prf_no": answer['prf_no'],
-            "expire_date": answer['expire_date'][0]
-        })
-        console.log(answer['expire_date'])
+        if(userExist)
+        {
+
+            setUserInfo({
+                "name": name,
+                "email": email,
+                "prf_no": answer['prf_no'],
+                "expire_date": answer['expire_date'][0]
+            })
+        }
+        else if(Object.hasOwn(ans, 'Name'))
+        {
+            setUserInfo({
+                "name": name,
+                "email": email,
+                "prf_no": ans['CardID'],
+                "expire_date": ans['ExpireDate']
+            })
+        }
     }
 
     // if user don't exist, just create a new user
-    setUserExistState(userExist)
+    setUserExistState(userExist || Object.hasOwn(ans, 'Name'))
 
     //show the created form if the user don't exist
-    setCreateFormShow(!userExist)
+    setCreateFormShow(!userExist && !Object.hasOwn(ans, 'Name'))
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 
 
-async function  InsertCustomer(customerName, customerEmail, AgentID,ManyChatID, ContactPhone,Amount,Month)
+async function  InsertCustomer(customerName, customerEmail, AgentID,ManyChatID, ContactPhone,Amount,Month, cardId )
 {
     const query = `
     INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactPhoneNo ) VALUES (?, ?, ?, ?, ?)
@@ -41,7 +41,7 @@ export async function POST(req){
       let json = await req.json();
 
       const { customerName, customerEmail, agentID, supportRegionID, 
-        manyChatID, contactPhone, amount, month ,note,walletId } = json;
+        manyChatID, contactPhone, amount, month ,note,walletId} = json;
       
        const customerId = await InsertCustomer(customerName, customerEmail, agentID, manyChatID, contactPhone, amount, month);
        // console.log("customerId: ",customerId);
@@ -51,10 +51,10 @@ export async function POST(req){
 
     const query = `
       INSERT INTO Transactions 
-      (CustomerID, Amount,AgentID,SupportRegionID, WalletID, ScreenShot, TransactionDate, NoteID, Month, PaymentDenied) 
-      VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?)
+      (CustomerID, Amount,AgentID,SupportRegionID, WalletID, ScreenShot, TransactionDate, NoteID) 
+      VALUES (?, ?, ?, ?, ?, ?, ?,?)
     `;
-    const values= [customerId, amount, agentID,supportRegionID,  walletId, null, "2024-07-13",noteId, month, false];
+    const values= [customerId, amount, agentID,supportRegionID,  walletId, null, "2024-07-13",noteId];
      const result = await db(query, values);
     // console.log("Result: ", result);
  return Response.json({status: "success"});

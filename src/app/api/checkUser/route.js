@@ -35,7 +35,7 @@ export async function POST(request) {
             name: records[0].fields['Name'],
             email: records[0].fields["Email"],
             prf_no: records[0].fields["prf_card_no"],
-            expire_date: records[0].fields["expire_date (from test_hqid)"]
+            expire_date: records[0].fields["expire_date (from test_hqid)"],
         })
     }
     else
