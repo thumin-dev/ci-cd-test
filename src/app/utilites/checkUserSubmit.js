@@ -25,6 +25,7 @@ export default async function checkUserSubmit(event, setUserExistState, setFinis
     redirect: 'follow'
     };
 
+    // check if the user exist in airtable
     let response =await fetch("/api/checkUser", requestOptions)
 
 
@@ -32,17 +33,22 @@ export default async function checkUserSubmit(event, setUserExistState, setFinis
     let userExist = answer.message;
 
     setUserInfo({"name": name, "email": email})
+
+    // check if the user exist in mysql
+    let res = await fetch('/api/InCustomerTable/', requestOptions)
+    let ans = await res.json()
     
     //if user exist, get PRF and expire data about user
-    if(userExist)
+    if(userExist || Object.hasOwn(ans, 'Name'))
     {
         
         //check if the user has permission
         console.log("This is has permission: ")
-        let response = await fetch("/api/checkPermission/", requestOptions)
+        let response = await fetch("/api/checkolduserpermission/", requestOptions)
         let bool = await response.json();
 
         console.log(bool)
+        // if the user has not permission this month
         if(!bool)
         {
             setHasPermissonThisMonth(bool)
@@ -69,6 +75,7 @@ export default async function checkUserSubmit(event, setUserExistState, setFinis
         console.log(answer['expire_date'])
     }
 
+    // if user don't exist, just create a new user
     setUserExistState(userExist)
 
     //show the created form if the user don't exist
