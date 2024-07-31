@@ -17,7 +17,6 @@ async function loadSupportRegion() {
   }
 }
 
-// GET handler for the API route
 export async function GET(req) {
   try {
     const data = await loadSupportRegion();
