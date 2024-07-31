@@ -32,6 +32,6 @@ export async function POST(request) {
 
     } catch (error) {
         console.error('Error checking user:', error);
-        return false; // Return false in case of an error
+        return Response.json({answer: false}); // Return false in case of an error
     }
 }
