@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-const db = require('../../utilites/db')
+import db from "../../utilites/db";
 
 
 
