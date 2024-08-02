@@ -127,7 +127,7 @@ const ExtendUserForm = ({userRole}) => {
 
     {
       userExist && !loading && hasContinue && (
-        <Box component="form" onSubmit={(event) => extendUserSubmit(event, userInfo, currency, supportRegion, files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist)}  sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={(event) => extendUserSubmit(event, userInfo, currency, supportRegion, files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, wallets)}  sx={{ mt: 1 }}>
             <TextField
                   autoFocus
                   margin="normal"
