@@ -9,10 +9,10 @@ export default async function db(query, value)
       // const credentials = await getDatabaseCredentials();
       // Create the connection to database
       const connection = await mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        database: "hopefuel",
-        password: "root",
+        host: process.env.DATABASEHOST,
+        user: process.env.DATABASEUSER,
+        database: process.env.DATABASE,
+        password: process.env.DATABASEPASSWORD,
         port: 3306,
         waitForConnections: true,
       });
