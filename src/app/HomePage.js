@@ -32,14 +32,14 @@ import ResponsiveAppBar from './UI/AppBar/AppBar'
 import ExtendUser from './UI/ExtendUser/ExtendUser'
 import { Amplify, Auth } from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import {fetchAuthSession, FetchUserAttributesOutput} from 'aws-amplify/auth'
+import {fetchAuthSession, FetchUserAttributesOutput, getCurrentUser} from 'aws-amplify/auth'
 import '@aws-amplify/ui-react/styles.css';
 import config from '../amplifyconfiguration.json';
 import { generateClient } from 'aws-amplify/api';
 import { createApp, updateApp, deleteApp } from '../graphql/mutations';
 import { listApps } from '../graphql/queries';
 import * as subscriptions from '../graphql/subscriptions';
-
+import getAuthCurrentUser from './utilites/getAuthCurrentUser';
 
 import OpenCloseForm from './UI/OpenCloseForm.js'
 Amplify.configure(config);
@@ -57,6 +57,7 @@ function HomePage({ signOut, user }) {
   
   //Get the page is unable or not
   React.useEffect(() => {
+    getAuthCurrentUser()
     client.graphql({ query: listApps }).then(result => 
       {
         let enable = result.data.listApps.items[0].status ? "enable" : "disable";
