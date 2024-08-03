@@ -41,8 +41,15 @@ export async function POST(req){
       let json = await req.json();
 
       const { customerName, customerEmail, agentID, supportRegionID, 
-        manyChatID, contactPhone, amount, month ,note,walletId } = json;
+        manyChatID, contactPhone, amount, month ,note,walletId,screenshot} = json;
+
       
+         if (!screenshot) {
+           return NextResponse.json(
+             { error: "You need to provide a screenshot" },
+             { status: 400 }
+           );
+         }
        const customerId = await InsertCustomer(customerName, customerEmail, agentID, manyChatID, contactPhone, amount, month);
        // console.log("customerId: ",customerId);
         
@@ -51,10 +58,12 @@ export async function POST(req){
 
     const query = `
       INSERT INTO Transactions 
-      (CustomerID, Amount,AgentID,SupportRegionID, WalletID, ScreenShot, TransactionDate, NoteID, Month, PaymentDenied) 
-      VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?)
+
+      (CustomerID, Amount,AgentID,SupportRegionID, WalletID, ScreenShot,  NoteID) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    const values= [customerId, amount, agentID,supportRegionID,  walletId, null, "2024-07-13",noteId, month, false];
+    const values= [customerId, amount, agentID,supportRegionID,  walletId, screenshot,noteId];
+
      const result = await db(query, values);
     // console.log("Result: ", result);
  return Response.json({status: "success"});
