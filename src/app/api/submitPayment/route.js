@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 
 
-async function  InsertCustomer(customerName, customerEmail, AgentID,ManyChatID, ContactPhone,Amount,Month)
+async function  InsertCustomer(customerName, customerEmail, agentId,manyChatId, contactLink)
 {
     const query = `
-    INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactPhoneNo ) VALUES (?, ?, ?, ?, ?)
+    INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink ) VALUES (?, ?, ?, ?, ?)
     `;
-    const values = [customerName, customerEmail, AgentID, ManyChatID, ContactPhone];
+    const values = [customerName, customerEmail, agentId, manyChatId, contactLink];
        try {
       const result = await db(query, values);
      // console.log("Result: ", result);
@@ -40,29 +40,29 @@ export async function POST(req){
     try{
       let json = await req.json();
 
-      const { customerName, customerEmail, agentID, supportRegionID, 
-        manyChatID, contactPhone, amount, month ,note,walletId,screenshot} = json;
+      const { customerName, customerEmail, agentId, supportRegionId, 
+        manyChatId, contactLink, amount, month , note, walletId, screenShot} = json;
 
       
-         if (!screenshot) {
+         if (!screenShot) {
            return NextResponse.json(
              { error: "You need to provide a screenshot" },
              { status: 400 }
            );
          }
-       const customerId = await InsertCustomer(customerName, customerEmail, agentID, manyChatID, contactPhone, amount, month);
-       // console.log("customerId: ",customerId);
+       const customerId = await InsertCustomer(customerName, customerEmail, agentId, manyChatId, contactLink);
+        console.log("customerId: ",customerId);
         
-        const noteId = await createNote(note,agentID);
-       //  console.log("noteId: ",noteId);
+        const noteId = await createNote(note,agentId);
+         console.log("noteId: ",noteId);
 
     const query = `
       INSERT INTO Transactions 
 
-      (CustomerID, Amount,AgentID,SupportRegionID, WalletID, ScreenShot,  NoteID) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      (CustomerID, Amount, AgentID, SupportRegionID, WalletID, ScreenShot, TransactionDate, NoteID) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const values= [customerId, amount, agentID,supportRegionID,  walletId, screenshot,noteId];
+    const values= [customerId, amount, agentId,supportRegionId,  walletId, screenShot,new Date(),noteId];
 
      const result = await db(query, values);
     // console.log("Result: ", result);
