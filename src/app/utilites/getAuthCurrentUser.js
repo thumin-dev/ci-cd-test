@@ -2,10 +2,9 @@ import { getCurrentUser } from "aws-amplify/auth";
 
 export default async function getAuthCurrentUser() {
   try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    console.log(`The username: ${username}`);
+    const {  userId } = await getCurrentUser();
     console.log(`The userId: ${userId}`);
-    console.log(`The signInDetails: ${signInDetails}`);
+    return userId
   } catch (err) {
     console.log(err);
   }
