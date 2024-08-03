@@ -1,16 +1,18 @@
 import { useSearchParams } from 'next/navigation'
 
 export default async function createFormSubmit(event, currency, supportRegion ,files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate,fileExist, setfileExist) {
-    event.preventDefault();
+  
+  event.preventDefault();
     setAmountValidate(false);
     setmonthValidate(false)
     setmanyChatValidate(false)
     setfileExist(true)
     setloading(true)
+    
     const data = new FormData(event.currentTarget);
     const amount = data.get("amount")
     const month = data.get("month");
-    const manychat = data.get('manychat')
+    const manychat = data.get("manyChat")
     const wallet = JSON.parse(data.get("wallets"))
     const notes = data.get("notes")
     const contactLink = data.get("contactLink")
@@ -45,6 +47,7 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     // // submitpaymentinformation
+    console.log("UserInfo",userInfo);
     let raw = JSON.stringify({
       "customerName": userInfo.name, 
       "customerEmail": userInfo.email,
