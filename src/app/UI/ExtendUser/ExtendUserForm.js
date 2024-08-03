@@ -31,6 +31,7 @@ const ExtendUserForm = ({userRole}) => {
   const [wallets, setwallets] = useState();
   const [currency, setcurrency] = useState();
   const [supportRegion, setsupportRegion] = useState("choose your region");
+    const [supportRegions, setsupportRegions] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [files, setfiles] = useState([]);
 
@@ -62,6 +63,20 @@ const ExtendUserForm = ({userRole}) => {
         });
     }
   }, [currency]);
+
+//LoadSupportRegion
+    useEffect(() => {
+      fetch("/api/loadSupportRegion")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("loadSupportRegionResponse:", data);
+          setsupportRegions(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching support regions:", error);
+        });
+    }, []);
+
 
   const formFillingPerson = useContext(UserContext).username;
   const [otp, setOtp] = React.useState("");
@@ -259,35 +274,33 @@ const ExtendUserForm = ({userRole}) => {
             />
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
-          {
-       
-        wallets && wallets.length > 0 ? (
-          <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
-            {wallets.map((wallet) => (
-              <FormControlLabel
-                value={JSON.stringify(wallet)}
-                control={<Radio />}
-                label={wallet.walletName}
-                key={wallet.id}
-                required={true}
-                sx={{mx:2}}
-              />
-            ))}
-          </RadioGroup>
-        ) : (
-          <h1>No wallets available for the selected currency.</h1>
-        )
-        }
-        
-          
+          {wallets && wallets.length > 0 ? (
+            <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
+              {wallets.map((wallet) => (
+                <FormControlLabel
+                  value={JSON.stringify(wallet)}
+                  control={<Radio />}
+                  label={wallet.walletName}
+                  key={wallet.id}
+                  required={true}
+                  sx={{ mx: 1 }}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <h1>No wallet selected.</h1>
+          )}
+
           <Autocomplete
             disablePortal
             id="supportRegion"
             onChange={(event, value) => setsupportRegion(value)}
             required
-            options={SUPPORTREGIONCONST}
-            sx={{ width: 300 }}
-            defaultValue={supportRegion}
+            options={supportRegions}
+            sx={{ width: 300, marginTop: 2 }}
+            value={supportRegion}
+            defaultValue={() => setsupportRegion("choose a region")}
+            getOptionLabel={(option) => option.Region || ""}
             renderInput={(params) => (
               <TextField {...params} label="Support Region" required />
             )}
