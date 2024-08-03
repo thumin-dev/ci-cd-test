@@ -43,40 +43,64 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     }
 
     var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-var raw = JSON.stringify({
-  "records": [
-    {
-      "fields": {
-        "Name": userInfo.name,
-        "Email": userInfo.email,
-        "Status":  '၁ - ဖောင်တင်သွင်း',
-        "Currency":  currency,
-        "Amount": parseInt(amount),
-        "Month": parseInt(month),
-        "support_region": supportRegion,
-        "notes": notes,
-        "contact_person_link": contactLink,
-        "wallet": [wallet.id],
-        "screenshot": files.map((url) => {return {url: url.href}}),
-        "notion_form_filled_person": formFillingPerson,
-        "manychat_id": parseInt(manychat)
+    myHeaders.append("Content-Type", "application/json");
+    // // submitpaymentinformation
+    let raw = JSON.stringify({
+      "customerName": userInfo.name, 
+      "customerEmail": userInfo.email,
+      "agentID": 1,
+      "supportRegionID": 1,
+      "manyChatID": manychat,
+      "contactPhone": "123",
+      "amount": amount,
+      "month": month,
+      "note": notes,
+      "walletId": 1
+    })
+    let requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+    let answ = await fetch('/api/submitPayment/', requestOptions)
+    let {status} =  await answ.json()
+    console.log(status)
+    location.reload()
+  }
+// var raw = JSON.stringify({
+//   "records": [
+//     {
+//       "fields": {
+//         "Name": userInfo.name,
+//         "Email": userInfo.email,
+//         "Status":  '၁ - ဖောင်တင်သွင်း',
+//         "Currency":  currency,
+//         "Amount": parseInt(amount),
+//         "Month": parseInt(month),
+//         "support_region": supportRegion,
+//         "notes": notes,
+//         "contact_person_link": contactLink,
+//         "wallet": [wallet.id],
+//         "screenshot": files.map((url) => {return {url: url.href}}),
+//         "notion_form_filled_person": formFillingPerson,
+//         "manychat_id": parseInt(manychat)
         
-      }
-    }
-  ]
-});
+//       }
+//     }
+//   ]
+// });
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+// var requestOptions = {
+//   method: 'POST',
+//   headers: myHeaders,
+//   body: raw,
+//   redirect: 'follow'
+// };
 
- let response = await fetch(`/api/createNewUser`, requestOptions)
+//  let response = await fetch(`/api/createNewUser`, requestOptions)
 
- let json = await response.json();
- location.reload();
+//  let json = await response.json();
+//  location.reload();
 
-}
+

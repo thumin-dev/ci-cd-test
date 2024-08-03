@@ -12,7 +12,7 @@ export async function POST(request) {
 
     
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer patur9N4mKx7GpWZv.da71f016c51cd75abbcea2d3efae8b4dcc2d73af79e75be47183822e8439def1");
+    myHeaders.append("Authorization", `Bearer ${process.env.AIRTABLE_TOKEN}`);
     // myHeaders.append("Cookie", "brw=brwb8tzTqMzSEOnxJ; AWSALB=tG4ugsmCvEw0QmkwD5a/xwM4qDNJmxcWkvkvKCJaHyjDBJPBLGK0ghh6w47tHOtRDDWAg7TDF0owjxiycR46RLhQi2p40MjQik2AFBFWK7/vMHaX46HRgEG43Ytw; AWSALBCORS=tG4ugsmCvEw0QmkwD5a/xwM4qDNJmxcWkvkvKCJaHyjDBJPBLGK0ghh6w47tHOtRDDWAg7TDF0owjxiycR46RLhQi2p40MjQik2AFBFWK7/vMHaX46HRgEG43Ytw");
 
     var requestOptions = {
@@ -23,7 +23,6 @@ export async function POST(request) {
 
     let response = await fetch(`https://api.airtable.com/v0/appp80DDZ7FHxqCc1/tblZeEt4ay83MpLcL?filterByFormula=IF(SEARCH(%22${prfNo}%22%2C+prf_card_no)%2CTRUE()%2CFALSE())`, requestOptions)
 
-    
     let answer = false;
     json = await response.json();
     let records = json.records;

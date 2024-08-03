@@ -10,6 +10,20 @@
       "StackName": "amplify-hopefuel-dev-41d36",
       "StackId": "arn:aws:cloudformation:us-east-1:340673541632:stack/amplify-hopefuel-dev-41d36/dc976030-44a7-11ef-84ed-129b6af0b50d",
       "AmplifyAppId": "dnd6j4vw14zvc"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dnd6j4vw14zvc",
+          "type": "cicd"
+        }
+      },
+      "auth": {
+        "hopefuel3393c0f6": {}
+      },
+      "storage": {
+        "devimages": {}
+      }
     }
   }
 }
