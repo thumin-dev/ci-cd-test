@@ -40,11 +40,24 @@ const CreateForm = ({userInfo, setloading}) => {
     const [fileExist, setfileExist] = useState(true)
 
     //Load the Wallet on Component Mount
-    useEffect(() => {
-      fetch("/api/loadWallet")
-      .then(response => response.json())
-    .then(data => (setwallets(data)))
-    }, [])
+  useEffect(() => {
+    if (currency) {
+      fetch(`/api/loadWalletByCurrency?currencyCode=${currency}`)
+        .then((response) => {
+          return response.json(); // Ensure response.json() is returned
+        })
+        .then((data) => {
+          console.log("loadWalletByCurrencyResponse:", data);
+          setwallets(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching wallets by currency code:", error);
+        });
+    }
+  }, [currency]);
+
+    
+  
     
     const formFillingPerson = useContext(UserContext).username
     console.log(SUPPORTREGIONCONST)
@@ -91,8 +104,10 @@ const CreateForm = ({userInfo, setloading}) => {
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="female"
             name="Currency"
+            value={currency}
             row
             onChange={(event) => setcurrency(event.target.value)}
+            sx={{mx:2}}
             
           >
             <FormControlLabel value="MMK" control={<Radio required={true} />} label="MMK" />
@@ -103,23 +118,31 @@ const CreateForm = ({userInfo, setloading}) => {
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
         {
-            // only if wallet has been fetched and currency has been selected
-            wallets && currency ? (
-                <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="wallets">
-                    {
-                        //if the currency wallet exists
-                       wallets[currency] ? wallets[currency].map((wallet) => <FormControlLabel value={JSON.stringify(wallet)} control={<Radio />} label={wallet.name} key={wallet.id} required={true} />): <h1>There is no wallet</h1>
-                    }
-                </RadioGroup>
-                ) : <h1>No Selected Wallet Yet</h1>
-        }
+           
+        wallets && wallets.length > 0 ? (
+          <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
+            {wallets.map((wallet) => (
+              <FormControlLabel
+                value={JSON.stringify(wallet)}
+                control={<Radio />}
+                label={wallet.walletName}
+                key={wallet.id}
+                required={true}
+                sx={{mx:2}}
+              />
+            ))}
+          </RadioGroup>
+        ) : (
+          <h1>No wallets available for the selected currency.</h1>
+        )}
+        
             <Autocomplete
             disablePortal
             id="supportRegion"
             onChange={(event, value) => setsupportRegion(value)}
             required
             options={SUPPORTREGIONCONST}
-            sx={{ width: 300 }}
+            sx={{ width: 300,marginTop:2 }}
             defaultValue={supportRegion}
             renderInput={(params) => <TextField {...params} label="Support Region" required />}
             />
