@@ -13,7 +13,7 @@ export async function POST(request) {
   let now = new Date();
     const rows = await db(
       "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, ScreenShot, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-      [obj['CustomerID'], obj['SupportRegionID'], obj['WalletID'], obj['Amount'], null, obj['AgentID'], false, null, obj['NoteID'], now, false, obj['Month']]
+      [obj['CustomerID'], obj['SupportRegionID'], obj['WalletID'], obj['Amount'], obj['ScreenShot'], obj['AgentID'], false, null, obj['NoteID'], now, false, obj['Month']]
   );
 
   return Response.json(rows)
