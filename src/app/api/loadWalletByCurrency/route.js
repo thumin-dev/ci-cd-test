@@ -3,7 +3,7 @@ import db from "../../utilites/db";
 
 async function loadWallet(currencyCode) {
   const query = `
-  SELECT Wallet.WalletID, Wallet.walletName 
+  SELECT Wallet.WalletID, Wallet.WalletName 
   FROM Wallet 
   JOIN Currency ON Wallet.CurrencyID = Currency.CurrencyID 
   WHERE Currency.CurrencyCode = ?
