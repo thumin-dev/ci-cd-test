@@ -86,14 +86,15 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
         console.log(ans)
        raw = JSON.stringify(
         {
-          "CustomerID": ans["CustomerID"],
-          "SupportRegionID": 1,
-          "WalletID": 1,
-          "Amount": amount,
-          "AgentID": 2,
-          "NoteID": note["id"],
-          "TransactionDate": new Date(),
-          "Month": month
+          "customerId": ans["CustomerID"],
+          "supportRegionId": 1,
+          "walletId": 1,
+          "amount": amount,
+          "agentId": 2,
+          "noteId": note["id"],
+          "transactionDate": new Date(),
+          "month": month,
+          "screenShot": files[0].href
       }
       )
       
@@ -142,7 +143,8 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
         "month": month,
         "note": notes,
         "walletId": 1,
-        "Month": month
+        "month": month,
+        "screenShot": files[0].href
       })
       requestOptions = {
         method: 'POST',
