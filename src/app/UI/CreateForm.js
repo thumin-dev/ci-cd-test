@@ -203,10 +203,10 @@ const CreateForm = ({userInfo, setloading}) => {
           <TextField
             margin="normal"
             fullWidth
-            id="manychat"
+            id="manyChat"
             label="Many Chat ID"
             required
-            name="manychat"
+            name="manyChat"
             type="text"
             error={manyChatValidate}
             helperText={manyChatValidate && "ဂဏန်းဘဲသွင်းပါ"}
