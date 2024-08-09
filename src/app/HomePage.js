@@ -1,29 +1,11 @@
 "use client";
 
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody, { tableBodyClasses } from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper";
+
 import {
   Autocomplete,
   CircularProgress,
@@ -69,9 +51,9 @@ function HomePage({ signOut, user }) {
 
   //getting current AgentId
   const checkAgentStatus = async () => {
-    const agentId = await getAuthCurrentUser();
-    console.log("AgentId:", agentId);
-    const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
+    const {userId} = await getAuthCurrentUser();
+    //console.log("AgentId:", userId);
+    const response = await fetch(`/api/checkAgent?awsId=${userId}`);
     const data = await response.json();
     console.log("Response: ", data.code);
 
