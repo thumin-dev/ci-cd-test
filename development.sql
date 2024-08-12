@@ -44,7 +44,7 @@ CREATE TABLE Customer (
     ManyChatID JSON,
     ExpireDate DATE,
     UserCountry VARCHAR(100),
-    ContactLink VARCHAR(15),
+    ContactLink VARCHAR(100),
     AgentID INT,
     CardID INT,
     FOREIGN KEY (AgentID) REFERENCES Agent(AgentID)
