@@ -7,10 +7,8 @@ export default async function db(query, value)
 {
 
     try {
-
-    // const credentials = await getDatabaseCredentials();
-    // Create the connection to database
     const connection = await mysql.createConnection({
+
         host: process.env.DATABASEHOST,
         user: process.env.DATABASEUSER,
         database: process.env.DATABASE,
