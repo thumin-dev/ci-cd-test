@@ -2,7 +2,7 @@ import { Alert, AlertTitle, Autocomplete, Box, Button, CircularProgress, FormCon
 import React, { useContext, useEffect, useState } from 'react'
 import extendUserSubmit from '../../utilites/ExtendUser/extendUserSubmit'
 import { styled } from '@mui/material/styles';
-import { UserContext } from '../../HomePage';
+import { UserContext, AgentContext } from '../../HomePage';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import filehandler from '../../utilites/createForm/fileHandler';
 import checkPrfSubmit from '../../utilites/ExtendUser/checkPrfSubmit'
@@ -30,6 +30,7 @@ const ExtendUserForm = ({userRole}) => {
   //LOAD THE WALLETS
   const [wallets, setwallets] = useState();
   const [currency, setcurrency] = useState();
+  const [currencies, setCurrencies] = useState([])
   const [supportRegion, setsupportRegion] = useState("choose your region");
     const [supportRegions, setsupportRegions] = useState([]);
   const [userInfo, setUserInfo] = useState({});
@@ -77,6 +78,15 @@ const ExtendUserForm = ({userRole}) => {
         });
     }, []);
 
+    // load currencies when component mount
+    useEffect(() => {
+      fetch("/api/getCurrencies")
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrencies(data);
+      })
+    }, [])
+
 
   const formFillingPerson = useContext(UserContext).username;
   const [otp, setOtp] = React.useState("");
@@ -84,6 +94,10 @@ const ExtendUserForm = ({userRole}) => {
   const handleChange = (newValue) => {
     setOtp(newValue);
   };
+
+
+  const agentId = useContext(AgentContext).id;
+  console.log("AgentId from createform: " + agentId)
 
   return (
     <>
@@ -204,7 +218,8 @@ const ExtendUserForm = ({userRole}) => {
               setmanyChatValidate,
               fileExist,
               setfileExist,
-              wallets
+              wallets,
+              agentId
             )
           }
           sx={{ mt: 1 }}
@@ -247,59 +262,44 @@ const ExtendUserForm = ({userRole}) => {
             onChange={(event) => setcurrency(event.target.value)}
             sx={{ mx: 2 }}
           >
-            <FormControlLabel
-              value="MMK"
-              control={<Radio required={true} />}
-              label="MMK"
-            />
-            <FormControlLabel
-              value="THB"
-              control={<Radio required={true} />}
-              label="THB"
-            />
-            <FormControlLabel
-              value="SGD"
-              control={<Radio required={true} />}
-              label="SGD"
-            />
-            <FormControlLabel
-              value="USD"
-              control={<Radio required={true} />}
-              label="USD"
-            />
-            <FormControlLabel
-              value="USDT"
-              control={<Radio required={true} />}
-              label="USDT"
-            />
+            {
+              currencies.map(item => {
+                return <FormControlLabel
+                  value={item.CurrencyCode}
+                  control={<Radio required={true} />}
+                  label={item.CurrencyCode}
+                  id={item.CurrencyID}
+                />
+              })
+            }
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
             <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
               {wallets.map((wallet) => (
                 <FormControlLabel
-                  value={JSON.stringify(wallet)}
+                  value={wallet.WalletID}
                   control={<Radio />}
-                  label={wallet.walletName}
-                  key={wallet.id}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
                   required={true}
                   sx={{ mx: 1 }}
                 />
               ))}
             </RadioGroup>
           ) : (
-            <h1>No wallet selected.</h1>
+            <h1>No wallets selected.</h1>
           )}
 
-          <Autocomplete
+            <Autocomplete
             disablePortal
             id="supportRegion"
-            onChange={(event, value) => setsupportRegion(value)}
+            onChange={(event, value) => {console.log(value);setsupportRegion(value)}}
             required
             options={supportRegions}
             sx={{ width: 300, marginTop: 2 }}
             value={supportRegion}
-            defaultValue={() => setsupportRegion("choose a region")}
+            defaultValue={()=>setsupportRegion('choose a region')}
             getOptionLabel={(option) => option.Region || ""}
             renderInput={(params) => (
               <TextField {...params} label="Support Region" required />

@@ -1,3 +1,6 @@
+// input : awsId
+// output: {id: 1}
+
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 
@@ -23,9 +26,8 @@ export async function POST(req) {
     const { awsId } = await req.json();
 
     const data = await createAgent( awsId ,1);
-    console.log("Data:", data); 
 
-    return NextResponse.json({ message: "Agent created!" });
+    return NextResponse.json({id: data});
   } catch (error) {
     console.error("[Error] Cannot create agentUser", error);
     return NextResponse.json(

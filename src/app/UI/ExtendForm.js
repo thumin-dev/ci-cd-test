@@ -4,7 +4,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import extendFormSubmit from '../utilites/extendForm/extendFormSubmit'
 import filehandler from '../utilites/createForm/fileHandler';
-import { UserContext } from '../HomePage';
+import { UserContext, AgentContext } from '../HomePage';
 import { SUPPORTREGIONCONST } from '../variables/const';
 import Dropzone from 'react-dropzone'
 
@@ -24,12 +24,57 @@ const ExtendForm = ({userInfo, setloading}) => {
     const [wallets, setwallets] = useState()
     const [currency, setcurrency] = useState();
     const [supportRegion, setsupportRegion] = useState('choose your region')
+    const [currencies, setCurrencies] = useState([])
     const [files, setfiles] = useState([])
+    const [supportRegions, setsupportRegions] = useState([]);
 
     const [amountValidate, setAmountValidate] = useState(false)
     const [monthValidate, setmonthValidate] = useState(false)
     const [manyChatValidate, setmanyChatValidate] = useState(false)
     const [fileExist, setfileExist] = useState(true)
+
+    const agentId = useContext(AgentContext).id;
+
+    //Load the Wallet on Component Mount
+  useEffect(() => {
+    if (currency) {
+      fetch(`/api/loadWalletByCurrency?currencyCode=${currency}`)
+        .then((response) => {
+          return response.json(); // Ensure response.json() is returned
+        })
+        .then((data) => {
+          console.log(":loadcurrency", currency)
+          console.log("loadWalletByCurrencyResponse:", data);
+          setwallets(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching wallets by currency code:", error);
+        });
+    }
+  }, [currency]);
+
+    //load support Region
+    useEffect(() => {
+      fetch("/api/loadSupportRegion")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("loadSupportRegionResponse:", data);
+          setsupportRegions(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching support regions:", error);
+        });
+
+      }, []);
+
+      // load currencies when component mount
+    useEffect(() => {
+      fetch("/api/getCurrencies")
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrencies(data);
+      })
+    }, [])
 
     //Load the Wallet on Component Mount
     useEffect(() => {
@@ -44,7 +89,7 @@ const ExtendForm = ({userInfo, setloading}) => {
         <Typography component="h1" variant="h5">
                 Extend this User
               </Typography>
-              <Box component="form"  sx={{ mt: 1 }} onSubmit={(event) => extendFormSubmit(event, currency, supportRegion, files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist,setfileExist)}>
+              <Box component="form"  sx={{ mt: 1 }} onSubmit={(event) => extendFormSubmit(event, currency, supportRegion, files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist,setfileExist, agentId)}>
               <FormLabel id="prf_no">PRF No</FormLabel>
               <TextField
                   autoFocus
@@ -90,40 +135,53 @@ const ExtendForm = ({userInfo, setloading}) => {
                   }}
                 />
                 
-        <FormLabel id="currency">Currency</FormLabel>
+                <FormLabel id="currency">Currency</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="female"
             name="Currency"
+            value={currency}
             row
             onChange={(event) => setcurrency(event.target.value)}
-            
+            sx={{ mx: 2 }}
           >
-            <FormControlLabel value="MMK" control={<Radio required={true} />} label="MMK" />
-            <FormControlLabel value="THB" control={<Radio required={true}/>} label="THB" />
-            <FormControlLabel value="SGD" control={<Radio required={true}/>} label="SGD" />
-            <FormControlLabel value="USD" control={<Radio required={true}/>} label="USD" />
-            <FormControlLabel value="USDT" control={<Radio required={true}/>} label="USDT" />
+            {
+              currencies.map(item => {
+                return <FormControlLabel
+                  value={item.CurrencyCode}
+                  control={<Radio required={true} />}
+                  label={item.CurrencyCode}
+                  id={item.CurrencyID}
+                />
+              })
+            }
+
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
-        {
-            // only if wallet has been fetched and currency has been selected
-            wallets && currency ? (
-                <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="wallets">
-                    {
-                        //if the currency wallet exists
-                       wallets[currency] ? wallets[currency].map((wallet) => <FormControlLabel value={JSON.stringify(wallet)} control={<Radio />} label={wallet.name} key={wallet.id} required={true} />): <h1>There is no wallet</h1>
-                    }
-                </RadioGroup>
-                ) : <h1>No Selected Wallet Yet</h1>
-        }
+          {wallets && wallets.length > 0 ? (
+            <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
+              {wallets.map((wallet) => (
+                <FormControlLabel
+                  value={wallet.WalletID}
+                  control={<Radio />}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
+                  required={true}
+                  sx={{ mx: 1 }}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <h1>No wallets selected.</h1>
+          )}
             <Autocomplete
             disablePortal
             id="supportRegion"
             onChange={(event, value) => setsupportRegion(value)}
             required
-            defaultValue={supportRegion}
-            options={SUPPORTREGIONCONST}
+            defaultValue={()=>setsupportRegion('choose a region')}
+            options={supportRegions}
+            getOptionLabel={(option) => option.Region || ""}
             sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Support Region" required />}
             />

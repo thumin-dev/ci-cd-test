@@ -45,6 +45,29 @@ async function createNote(note, agentID) {
     );
   }
 }
+
+async function createScreenShot(screenShot,transactionsID) {
+  console.log(transactionsID +  "  " + screenShot)
+
+  let screenShotLink = await screenShot.map(async (item) => {
+    const query = `insert into ScreenShot (TransactionID , ScreenShotLink) values ( ?, ?)`;
+    
+    const path = String(item.url).substring(0,String(item.url).indexOf('?'))
+    const values = [transactionsID, path];
+
+    try {
+      const result = await db(query, values);
+      console.log("result " + result)
+      // console.log("Result: ", result);
+      return result.insertId;
+    } catch (error) {
+      console.error("Error inserting ScreenShot:", error);
+      return 
+    }
+  })
+  return screenShotLink
+  // return screenShotLink;
+}
 export async function POST(req) {
   try {
     let json = await req.json();
@@ -83,8 +106,8 @@ export async function POST(req) {
 
     const query = `
      INSERT INTO Transactions   
-    (CustomerID, Amount, AgentID, SupportRegionID, WalletID, Screenshot, TransactionDate, NoteID, Month) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (CustomerID, Amount, AgentID, SupportRegionID, WalletID, TransactionDate, NoteID, Month) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 
     `;
     const values = [
@@ -93,15 +116,20 @@ export async function POST(req) {
       agentId,
       supportRegionId,
       walletId,
-      screenShot,
       new Date(),
       noteId,
       month,
     ];
     const result = await db(query, values);
+
+    const transactionId = result.insertId;
+    console.log("Transaction ID " + transactionId)
+
+    const screenShotIds = await createScreenShot(screenShot, transactionId)
+    // console.log("Screenshot ids are: " + screenShotIds)
     // console.log("Result: ", result);
     return Response.json({ status: "success" });
   } catch (error) {
-    console.log("[DB] query error");
+    console.log(error);
   }
 }
