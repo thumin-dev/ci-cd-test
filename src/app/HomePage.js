@@ -59,6 +59,7 @@ Amplify.configure(config);
 const client = generateClient();
 let isCreatingAgent = false;
 export const UserContext = React.createContext();
+export const AgentContext = React.createContext();
 
 function HomePage({ signOut, user }) {
   const [page, setPage] = React.useState(1);
@@ -66,25 +67,41 @@ function HomePage({ signOut, user }) {
   const [status, setStatus] = React.useState("loading");
   //User Role = admin | user
   const [userRole, setUserRole] = React.useState("admin");
+  const [agentId, setAgentId] = React.useState(null);
 
   //getting current AgentId
   const checkAgentStatus = async () => {
+
+    // check if there is already an id
+
+
     const agentId = await getAuthCurrentUser();
     console.log("AgentId:", agentId);
     const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
     const data = await response.json();
     console.log("Response: ", data.code);
 
+    if(data.code === 1)
+    {
+      // get the agent id
+      let response = await fetch(`/api/getAgent?awsId=${agentId}`);
+      response = await response.json()
+      setAgentId({id: response.data['AgentID']})
+
+    }
+
     if (data.code === 0 && !isCreatingAgent) {
       isCreatingAgent = true;
       setTimeout(async () => {
-        await fetch(`/api/createAgent`, {
+        let response = await fetch(`/api/createAgent`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ awsId: agentId }),
         });
+        response = await response.json()
+        setAgentId({id: response.id})
       }, 9000);
     }
   };
@@ -133,6 +150,7 @@ function HomePage({ signOut, user }) {
   // ,[])
 
   return (
+    <AgentContext.Provider value={agentId}>
     <UserContext.Provider value={user}>
       <Container component="main" maxWidth="xl" disableGutters>
         <ResponsiveAppBar
@@ -170,6 +188,7 @@ function HomePage({ signOut, user }) {
         </Container>
       </Container>
     </UserContext.Provider>
+    </AgentContext.Provider>
   );
 }
 
