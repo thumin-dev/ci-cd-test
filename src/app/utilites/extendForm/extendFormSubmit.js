@@ -1,19 +1,49 @@
-export default async function extendFormSubmit(event, currency, supportRegion, files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist) {
+export default async function extendFormSubmit(event, currency, supportRegion, files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, agentID) {
     event.preventDefault();
     setAmountValidate(false);
     setmonthValidate(false)
     setmanyChatValidate(false)
-    setloading(true)
+    // setloading(true)
     const data = new FormData(event.currentTarget);
     const amount = data.get("amount")
     const month = data.get("month");
     const manychat = data.get('manychat')
     const wallet = JSON.parse(data.get("wallets"))
     const notes = data.get("notes")
-    const contactLink = data.get("contactLink")
-    console.log("First URL of Image: " + files[0].href)
+    const contactLink = data.get("contactLink");
+    let cardId = String(userInfo['prf_no'])
+    //if cardID exist for the extend user
+    if(cardId)
+    {
+      const regexp = /\d+/g;
+      cardId = cardId.match(regexp)[0];
+      cardId = parseInt(cardId)
+    }
 
-    //validate month and amount
+    const supportRegionID = supportRegion.SupportRegionID;
+    let expireDate = userInfo['expire_date']
+    if(expireDate)
+    {
+      expireDate = new Date(userInfo['expire_date'])
+    }
+    // console.log("First URL of Image: " + files[0].href)
+
+    let tmp = {
+      amount,
+      month,
+      manychat,
+      wallet,
+      notes,
+      contactLink,
+      supportRegionID,
+      files,
+      agentID,
+      "expireDate": expireDate,
+      "cardID": cardId
+    }
+    console.log(tmp)
+
+    // validate month and amount
     if(!/^\d+$/g.test(amount))
     {
       setAmountValidate(true);
@@ -33,13 +63,13 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       return;
     }
 
-    //check if file exist
-    if(files.length == 0)
-    {
-      setfileExist(false);
-      setloading(false)
-      return;
-    }
+    // //check if file exist
+    // if(files.length == 0)
+    // {
+    //   setfileExist(false);
+    //   setloading(false)
+    //   return;
+    // }
 
     // check if the user exist in mysql
     let myHeaders = new Headers();
@@ -67,8 +97,8 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
   
         // create a note
         raw = JSON.stringify({
-          "note": "hello",
-          "agentID": 1
+          "note": notes,
+          "agentID": agentID
       })
        requestOptions = {
         method: 'POST',
@@ -86,14 +116,16 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
         console.log(ans)
        raw = JSON.stringify(
         {
-          "CustomerID": ans["CustomerID"],
-          "SupportRegionID": 1,
-          "WalletID": 1,
-          "Amount": amount,
-          "AgentID": 2,
-          "NoteID": note["id"],
-          "TransactionDate": new Date(),
-          "Month": month
+          "customerId": ans["CustomerID"],
+          "supportRegionId": supportRegionID,
+          "walletId": wallet,
+          "amount": amount,
+          "agentId": agentID,
+          "noteId": note['id'],
+          "transactionDate": new Date(),
+          "month": month,
+          "screenShot": files.map((url) => {return {url: url.href}}),
+          "cardId": cardId
       }
       )
       
@@ -107,7 +139,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       };
   
         let response = await fetch(`/api/extendUser`, requestOptions)
-        location.reload()
+        // location.reload()
       }
 
       else // treat this as new customer but get the requried user information from airtable
@@ -131,28 +163,32 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       
 
       // submitpaymentinformation
-      raw = JSON.stringify({
-        "customerName": userInfo.name, 
+
+      let raw = JSON.stringify({
+        "customerName": userInfo.name,
         "customerEmail": userInfo.email,
-        "agentID": 1,
-        "supportRegionID": 1,
-        "manyChatID": manychat,
-        "contactPhone": "123",
+        "agentId": agentID,
+        "supportRegionId": supportRegionID,
+        "manyChatId": manychat,
+        "contactLink": contactLink,
         "amount": amount,
         "month": month,
         "note": notes,
-        "walletId": 1,
-        "Month": month
+        "walletId": wallet,
+        "screenShot": files.map((url) => {return {url: url.href}}),
+        "expireDate": expireDate,
+        "cardId": cardId
       })
+      console.log(JSON.parse(raw))
       requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: raw,
         redirect: 'follow'
       };
-      let answ = await fetch('/api/submitPayment/', requestOptions)
+      let answ = await fetch('/api/submitPaymentolduser/', requestOptions)
       let {status} =  await answ.json()
       console.log(status)
-      location.reload()
+      // location.reload()
     }
 }
