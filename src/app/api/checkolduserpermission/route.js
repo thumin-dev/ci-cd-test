@@ -37,10 +37,8 @@ export async function POST(request) {
             }
 
         
-        checkPermission(name,email).then(answer => {
-
-            return Response.json(answer)
-        })
+        let answer = await checkPermission(name,email)
+        return Response.json(answer)
 
 
 
@@ -73,6 +71,7 @@ async function checkPermission(name, email) {
 
     let json = await response.json();
     let records = await json.records;
+
     let record = records[0].fields;
     let now = new Date().getMonth();
     let nowYear = new Date().getFullYear();
