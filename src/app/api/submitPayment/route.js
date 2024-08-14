@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
+import calculateExpireDate from '../../utilites/calculateExpireDate'
 
 async function InsertCustomer(
   customerName,
   customerEmail,
   agentId,
   manyChatId,
-  contactLink
+  contactLink,
+  month
 ) {
+  let currentDay = new Date();
+  let nextExpireDate = calculateExpireDate(currentDay, month)
   const query = `
-    INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink ) VALUES (?, ?, ?, ?, ?)
+    INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink, ExpireDate ) VALUES (?, ?, ?, ?, ?, ?)
     `;
   const values = [
     customerName,
@@ -17,6 +21,7 @@ async function InsertCustomer(
     agentId,
     manyChatId,
     contactLink,
+    nextExpireDate
   ];
   try {
     const result = await db(query, values);
@@ -72,7 +77,7 @@ export async function POST(req) {
   try {
     let json = await req.json();
 
-    const {
+    let {
       customerName,
       customerEmail,
       agentId,
@@ -86,6 +91,8 @@ export async function POST(req) {
       screenShot,
     } = json;
 
+    month = parseInt(month)
+
     if (!screenShot) {
       return NextResponse.json(
         { error: "You need to provide a screenshot" },
@@ -97,7 +104,8 @@ export async function POST(req) {
       customerEmail,
       agentId,
       manyChatId,
-      contactLink
+      contactLink,
+      month
     );
     console.log("customerId: ", customerId);
 

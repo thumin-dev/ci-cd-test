@@ -7,7 +7,7 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     setmonthValidate(false)
     setmanyChatValidate(false)
     setfileExist(true)
-    setloading(true)
+    // setloading(true)
     
     const data = new FormData(event.currentTarget);
     const amount = data.get("amount")
@@ -37,12 +37,12 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     }
 
     //check if file exist
-    if(files.length == 0)
-    {
-      setfileExist(false);
-      setloading(false)
-      return;
-    }
+    // if(files.length == 0)
+    // {
+    //   setfileExist(false);
+    //   setloading(false)
+    //   return;
+    // }
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -56,13 +56,14 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
       "agentId": agentId,
       "supportRegionId": supportRegion['SupportRegionID'],
       "manyChatId": manychat,
-      "contactLink": "123",
+      "contactLink": contactLink,
       "amount": amount,
       "month": month,
       "note": notes,
-      "walletId": 1,
+      "walletId": wallet,
       "screenShot": files.map((url) => {return {url: url.href}})
     })
+    console.log(JSON.parse(raw) )
     let requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -73,7 +74,7 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     let {status} =  await answ.json()
     let res = await answ.json()
     console.log("My answer id: " + res)
-    location.reload()
+    // location.reload()
   }
 // var raw = JSON.stringify({
 //   "records": [
