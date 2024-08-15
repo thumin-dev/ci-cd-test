@@ -1,29 +1,10 @@
 "use client";
 
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody, { tableBodyClasses } from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper";
 import {
   Autocomplete,
   CircularProgress,
@@ -33,8 +14,6 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import CreateOrExtend from "./UI/CreateOrExtend/CreateOrExtend";
 import ResponsiveAppBar from "./UI/AppBar/AppBar";
 import ExtendUser from "./UI/ExtendUser/ExtendUser";
@@ -68,64 +47,63 @@ function HomePage({ signOut, user }) {
   //User Role = admin | user
   const [userRole, setUserRole] = React.useState("admin");
   const [agentId, setAgentId] = React.useState(null);
+  const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
 
   //getting current AgentId
   const checkAgentStatus = async () => {
-
     // check if there is already an id
 
-
     const agentId = await getAuthCurrentUser();
-    console.log("AgentId:", agentId);
+    //  console.log("AgentId:", agentId);
     const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
     const data = await response.json();
     console.log("Response: ", data.code);
 
-    if(data.code === 1)
-    {
-      // get the agent id
-      let response = await fetch(`/api/getAgent?awsId=${agentId}`);
-      response = await response.json()
-      setAgentId({id: response.data['AgentID']})
-
-    }
-
-    if (data.code === 0 && !isCreatingAgent) {
-      isCreatingAgent = true;
+    if (data.code === 1) {
+      setAgentId({ id: data.user.AgentID });
+      // console.log('success', agentId);
+    } else if (data.code === 0 && !isCreatingAgent) {
+      setIsCreatingAgent(true); // set the createAgent flag
       setTimeout(async () => {
-        let response = await fetch(`/api/createAgent`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ awsId: agentId }),
-        });
-        response = await response.json()
-        setAgentId({id: response.id})
+        try {
+          let response = await fetch(`/api/createAgent`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ awsId: agentId }),
+          });
+          response = await response.json();
+          setAgentId({ id: response.id });
+        } catch (error) {
+          console.error("Error creating agent:", error);
+        } finally {
+          setIsCreatingAgent(false); // reset the createAgent flag
+        }
       }, 9000);
     }
   };
-  isCreatingAgent = false;
+ 
 
   //Get the page is unable or not
   React.useEffect(() => {
     checkAgentStatus();
 
-    client.graphql({ query: listApps }).then((result) => {
-      let enable = result.data.listApps.items[0].status ? "enable" : "disable";
-      setStatus(enable);
-    });
+  //   client.graphql({ query: listApps }).then((result) => {
+  //     let enable = result.data.listApps.items[0].status ? "enable" : "disable";
+  //     setStatus(enable);
+  //   });
 
-    //always listen for changes in status
-    const updateSub = client
-      .graphql({ query: subscriptions.onUpdateApp })
-      .subscribe({
-        next: ({ data }) => {
-          let enable = data["onUpdateApp"]["status"] ? "enable" : "disable";
-          setStatus(enable);
-        },
-        error: (error) => console.warn(error),
-      });
+  //  // always listen for changes in status
+  //   const updateSub = client
+  //     .graphql({ query: subscriptions.onUpdateApp })
+  //     .subscribe({
+  //       next: ({ data }) => {
+  //         let enable = data["onUpdateApp"]["status"] ? "enable" : "disable";
+  //         setStatus(enable);
+  //       },
+  //       error: (error) => console.warn(error),
+  //     });
   }, []);
 
   //Get user role
