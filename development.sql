@@ -44,7 +44,7 @@ CREATE TABLE Customer (
     ManyChatID JSON,
     ExpireDate DATE,
     UserCountry VARCHAR(100),
-    ContactLink VARCHAR(15),
+    ContactLink VARCHAR(100),
     AgentID INT,
     CardID INT,
     FOREIGN KEY (AgentID) REFERENCES Agent(AgentID)
@@ -74,7 +74,6 @@ CREATE TABLE Transactions (
     SupportRegionID INT,
     WalletID INT,
     Amount FLOAT,
-    Screenshot BLOB,
     AgentID INT,
     PaymentCheck BOOLEAN,
     PaymentCheckTime DATE,
@@ -116,6 +115,14 @@ VALUES
 (1, 'AWS-1234', 1),
 (2, 'AWS-5678', 2);
 
+CREATE TABLE ScreenShot (
+    ScreenShotID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT,
+    ScreenShotLink VARCHAR(2048),
+    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
+);
+
+
 -- Insert data into Customer Table
 INSERT INTO Customer (CustomerID, Name, Email, ManyChatID, ExpireDate, UserCountry, ContactLink, AgentID, CardID)
 VALUES 
@@ -136,7 +143,13 @@ VALUES
 (2, 'Customer requested refund.', '2024-07-02', 2);
 
 -- Insert data into Transactions Table
-INSERT INTO Transactions (TransactionID, CustomerID, SupportRegionID, WalletID, Amount, Screenshot, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month)
+INSERT INTO Transactions (TransactionID, CustomerID, SupportRegionID, WalletID, Amount, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month)
 VALUES 
-(1, 1, 1, 1, 100.00, NULL, 1, TRUE, '2024-07-01', 1, '2024-07-01', FALSE, 7),
-(2, 2, 2, 2, 200.00, NULL, 2, FALSE, '2024-07-02', 2, '2024-07-02', TRUE, 7);
+(1, 1, 1, 1, 100.00, 1, TRUE, '2024-07-01', 1, '2024-07-01', FALSE, 7),
+(2, 2, 2, 2, 200.00, 2, FALSE, '2024-07-02', 2, '2024-07-02', TRUE, 7);
+
+INSERT INTO ScreenShot (TransactionID, ScreenShotLink)
+VALUES 
+(1, 'http://example.com/screenshot1.png'),
+(1, 'http://example.com/screenshot2.png'),
+(2, 'http://example.com/screenshot3.png');

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import filehandler from '../utilites/createForm/fileHandler';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
-import { UserContext } from '../HomePage';
+import { AgentContext, UserContext } from '../HomePage';
 
 import Dropzone from 'react-dropzone'
 
@@ -34,6 +34,7 @@ const CreateForm = ({userInfo, setloading}) => {
     const [currency, setcurrency] = useState();
     const [supportRegion, setsupportRegion] = useState('Choose a Region');
     const [supportRegions, setsupportRegions] = useState([]);
+    const [currencies, setCurrencies] = useState([])
     const [files, setfiles] = useState([])
 
     const [amountValidate, setAmountValidate] = useState(false)
@@ -49,6 +50,7 @@ const CreateForm = ({userInfo, setloading}) => {
           return response.json(); // Ensure response.json() is returned
         })
         .then((data) => {
+          console.log(":loadcurrency", currency)
           console.log("loadWalletByCurrencyResponse:", data);
           setwallets(data);
         })
@@ -68,13 +70,25 @@ const CreateForm = ({userInfo, setloading}) => {
         .catch((error) => {
           console.error("Error fetching support regions:", error);
         });
-    }, []);
 
-    
-  
-    
-    const formFillingPerson = useContext(UserContext).username
-    console.log(SUPPORTREGIONCONST)
+      }, []);
+
+    // load currencies when component mount
+    useEffect(() => {
+      fetch("/api/getCurrencies")
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrencies(data);
+      })
+    }, [])
+      
+      
+      
+      
+      const formFillingPerson = useContext(UserContext).username
+      console.log(SUPPORTREGIONCONST)
+      const agentId = useContext(AgentContext).id;
+      console.log("AgentId from createform: " + agentId)
     
 
     return (
@@ -98,7 +112,8 @@ const CreateForm = ({userInfo, setloading}) => {
               setmonthValidate,
               setmanyChatValidate,
               fileExist,
-              setfileExist
+              setfileExist,
+              agentId
             )
           }
         >
@@ -142,41 +157,27 @@ const CreateForm = ({userInfo, setloading}) => {
             onChange={(event) => setcurrency(event.target.value)}
             sx={{ mx: 2 }}
           >
-            <FormControlLabel
-              value="MMK"
-              control={<Radio required={true} />}
-              label="MMK"
-            />
-            <FormControlLabel
-              value="THB"
-              control={<Radio required={true} />}
-              label="THB"
-            />
-            <FormControlLabel
-              value="SGD"
-              control={<Radio required={true} />}
-              label="SGD"
-            />
-            <FormControlLabel
-              value="USD"
-              control={<Radio required={true} />}
-              label="USD"
-            />
-            <FormControlLabel
-              value="USDT"
-              control={<Radio required={true} />}
-              label="USDT"
-            />
+            {
+              currencies.map(item => {
+                return <FormControlLabel
+                  value={item.CurrencyCode}
+                  control={<Radio required={true} />}
+                  label={item.CurrencyCode}
+                  id={item.CurrencyID}
+                />
+              })
+            }
+
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
             <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
               {wallets.map((wallet) => (
                 <FormControlLabel
-                  value={JSON.stringify(wallet)}
+                  value={wallet.WalletID}
                   control={<Radio />}
-                  label={wallet.walletName}
-                  key={wallet.id}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
                   required={true}
                   sx={{ mx: 1 }}
                 />
@@ -189,7 +190,7 @@ const CreateForm = ({userInfo, setloading}) => {
           <Autocomplete
             disablePortal
             id="supportRegion"
-            onChange={(event, value) => setsupportRegion(value)}
+            onChange={(event, value) => {console.log(value);setsupportRegion(value)}}
             required
             options={supportRegions}
             sx={{ width: 300, marginTop: 2 }}
@@ -203,10 +204,10 @@ const CreateForm = ({userInfo, setloading}) => {
           <TextField
             margin="normal"
             fullWidth
-            id="manychat"
+            id="manyChat"
             label="Many Chat ID"
             required
-            name="manychat"
+            name="manyChat"
             type="text"
             error={manyChatValidate}
             helperText={manyChatValidate && "ဂဏန်းဘဲသွင်းပါ"}
