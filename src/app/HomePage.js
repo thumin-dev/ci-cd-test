@@ -15,8 +15,6 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import CreateOrExtend from "./UI/CreateOrExtend/CreateOrExtend";
 import ResponsiveAppBar from "./UI/AppBar/AppBar";
 import ExtendUser from "./UI/ExtendUser/ExtendUser";
@@ -41,6 +39,7 @@ Amplify.configure(config);
 const client = generateClient();
 let isCreatingAgent = false;
 export const UserContext = React.createContext();
+export const AgentContext = React.createContext();
 
 function HomePage({ signOut, user }) {
   const [page, setPage] = React.useState(1);
@@ -48,49 +47,66 @@ function HomePage({ signOut, user }) {
   const [status, setStatus] = React.useState("loading");
   //User Role = admin | user
   const [userRole, setUserRole] = React.useState("admin");
+  const [agentId, setAgentId] = React.useState(null);
+  const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
 
   //getting current AgentId
   const checkAgentStatus = async () => {
-    const {userId} = await getAuthCurrentUser();
-    //console.log("AgentId:", userId);
-    const response = await fetch(`/api/checkAgent?awsId=${userId}`);
+
+    // check if there is already an id
+
+    const agentId = await getAuthCurrentUser();
+    //  console.log("AgentId:", agentId);
+    const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
+
     const data = await response.json();
     console.log("Response: ", data.code);
 
-    if (data.code === 0 && !isCreatingAgent) {
-      isCreatingAgent = true;
+    if (data.code === 1) {
+      setAgentId({ id: data.user.AgentID });
+      // console.log('success', agentId);
+    } else if (data.code === 0 && !isCreatingAgent) {
+      setIsCreatingAgent(true); // set the createAgent flag
       setTimeout(async () => {
-        await fetch(`/api/createAgent`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ awsId: agentId }),
-        });
+        try {
+          let response = await fetch(`/api/createAgent`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ awsId: agentId }),
+          });
+          response = await response.json();
+          setAgentId({ id: response.id });
+        } catch (error) {
+          console.error("Error creating agent:", error);
+        } finally {
+          setIsCreatingAgent(false); // reset the createAgent flag
+        }
       }, 9000);
     }
   };
-  isCreatingAgent = false;
+ 
 
   //Get the page is unable or not
   React.useEffect(() => {
     checkAgentStatus();
 
-    client.graphql({ query: listApps }).then((result) => {
-      let enable = result.data.listApps.items[0].status ? "enable" : "disable";
-      setStatus(enable);
-    });
+  //   client.graphql({ query: listApps }).then((result) => {
+  //     let enable = result.data.listApps.items[0].status ? "enable" : "disable";
+  //     setStatus(enable);
+  //   });
 
-    //always listen for changes in status
-    const updateSub = client
-      .graphql({ query: subscriptions.onUpdateApp })
-      .subscribe({
-        next: ({ data }) => {
-          let enable = data["onUpdateApp"]["status"] ? "enable" : "disable";
-          setStatus(enable);
-        },
-        error: (error) => console.warn(error),
-      });
+  //  // always listen for changes in status
+  //   const updateSub = client
+  //     .graphql({ query: subscriptions.onUpdateApp })
+  //     .subscribe({
+  //       next: ({ data }) => {
+  //         let enable = data["onUpdateApp"]["status"] ? "enable" : "disable";
+  //         setStatus(enable);
+  //       },
+  //       error: (error) => console.warn(error),
+  //     });
   }, []);
 
   //Get user role
@@ -115,6 +131,7 @@ function HomePage({ signOut, user }) {
   // ,[])
 
   return (
+    <AgentContext.Provider value={agentId}>
     <UserContext.Provider value={user}>
       <Container component="main" maxWidth="xl" disableGutters>
         <ResponsiveAppBar
@@ -152,6 +169,7 @@ function HomePage({ signOut, user }) {
         </Container>
       </Container>
     </UserContext.Provider>
+    </AgentContext.Provider>
   );
 }
 
