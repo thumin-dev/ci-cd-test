@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import getAuthCurrentUser from "../../utilites/getAuthCurrentUser";
 
-const pages = ["Products", "Pricing", "Blog"];
+// const pages = ["Products", "Pricing", "Blog"];
 //const settings = ['Profile','Account', 'Dashboard', 'Logout'];
 const settings = [
   { icon: <PersonOutlineIcon />, label: "Account" },
@@ -60,7 +60,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
     setAnchorElUser(null);
     switch (setting.label) {
       case "Account":
-        router.push("/account");
+        router.push("/");
         break;
       case "Dashboard":
         router.push("/");
@@ -114,7 +114,14 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
             {navItems.map((item) => (
               <Button
                 key={item}
-                sx={{ color: "#fff" }}
+                sx={{
+                  color: "#fff",
+                  ":hover": {
+                    cursor: "pointer",
+                    color: "secondary.yellow400",
+                    textDecoration: "none",
+                  },
+                }}
                 onClick={() => handleClick(item)}
               >
                 {item}
