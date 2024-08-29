@@ -126,7 +126,7 @@ export async function POST(req) {
       walletId,
       new Date(),
       noteId,
-      month,
+      month
     ];
     const result = await db(query, values);
 
