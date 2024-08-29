@@ -41,6 +41,7 @@ const CreateForm = ({userInfo, setloading}) => {
     const [monthValidate, setmonthValidate] = useState(false)
     const [manyChatValidate, setmanyChatValidate] = useState(false)
     const [fileExist, setfileExist] = useState(true)
+    const [uploadProgress, setUploadProgress] = useState("")
 
     //Load the Wallet on Component Mount
   useEffect(() => {
@@ -87,8 +88,8 @@ const CreateForm = ({userInfo, setloading}) => {
       
       const formFillingPerson = useContext(UserContext).username
       console.log(SUPPORTREGIONCONST)
-      const agentId = useContext(AgentContext).id;
-      console.log("AgentId from createform: " + agentId)
+    //  const agentId = useContext(AgentContext).id;
+     // console.log("AgentId from createform: " + agentId)
     
 
     return (
@@ -253,7 +254,7 @@ const CreateForm = ({userInfo, setloading}) => {
           >
             <Dropzone
               onDrop={(acceptedFiles) =>
-                filehandler(acceptedFiles, setfiles, files)
+                filehandler(acceptedFiles, setfiles, files, setUploadProgress)
               }
               accept={["text/*, img/*"]}
             >
@@ -262,7 +263,7 @@ const CreateForm = ({userInfo, setloading}) => {
                   <div {...getRootProps()} style={{ padding: "20% 20%" }}>
                     <input {...getInputProps()} />
                     <p>
-                      Drag 'n' drop some files here, or click to select files
+                     { uploadProgress || "Drag & drop some files here, or click to select files"}
                     </p>
                   </div>
                 </section>
