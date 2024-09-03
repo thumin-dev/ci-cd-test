@@ -37,12 +37,12 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     }
 
     //check if file exist
-    // if(files.length == 0)
-    // {
-    //   setfileExist(false);
-    //   setloading(false)
-    //   return;
-    // }
+    if(files.length == 0)
+    {
+      setfileExist(false);
+      setloading(false)
+      return;
+    }
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -71,10 +71,10 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     redirect: 'follow'
     };
     let answ = await fetch('/api/submitPayment/', requestOptions)
-    let {status} =  await answ.json()
+ 
     let res = await answ.json()
     console.log("My answer id: " + res)
-    // location.reload()
+     location.reload()
   }
 // var raw = JSON.stringify({
 //   "records": [

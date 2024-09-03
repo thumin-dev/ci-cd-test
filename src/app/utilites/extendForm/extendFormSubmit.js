@@ -19,7 +19,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       cardId = cardId.match(regexp)[0];
       cardId = parseInt(cardId)
     }
-
+ 
     const supportRegionID = supportRegion.SupportRegionID;
     let expireDate = userInfo['expire_date']
     if(expireDate)
@@ -64,12 +64,12 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
     }
 
     // //check if file exist
-    // if(files.length == 0)
-    // {
-    //   setfileExist(false);
-    //   setloading(false)
-    //   return;
-    // }
+    if(files.length == 0)
+    {
+      setfileExist(false);
+      setloading(false)
+      return;
+    }
 
     // check if the user exist in mysql
     let myHeaders = new Headers();
@@ -139,7 +139,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       };
   
         let response = await fetch(`/api/extendUser`, requestOptions)
-        // location.reload()
+         location.reload()
       }
 
       else // treat this as new customer but get the requried user information from airtable
@@ -189,6 +189,6 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       let answ = await fetch('/api/submitPaymentolduser/', requestOptions)
       let {status} =  await answ.json()
       console.log(status)
-      // location.reload()
+       location.reload()
     }
 }
