@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
-import calculateExpireDate from '../../utilites/calculateExpireDate'
+import calculateExpireDate from "../../utilites/calculateExpireDate";
 
 async function InsertCustomer(
   customerName,
@@ -11,7 +11,7 @@ async function InsertCustomer(
   month
 ) {
   let currentDay = new Date();
-  let nextExpireDate = calculateExpireDate(currentDay, month)
+  let nextExpireDate = calculateExpireDate(currentDay, month);
   const query = `
     INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink, ExpireDate ) VALUES (?, ?, ?, ?, ?, ?)
     `;
@@ -21,7 +21,7 @@ async function InsertCustomer(
     agentId,
     manyChatId,
     contactLink,
-    nextExpireDate
+    nextExpireDate,
   ];
   try {
     const result = await db(query, values);
@@ -51,28 +51,36 @@ async function createNote(note, agentID) {
   }
 }
 
-async function createScreenShot(screenShot,transactionsID) {
-  console.log(transactionsID +  "  " + screenShot)
+async function createScreenShot(screenShot, transactionsID) {
+    if (!screenShot) {
+      return NextResponse.json(
+        { error: "You need to provide a screenshot" },
+        { status: 400 }
+      );
+    }
+  console.log("From createScreenshotDB:"+transactionsID + "  " + screenShot);
 
   let screenShotLink = await screenShot.map(async (item) => {
     const query = `insert into ScreenShot (TransactionID , ScreenShotLink) values ( ?, ?)`;
-    
-    const path = String(item.url).substring(0,String(item.url).indexOf('?'))
+
+    const path = String(item.url).substring(0, String(item.url).indexOf("?"));
     const values = [transactionsID, path];
 
     try {
       const result = await db(query, values);
-      console.log("result " + result)
+      console.log("result " + result);
       // console.log("Result: ", result);
       return result.insertId;
     } catch (error) {
       console.error("Error inserting ScreenShot:", error);
-      return 
+      return;
     }
-  })
-  return screenShotLink
+  });
+  return screenShotLink;
   // return screenShotLink;
 }
+
+
 export async function POST(req) {
   try {
     let json = await req.json();
@@ -91,14 +99,14 @@ export async function POST(req) {
       screenShot,
     } = json;
 
-    month = parseInt(month)
+    month = parseInt(month);
 
-    if (!screenShot) {
-      return NextResponse.json(
-        { error: "You need to provide a screenshot" },
-        { status: 400 }
-      );
-    }
+      if (!screenShot || screenShot.length === 0) {
+        return NextResponse.json(
+          { error: "You need to provide a screenshot" },
+          { status: 400 }
+        );
+      }
     const customerId = await InsertCustomer(
       customerName,
       customerEmail,
@@ -131,11 +139,11 @@ export async function POST(req) {
     const result = await db(query, values);
 
     const transactionId = result.insertId;
-    console.log("Transaction ID " + transactionId)
+    console.log("Transaction ID " + transactionId);
 
-    const screenShotIds = await createScreenShot(screenShot, transactionId)
+    const screenShotIds = await createScreenShot(screenShot, transactionId);
     // console.log("Screenshot ids are: " + screenShotIds)
-    // console.log("Result: ", result);
+     console.log("Transaction Result: ", result);
     return Response.json({ status: "success" });
   } catch (error) {
     console.log(error);
