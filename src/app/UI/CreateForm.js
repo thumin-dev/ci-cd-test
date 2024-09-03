@@ -29,29 +29,28 @@ const VisuallyHiddenInput = styled('input')({
 
 
 const CreateForm = ({userInfo, setloading}) => {
-    //LOAD THE WALLETS
-    const [wallets, setwallets] = useState()
-    const [currency, setcurrency] = useState();
-    const [supportRegion, setsupportRegion] = useState('Choose a Region');
-    const [supportRegions, setsupportRegions] = useState([]);
-    const [currencies, setCurrencies] = useState([])
-    const [files, setfiles] = useState([])
+  //LOAD THE WALLETS
+  const [wallets, setwallets] = useState();
+  const [currency, setcurrency] = useState();
+  const [supportRegion, setsupportRegion] = useState("Choose a Region");
+  const [supportRegions, setsupportRegions] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [files, setfiles] = useState([]);
 
-    const [amountValidate, setAmountValidate] = useState(false)
-    const [monthValidate, setmonthValidate] = useState(false)
-    const [manyChatValidate, setmanyChatValidate] = useState(false)
-    const [fileExist, setfileExist] = useState(true)
+  const [amountValidate, setAmountValidate] = useState(false);
+  const [monthValidate, setmonthValidate] = useState(false);
+  const [manyChatValidate, setmanyChatValidate] = useState(false);
+  const [fileExist, setfileExist] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
     const [uploadProgress, setUploadProgress] = useState("")
 
-    //Load the Wallet on Component Mount
+  //Load the Wallet on Component Mount
   useEffect(() => {
     if (currency) {
       fetch(`/api/loadWalletByCurrency?currencyCode=${currency}`)
-        .then((response) => {
-          return response.json(); // Ensure response.json() is returned
-        })
+        .then((response) => response.json()) // Simplified to directly return the JSON response
         .then((data) => {
-          console.log(":loadcurrency", currency)
+          console.log(":loadcurrency", currency);
           console.log("loadWalletByCurrencyResponse:", data);
           setwallets(data);
         })
@@ -59,65 +58,73 @@ const CreateForm = ({userInfo, setloading}) => {
           console.error("Error fetching wallets by currency code:", error);
         });
     }
-  }, [currency]);
+  }, [currency]); // Ensure that the dependency array is properly closed
 
-    useEffect(() => {
-      fetch("/api/loadSupportRegion")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("loadSupportRegionResponse:", data);
-          setsupportRegions(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching support regions:", error);
-        });
+  useEffect(() => {
+    fetch("/api/loadSupportRegion")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("loadSupportRegionResponse:", data);
+        setsupportRegions(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching support regions:", error);
+      });
+  }, []);
 
-      }, []);
-
-    // load currencies when component mount
-    useEffect(() => {
-      fetch("/api/getCurrencies")
+  // load currencies when component mount
+  useEffect(() => {
+    fetch("/api/getCurrencies")
       .then((response) => response.json())
       .then((data) => {
         setCurrencies(data);
-      })
-    }, [])
+      });
+  }, []);
+
+  const formFillingPerson = useContext(UserContext).username;
+  console.log(SUPPORTREGIONCONST);
+  const agentId = useContext(AgentContext).id;
+  console.log("AgentId from createform: " + agentId);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (files.length == 0) {
+      setfileExist(false);
+      return;
       
-      
-      
-      
-      const formFillingPerson = useContext(UserContext).username
-      console.log(SUPPORTREGIONCONST)
-     const agentId = useContext(AgentContext).id;
-     console.log("AgentId from createform: " + agentId)
-    
+    }
+    createFormSubmit(
+      event,
+      currency,
+      supportRegion,
+      files,
+      userInfo,
+      setloading,
+      formFillingPerson,
+      setAmountValidate,
+      setmonthValidate,
+      setmanyChatValidate,
+      fileExist,
+      setfileExist,
+      agentId
+    );
+
+    setAmountValidate(false);
+    setmonthValidate(false);
+    setmanyChatValidate(false);
+    setfileExist(false);
+    setfiles([]);
+
+
+    window.location.reload();
+  };
 
     return (
       <>
         <Typography component="h1" variant="h5">
           Create A New User
         </Typography>
-        <Box
-          component="form"
-          sx={{ mt: 1 }}
-          onSubmit={(event) =>
-            createFormSubmit(
-              event,
-              currency,
-              supportRegion,
-              files,
-              userInfo,
-              setloading,
-              formFillingPerson,
-              setAmountValidate,
-              setmonthValidate,
-              setmanyChatValidate,
-              fileExist,
-              setfileExist,
-              agentId
-            )
-          }
-        >
+        <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
           <TextField
             autoFocus
             margin="normal"
@@ -158,17 +165,16 @@ const CreateForm = ({userInfo, setloading}) => {
             onChange={(event) => setcurrency(event.target.value)}
             sx={{ mx: 2 }}
           >
-            {
-              currencies.map(item => {
-                return <FormControlLabel
+            {currencies.map((item) => {
+              return (
+                <FormControlLabel
                   value={item.CurrencyCode}
                   control={<Radio required={true} />}
                   label={item.CurrencyCode}
                   id={item.CurrencyID}
                 />
-              })
-            }
-
+              );
+            })}
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
@@ -191,12 +197,15 @@ const CreateForm = ({userInfo, setloading}) => {
           <Autocomplete
             disablePortal
             id="supportRegion"
-            onChange={(event, value) => {console.log(value);setsupportRegion(value)}}
+            onChange={(event, value) => {
+              console.log(value);
+              setsupportRegion(value);
+            }}
             required
             options={supportRegions}
             sx={{ width: 300, marginTop: 2 }}
             value={supportRegion}
-            defaultValue={()=>setsupportRegion('choose a region')}
+            defaultValue={() => setsupportRegion("choose a region")}
             getOptionLabel={(option) => option.Region || ""}
             renderInput={(params) => (
               <TextField {...params} label="Support Region" required />
@@ -246,6 +255,8 @@ const CreateForm = ({userInfo, setloading}) => {
                   return;
                 }
                 setfiles([...files, { href: url }]);
+                setfileExist(true);
+                console.log("setfileExist", fileExist);
               });
             }}
             onDragOver={(e) => {
@@ -253,9 +264,10 @@ const CreateForm = ({userInfo, setloading}) => {
             }}
           >
             <Dropzone
-              onDrop={(acceptedFiles) =>
-                filehandler(acceptedFiles, setfiles, files, setUploadProgress)
-              }
+              onDrop={(acceptedFiles) => {
+                filehandler(acceptedFiles, setfiles, files);
+                setfileExist(true);
+              }}
               accept={["text/*, img/*"]}
             >
               {({ getRootProps, getInputProps }) => (
@@ -294,13 +306,22 @@ const CreateForm = ({userInfo, setloading}) => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick={() => {
+              e.preventDefault();
+              setSubmitted(true);
+            }}
           >
             Submit
           </Button>
+          {submitted && (
+            <Typography variant="h6" sx={{ mt: 2, color: "green" }}>
+              Submitted
+            </Typography>
+          )}
         </Box>
       </>
     );
-}
 
+  }
 export default CreateForm
 
