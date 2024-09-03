@@ -2,9 +2,10 @@
 //input is setfile functions and files
 import { uploadData } from 'aws-amplify/storage';
 import { getUrl } from 'aws-amplify/storage';
+import { set } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
-export default async function filehandler(files, setFile, filesState) {
+export default async function filehandler(files, setFile, filesState, setUploadProgress) {
     let arrayFiles= [];
     console.log(files)
     // get the submitted files
@@ -45,11 +46,14 @@ export default async function filehandler(files, setFile, filesState) {
               options: {
                 onProgress: ({ transferredBytes, totalBytes }) => {
                   if (totalBytes) {
+                    const progress =
+                      Math.round(transferredBytes / totalBytes) * 100;
                     console.log(
                       `Upload progress ${
-                        Math.round(transferredBytes / totalBytes) * 100
+                       progress
                       } %`
                     );
+                    setUploadProgress("Uploading .....");
                   }
                 }
               }
@@ -67,5 +71,6 @@ export default async function filehandler(files, setFile, filesState) {
     }
 
     setFile([...filesState,...url])
+    setUploadProgress("Upload Complete!\nDrag and drop more files to upload")
 
 }
