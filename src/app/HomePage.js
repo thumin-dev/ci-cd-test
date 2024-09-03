@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
+
 import {
   Autocomplete,
   CircularProgress,
@@ -51,11 +52,13 @@ function HomePage({ signOut, user }) {
 
   //getting current AgentId
   const checkAgentStatus = async () => {
+
     // check if there is already an id
 
     const agentId = await getAuthCurrentUser();
     //  console.log("AgentId:", agentId);
     const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
+
     const data = await response.json();
     console.log("Response: ", data.code);
 
