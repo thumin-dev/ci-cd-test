@@ -3,14 +3,19 @@ import db from "../../utilites/db";
 
 async function checkExistedAgent(awsId) {
   const query = `
- SELECT (
-        SELECT 1
-        FROM Agent
-        WHERE AWSID =?
-      ) AS AgentExists,
-      AgentID, AWSID, UserRoleID
+ SELECT 
+  (
+    SELECT 1
     FROM Agent
-    WHERE AWSID = ?;
+    WHERE AWSID = ?
+  ) AS AgentExists,
+  a.AgentID, 
+  a.AWSID, 
+  a.UserRoleID, 
+  ur.UserRole
+FROM Agent a
+JOIN UserRole ur ON a.UserRoleID = ur.UserRoleID
+WHERE a.AWSID = ?;
   `;
 
   const values = [awsId,awsId];
