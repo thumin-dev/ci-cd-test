@@ -32,6 +32,7 @@ import { createApp, updateApp, deleteApp } from "../graphql/mutations";
 import { listApps } from "../graphql/queries";
 import * as subscriptions from "../graphql/subscriptions";
 import getAuthCurrentUser from "./utilites/getAuthCurrentUser";
+import getScreenShotUrl from "./utilites/getScreenShotUrl";
 
 import OpenCloseForm from "./UI/OpenCloseForm.js";
 import PaymentTeam from "./UI/PaymentTeam/PaymentTeam"
@@ -154,6 +155,8 @@ function HomePage({ signOut, user }) {
   //       error: (error) => console.warn(error),
   //     });
   }, []);
+
+
 
   //Get user role
   // React.useEffect(
