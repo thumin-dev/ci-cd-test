@@ -11,6 +11,8 @@ async function createAgent(awsId,userRole) {
   `;
 
   const values = [awsId,userRole];
+  console.log("This is the value that you wanted: ")
+  console.log(values)
   try {
     const result = await db(query, values);
     console.log("Agent created:", result);
