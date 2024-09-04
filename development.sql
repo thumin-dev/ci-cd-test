@@ -107,7 +107,9 @@ VALUES
 INSERT INTO UserRole (UserRoleID, UserRole)
 VALUES 
 (1, 'Support Agent'),
-(2, 'Administrator');
+(2, 'Administrator'),
+(3, 'Payment Processors')
+;
 
 -- Insert data into Agent Table
 INSERT INTO Agent (AgentID, AWSID, UserRoleID)
