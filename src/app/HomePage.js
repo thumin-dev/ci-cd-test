@@ -48,8 +48,8 @@ function HomePage({ signOut, user }) {
   const [status, setStatus] = React.useState("loading");
   //User Role = admin | user
   const [userRole, setUserRole] = React.useState("admin");
-  // const [agentId, setAgentId] = React.useState(null);
-  let agentId = null;
+  const [agentId, setAgentId] = React.useState(null);
+  // let agentId = null;
   const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
   const currentUser = React.useRef(null);
 
@@ -59,15 +59,17 @@ function HomePage({ signOut, user }) {
     // check if there is already an id
     currentUser.current = await getAuthCurrentUser();
 
-    agentId = currentUser.current.userId;
+    let tmp = currentUser.current.userId;
+    // setAgentId(currentUser.current.userId)
     //  console.log("AgentId:", agentId);
-    const response = await fetch(`/api/checkAgent?awsId=${agentId}`);
+    const response = await fetch(`/api/checkAgent?awsId=${tmp}`);
 
     const data = await response.json();
     console.log("Response: ", data.code);
 
     if (data.code === 1) {
-      agentId = ({ id: data.user.AgentID });
+      // agentId = ({ id: data.user.AgentID });
+      setAgentId({ id: data.user.AgentID });
       // console.log('success', agentId);
     } else if (data.code === 0 && !isCreatingAgent) {
       // setIsCreatingAgent(true); // set the createAgent flag
@@ -77,10 +79,11 @@ function HomePage({ signOut, user }) {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ awsId: agentId }),
+            body: JSON.stringify({ awsId: tmp }),
           });
           response = await response.json();
-          agentId = ({ id: response.id });
+          // agentId = ({ id: response.id });
+          setAgentId({ id: response.id })
           setUserRole("user")
         } catch (error) {
           console.error("Error creating agent:", error);

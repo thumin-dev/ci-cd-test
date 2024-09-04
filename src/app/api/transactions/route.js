@@ -16,20 +16,20 @@ async function PaymentCheckQuery(status) {
     ag.AWSID
 FROM 
     Transactions t
-JOIN 
+LEFT JOIN 
     Customer c ON t.CustomerID = c.CustomerID
-JOIN 
+LEFT JOIN 
     SupportRegion sr ON t.SupportRegionID = sr.SupportRegionID
-JOIN 
+LEFT JOIN 
     ScreenShot ss ON t.TransactionID = ss.TransactionID
-JOIN 
+LEFT JOIN 
     Wallet w ON t.WalletID = w.WalletID
-JOIN 
+LEFT JOIN 
     Currency cu ON w.CurrencyID = cu.CurrencyID
-JOIN
+LEFT JOIN
     Agent ag ON t.AgentID = ag.AgentID
 WHERE 
-    t.PaymentCheck = ${status}
+    t.PaymentCheck = ${status} OR t.PaymentCheck IS NULL
 GROUP BY 
     t.TransactionID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode, ag.AWSID;
     
@@ -46,7 +46,16 @@ GROUP BY
       if(result.length > 0)
       {
         result.forEach(trans => {
-          trans['ScreenShots'] = trans['ScreenShots'].split(';')
+          if(trans['ScreenShots'] == null)
+          {
+            trans['ScreenShots'] = []
+
+          }
+          else
+          {
+            trans['ScreenShots'] = trans['ScreenShots'].split(';')
+
+          }
         })
       }
     }

@@ -19,18 +19,24 @@ const PaymentTeam = () => {
     function createData(transactionId,currency, amount, wallet ,customername,  formfillperson, month, screenshot, manychatid, status, email ) {
         return {transactionId ,currency, amount, wallet ,customername,  formfillperson, month, screenshot, manychatid, status, email };
       }
+
+      const [data, setData] = React.useState([])
       
-      const rows = [
+    //   const rows = [
 
+    //     createData(1, 'USD', 1000, 'Main Wallet', 'John Doe', 'Alice Smith', 1, ['screenshot1.png'], '12345', 'Confirmed', 'john.doe@example.com', 'Confirm'),
+    //     createData(2, 'EUR', 850, 'Savings Wallet', 'Jane Roe', 'Bob Johnson', 2, ['screenshot1.png', 'screenshot2.png'], '67890', 'Pending', 'jane.roe@example.com', 'Confirm'),
+    //     createData(3, 'GBP', 500, 'Travel Wallet', 'Michael Smith', 'Chris Lee', 3, ['screenshot1.png', 'screenshot2.png'], '13579', 'Confirmed', 'michael.smith@example.com', 'Confirm'),
+    //     createData(4, 'JPY', 120000, 'Investment Wallet', 'Emily Johnson', 'Sarah Clark', 2, ['screenshot1.png', 'screenshot2.png'], '24680', 'Failed', 'emily.johnson@example.com', 'Retry'),
+    //     createData(5, 'CAD', 750, 'Business Wallet', 'Daniel Brown', 'Tom Harris', 1, ['screenshot1.png', 'screenshot2.png'], '98765', 'Confirmed', 'daniel.brown@example.com', 'Confirm'),
+    //   ];
 
+      const rows = data.map(row => {
 
-        createData(1, 'USD', 1000, 'Main Wallet', 'John Doe', 'Alice Smith', 1, ['screenshot1.png'], '12345', 'Confirmed', 'john.doe@example.com', 'Confirm'),
-        createData(2, 'EUR', 850, 'Savings Wallet', 'Jane Roe', 'Bob Johnson', 2, ['screenshot1.png', 'screenshot2.png'], '67890', 'Pending', 'jane.roe@example.com', 'Confirm'),
-        createData(3, 'GBP', 500, 'Travel Wallet', 'Michael Smith', 'Chris Lee', 3, ['screenshot1.png', 'screenshot2.png'], '13579', 'Confirmed', 'michael.smith@example.com', 'Confirm'),
-        createData(4, 'JPY', 120000, 'Investment Wallet', 'Emily Johnson', 'Sarah Clark', 2, ['screenshot1.png', 'screenshot2.png'], '24680', 'Failed', 'emily.johnson@example.com', 'Retry'),
-        createData(5, 'CAD', 750, 'Business Wallet', 'Daniel Brown', 'Tom Harris', 1, ['screenshot1.png', 'screenshot2.png'], '98765', 'Confirmed', 'daniel.brown@example.com', 'Confirm'),
-      ];
+          return  createData(row['TransactionID'], row['CurrencyCode'], row['Amount'],row['WalletName'], row['Name'], row['AWSID'], row['Month'], row['ScreenShots'], row['ManyChatID'], "Pending", row['Email'], 'Confirm')
+      })
 
+     console.log(data)
       const handleScreenShotClick = async() => {
         // generate a screenshoturl 
 
@@ -53,6 +59,20 @@ const PaymentTeam = () => {
         // set payment check to be 1 
         setOpen(false);
       };
+
+      // get the data
+      React.useEffect(() => {
+
+        const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+        };
+
+        fetch("/api/transactions?paymentCheckStatus=0", requestOptions)
+        .then((response) => response.json())
+        .then((result) => setData(result))
+        .catch((error) => console.error(error));
+      }, [])
     return (
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
