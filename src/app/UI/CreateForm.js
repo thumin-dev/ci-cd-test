@@ -88,8 +88,8 @@ const CreateForm = ({userInfo, setloading}) => {
       
       const formFillingPerson = useContext(UserContext).username
       console.log(SUPPORTREGIONCONST)
-    //  const agentId = useContext(AgentContext).id;
-     // console.log("AgentId from createform: " + agentId)
+     const agentId = useContext(AgentContext).id;
+     console.log("AgentId from createform: " + agentId)
     
 
     return (

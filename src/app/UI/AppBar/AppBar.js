@@ -35,10 +35,21 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   
 
   //Check if the user is Admin or not
-  const navItems =
+  let navItems =
     userRole !== "admin"
-      ? ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း"]
-      : ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်"];
+      ? ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
+      : ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"];
+    
+    if(userRole == "admin")
+    {
+      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"]
+    }else if(userRole == "Support Agent")
+    {
+      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း"]
+    }
+    else{
+      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
+    }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -82,8 +93,11 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
     } else if (page == "ဖောင်အဖွင့်အပိတ်") {
       console.log(page);
       setPage(3);
-    } else {
+    } else if (page == "သက်တမ်းတိုးခြင်း") {
       setPage(2);
+    } else if (page == "ငွေစစ်ဆေးခြင်း")
+    {
+      setPage(4);
     }
   };
 
