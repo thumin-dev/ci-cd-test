@@ -9,7 +9,7 @@ async function PaymentCheckQuery(status) {
     c.Email,                     
     t.Amount,           
     t.Month,                       
-    ss.ScreenShotLink,
+    GROUP_CONCAT(ss.ScreenShotLink SEPARATOR ';') AS ScreenShots,  -- Concatenates multiple screenshots
     c.ManyChatID,
     w.WalletName,
     cu.CurrencyCode,
@@ -28,8 +28,10 @@ JOIN
     Currency cu ON w.CurrencyID = cu.CurrencyID
 JOIN
     Agent ag ON t.AgentID = ag.AgentID
-
-WHERE t.PaymentCheck= ${status};
+WHERE 
+    t.PaymentCheck = ${status}
+GROUP BY 
+    t.TransactionID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode, ag.AWSID;
     
 
 `;
@@ -37,6 +39,17 @@ WHERE t.PaymentCheck= ${status};
   try {
     const result = await db(query,[status]);
     // console.log("Result: ", result);
+
+    // turn every screenshot url into an array
+    if(Array.isArray(result))
+    {
+      if(result.length > 0)
+      {
+        result.forEach(trans => {
+          trans['ScreenShots'] = trans['ScreenShots'].split(';')
+        })
+      }
+    }
     return result;
   } catch (error) {
     console.error("Error getting Dashboard Data:", error);
@@ -52,7 +65,7 @@ export async function GET(req) {
     
     const url = new URL(req.url);
     const status = url.searchParams.get("paymentCheckStatus");
-    const data = await PaymentCheck(status);
+    const data = await PaymentCheckQuery(status);
 
     return NextResponse.json(data);
   } catch (error) {
