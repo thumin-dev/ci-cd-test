@@ -5,6 +5,7 @@ async function PaymentCheckQuery(status) {
   /* amount, month, screenshot, formfill person
    manychat id, wallet, currency, status, customer name and email. */
   const query = `SELECT 
+    t.TransactionID,
     c.Name,           
     c.Email,                     
     t.Amount,           
