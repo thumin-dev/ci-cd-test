@@ -48,15 +48,13 @@ export default async function filehandler(files, setFile, filesState, setUploadP
                   if (totalBytes) {
                     const progress =
                       Math.round(transferredBytes / totalBytes) * 100;
-                    console.log(
-                      `Upload progress ${
-                       progress
-                      } %`
-                    );
+                    console.log(`Upload progress ${progress} %`);
                     setUploadProgress("Uploading .....");
                   }
-                }
-              }
+                },
+                contentType: "image/png",
+                contentDisposition: "inline",
+              },
             }).result;
             
             let fileName = result.key;
