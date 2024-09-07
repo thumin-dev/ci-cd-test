@@ -14,7 +14,7 @@ export default async function getAuthCurrentUser() {
     const userId = session.tokens.idToken.payload.sub;
 
     // console.log("The email:", email);
-    //console.log("The userRole:", userRole[0]);
+   // console.log("The userRole:", userRole[0]);
     // console.log("The session:", JSON.stringify(session, null, 2));
     // console.log("The details:", JSON.stringify(email_verified, null, 2));
     //console.log(`The userId: ${userId}`);

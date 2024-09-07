@@ -265,7 +265,7 @@ const CreateForm = ({userInfo, setloading}) => {
           >
             <Dropzone
               onDrop={(acceptedFiles) => {
-                filehandler(acceptedFiles, setfiles, files);
+                filehandler(acceptedFiles, setfiles, files,setUploadProgress);
                 setfileExist(true);
               }}
               accept={["text/*, img/*"]}
