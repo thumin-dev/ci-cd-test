@@ -3,17 +3,25 @@ import db from "../../utilites/db";
 
 async function checkExistedAgent(awsId) {
   const query = `
-    SELECT EXISTS (
-      SELECT 1
-      FROM Agent
-      WHERE AWSID = ?
-    ) AS AgentExists;
+ SELECT 
+  (
+    SELECT 1
+    FROM Agent
+    WHERE AWSID = ?
+  ) AS AgentExists,
+  a.AgentID, 
+  a.AWSID, 
+  a.UserRoleID, 
+  ur.UserRole
+FROM Agent a
+JOIN UserRole ur ON a.UserRoleID = ur.UserRoleID
+WHERE a.AWSID = ?;
   `;
 
-  const values = [awsId];
+  const values = [awsId,awsId];
   try {
     const result = await db(query, values);
-    console.log("Agent exists:", result);
+   // console.log("Agent exists:", result);
     return result; 
   } catch (error) {
     console.error("[DB] Error checking agentDB:", error);
@@ -36,7 +44,7 @@ export async function GET(req) {
     }
 
     const data = await checkExistedAgent(awsId);
-    //console.log("Data:", data); // Log the entire data array
+    console.log("Data from CheckAgent:", data); // Log the entire data array
 
     if (data.length === 0 || data[0].AgentExists === 0) {
       return NextResponse.json(
@@ -44,7 +52,7 @@ export async function GET(req) {
         { status: 404 }
       );
     }
-    return NextResponse.json({ message: "User exists", code: 1 });
+    return NextResponse.json({ message: "User exists", code: 1, user: data[0] });
   } catch (error) {
     console.error("[Error] Cannot load existing agentUser", error);
     return NextResponse.json(

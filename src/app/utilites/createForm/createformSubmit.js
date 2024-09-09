@@ -1,80 +1,79 @@
-import { useSearchParams } from 'next/navigation'
+// Desc: This file contains the function that is used to submit the form data to the database
 
-export default async function createFormSubmit(event, currency, supportRegion ,files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate,fileExist, setfileExist, agentId) {
-  
+export default async function createFormSubmit(event, currency, supportRegion ,files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate,fileExist, setfileExist,agentId) {
+
   event.preventDefault();
-    setAmountValidate(false);
-    setmonthValidate(false)
-    setmanyChatValidate(false)
-    setfileExist(true)
-    // setloading(true)
-    
-    const data = new FormData(event.currentTarget);
-    const amount = data.get("amount")
-    const month = data.get("month");
-    const manychat = data.get("manyChat")
-    const wallet = JSON.parse(data.get("wallets"))
-    const notes = data.get("notes")
-    const contactLink = data.get("contactLink")
-    //validate month and amount
-    if(!/^\d+$/g.test(amount))
-    {
-      setAmountValidate(true);
-      setloading(false)
-      return;
-    }
-    if(!/^\d+$/g.test(month))
-    {
-      setmonthValidate(true);
-      setloading(false)
-      return;
-    }
-    if(!/^\d+$/g.test(manychat))
-    {
-      setmanyChatValidate(true);
-      setloading(false)
-      return;
-    }
+  setAmountValidate(false);
+  setmonthValidate(false);
+  setmanyChatValidate(false);
+  console.log("from the createFormSubmit", fileExist);
+  // setloading(true)
+
+  const data = new FormData(event.currentTarget);
+  const amount = data.get("amount");
+  const month = data.get("month");
+  const manychat = data.get("manyChat");
+  const wallet = JSON.parse(data.get("wallets"));
+  const notes = data.get("notes");
+  const contactLink = data.get("contactLink");
+  //validate month and amount
+  if (!/^\d+$/g.test(amount)) {
+    setAmountValidate(true);
+    setloading(false);
+    return;
+  }
+  if (!/^\d+$/g.test(month)) {
+    setmonthValidate(true);
+    setloading(false);
+    return;
+  }
+  if (!/^\d+$/g.test(manychat)) {
+    setmanyChatValidate(true);
+    setloading(false);
+    return;
+  }
 
     //check if file exist
-    // if(files.length == 0)
-    // {
-    //   setfileExist(false);
-    //   setloading(false)
-    //   return;
-    // }
+    if(files.length == 0)
+    {
+      setfileExist(false);
+      setloading(false)
+      return;
+    }
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    console.log("agentID is " + agentId)
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  console.log("agentID is " + agentId);
 
-    // // submitpaymentinformation
-    console.log("UserInfo",userInfo);
-    let raw = JSON.stringify({
-      "customerName": userInfo.name, 
-      "customerEmail": userInfo.email,
-      "agentId": agentId,
-      "supportRegionId": supportRegion['SupportRegionID'],
-      "manyChatId": manychat,
-      "contactLink": contactLink,
-      "amount": amount,
-      "month": month,
-      "note": notes,
-      "walletId": wallet,
-      "screenShot": files.map((url) => {return {url: url.href}})
-    })
-    console.log(JSON.parse(raw) )
-    let requestOptions = {
-    method: 'POST',
+  // // submitpaymentinformation
+  console.log("UserInfo", userInfo);
+  let raw = JSON.stringify({
+    customerName: userInfo.name,
+    customerEmail: userInfo.email,
+    agentId: agentId,
+    supportRegionId: supportRegion["SupportRegionID"],
+    manyChatId: manychat,
+    contactLink: contactLink,
+    amount: amount,
+    month: month,
+    note: notes,
+    walletId: wallet,
+    screenShot: files.map((url) => {
+      return { url: url.href };
+    }),
+  });
+  console.log(JSON.parse(raw));
+  let requestOptions = {
+    method: "POST",
     headers: myHeaders,
     body: raw,
     redirect: 'follow'
     };
     let answ = await fetch('/api/submitPayment/', requestOptions)
-    let {status} =  await answ.json()
+ 
     let res = await answ.json()
     console.log("My answer id: " + res)
-    // location.reload()
+     location.reload()
   }
 // var raw = JSON.stringify({
 //   "records": [
