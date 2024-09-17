@@ -21,7 +21,7 @@ export default async function db(query, value)
         console.log("database connection error");
       }
 
-      let [result, field] = await connection.query(query, value);
+      let [result] = await connection.query(query, value);
         console.log("[DB] query success");
       return result;
     } catch (error) {
