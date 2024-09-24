@@ -44,7 +44,7 @@ export async function GET(req) {
     }
 
     const data = await checkExistedAgent(awsId);
-    console.log("Data from CheckAgent:", data); // Log the entire data array
+   // console.log("Data from CheckAgent:", data); // Log the entire data array
 
     if (data.length === 0 || data[0].AgentExists === 0) {
       return NextResponse.json(
