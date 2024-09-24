@@ -1,7 +1,6 @@
 // Desc: This file contains the function that is used to submit the form data to the database
 
 export default async function createFormSubmit(event, currency, supportRegion ,files, userInfo, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate,fileExist, setfileExist,agentId) {
-
   event.preventDefault();
   setAmountValidate(false);
   setmonthValidate(false);
@@ -33,20 +32,20 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     return;
   }
 
-    //check if file exist
-    if(files.length == 0)
-    {
-      setfileExist(false);
-      setloading(false)
-      return;
-    }
+  //check if file exist
+  if (files.length == 0) {
+    setfileExist(false);
+    setloading(false);
+    return;
+  }
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   console.log("agentID is " + agentId);
+  console.log("UserInfo", userInfo);
 
   // // submitpaymentinformation
-  console.log("UserInfo", userInfo);
+
   let raw = JSON.stringify({
     customerName: userInfo.name,
     customerEmail: userInfo.email,
@@ -62,19 +61,21 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
       return { url: url.href };
     }),
   });
-  console.log(JSON.parse(raw));
+
+  console.log("RawData",JSON.parse(raw));
+
   let requestOptions = {
     method: "POST",
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
-    };
-    let answ = await fetch('/api/submitPayment/', requestOptions)
- 
-    let res = await answ.json()
-    console.log("My answer id: " + res)
-     location.reload()
-  }
+    redirect: "follow",
+  };
+  let answ = await fetch("/api/submitPayment/", requestOptions);
+
+  let res = await answ.json();
+  console.log("My answer id: " + res);
+  location.reload();
+}
 // var raw = JSON.stringify({
 //   "records": [
 //     {
