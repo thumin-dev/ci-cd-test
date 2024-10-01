@@ -107,18 +107,28 @@ export async function POST(req) {
           { status: 400 }
         );
       }
-    const customerId = await InsertCustomer(
-      customerName,
-      customerEmail,
-      agentId,
-      manyChatId,
-      contactLink,
-      month
-    );
-    console.log("customerId: ", customerId);
+      if (contactLink.trim() === "") {
+         contactLink = null;
+        
+      }
+     
+         const customerId = await InsertCustomer(
+           customerName,
+           customerEmail,
+           agentId,
+           manyChatId,
+           contactLink,
+           month
+         );
+         console.log("customerId: ", customerId);
+      
+   
 
-    const noteId = await createNote(note, agentId);
-    console.log("noteId: ", noteId);
+    let noteId = null;
+    if (note && note !== "")
+   { const noteId = await createNote(note, agentId);
+     console.log("noteId: ", noteId);
+  }
 
     const query = `
      INSERT INTO Transactions   
