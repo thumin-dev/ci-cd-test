@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 import calculateExpireDate from "../../utilites/calculateExpireDate";
 
+//Insert Into Customer Table
 async function InsertCustomer(
   customerName,
   customerEmail,
@@ -35,6 +36,8 @@ async function InsertCustomer(
     );
   }
 }
+
+//Insert Into Note Table
 async function createNote(note, agentID) {
   const query = `insert into Note (Note, Date, AgentID) values ( ?, ?, ?)`;
   const values = [note, new Date(), agentID];
@@ -51,6 +54,7 @@ async function createNote(note, agentID) {
   }
 }
 
+//Insert Into ScreenShot Table
 async function createScreenShot(screenShot, transactionsID) {
     if (!screenShot) {
       return NextResponse.json(
@@ -77,7 +81,21 @@ async function createScreenShot(screenShot, transactionsID) {
     }
   });
   return screenShotLink;
-  // return screenShotLink;
+
+}
+
+//Insert Into TransactionAgent Table
+async function InsertTransactionLog(transactionId, agentId) {
+  const query = `INSERT INTO TransactionAgent(TransactionID, AgentID, LogDate) VALUES (?, ?, ?)`;
+  const values = [transactionId, agentId, new Date()];
+  try {
+    const result = await db(query, values);
+    console.log("result " + result);
+  return result.insertId;
+    } catch (error) {
+      console.error("Error inserting log", error);
+      return;
+    }
 }
 
 
@@ -130,6 +148,7 @@ export async function POST(req) {
      console.log("noteId: ", noteId);
   }
 
+//insert into transaction table
     const query = `
      INSERT INTO Transactions   
     (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month) 
@@ -151,6 +170,7 @@ export async function POST(req) {
     console.log("Transaction ID " + transactionId);
 
     const screenShotIds = await createScreenShot(screenShot, transactionId);
+    const logId = await InsertTransactionLog(transactionId, agentId);
     // console.log("Screenshot ids are: " + screenShotIds)
      console.log("Transaction Result: ", result);
     return Response.json({ status: "success" });
