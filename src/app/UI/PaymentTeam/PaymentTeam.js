@@ -100,8 +100,8 @@ const PaymentTeam = () => {
   };
 
   const handleAgree = (row) => {
-    console.log("agree");
-    console.log(row);
+   // console.log("agree");
+   // console.log(row);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -109,6 +109,7 @@ const PaymentTeam = () => {
       denied: 0,
       transactionId: row.transactionId,
     });
+    
 
     const requestOptions = {
       method: "POST",
@@ -117,7 +118,15 @@ const PaymentTeam = () => {
       redirect: "follow",
     };
 
-    fetch("api/paymentConfirmOrDeined", requestOptions);
+    fetch("api/paymentConfirmOrDeined", requestOptions)
+    .then((response) => {if(response.ok) {
+      console.log("Payment Confirmed");
+      setData(
+        (prevData) =>
+          prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+      );
+    }
+    });
     setConfirmOpen(false);
   };
 
@@ -139,7 +148,15 @@ const PaymentTeam = () => {
       redirect: "follow",
     };
 
-    fetch("api/paymentConfirmOrDeined", requestOptions);
+    fetch("api/paymentConfirmOrDeined", requestOptions).then((response) => {
+      if (response.ok) {
+        console.log("Payment Denied");
+       setData(
+         (prevData) =>
+           prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+       );
+      }
+    });
     setDeinedOpen(false);
   };
 
