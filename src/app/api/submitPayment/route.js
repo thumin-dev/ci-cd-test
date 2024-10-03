@@ -132,14 +132,13 @@ export async function POST(req) {
 
     const query = `
      INSERT INTO Transactions   
-    (CustomerID, Amount, AgentID, SupportRegionID, WalletID, TransactionDate, NoteID, Month) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
 
     `;
     const values = [
       customerId,
       amount,
-      agentId,
       supportRegionId,
       walletId,
       new Date(),
