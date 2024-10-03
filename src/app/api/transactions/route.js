@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 
+
+
 async function PaymentCheckQuery(status) {
   /* amount, month, screenshot, formfill person
    manychat id, wallet, currency, status, customer name and email. */
@@ -14,7 +16,7 @@ async function PaymentCheckQuery(status) {
     c.ManyChatID,
     w.WalletName,
     cu.CurrencyCode,
-    ag.AWSID
+    a.AWSID 
 FROM 
     Transactions t
 LEFT JOIN 
@@ -27,12 +29,15 @@ LEFT JOIN
     Wallet w ON t.WalletID = w.WalletID
 LEFT JOIN 
     Currency cu ON w.CurrencyID = cu.CurrencyID
-LEFT JOIN
-    Agent ag ON t.AgentID = ag.AgentID
+LEFT JOIN 
+    TransactionAgent ta ON t.TransactionID = ta.TransactionID
+LEFT JOIN 
+    Agent a ON ta.AgentID = a.AgentID 
+
 WHERE 
     t.PaymentCheck = ${status} OR t.PaymentCheck IS NULL
 GROUP BY 
-    t.TransactionID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode, ag.AWSID;
+    t.TransactionID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode,   a.AWSID ;
     
 
 `;
