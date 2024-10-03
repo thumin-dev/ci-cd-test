@@ -56,15 +56,13 @@ async function createNote(note, agentID) {
 
 //Insert Into ScreenShot Table
 async function createScreenShot(screenShot, transactionsID) {
-    if (!screenShot) {
-      return NextResponse.json(
-        { error: "You need to provide a screenshot" },
-        { status: 400 }
-      );
+    if (!screenShot || screenShot.length === 0) {
+      throw new Error("You need to provide a screenshot");
     }
-  console.log("From createScreenshotDB:"+transactionsID + "  " + screenShot);
 
-  let screenShotLink = await screenShot.map(async (item) => {
+  console.log("From createScreenshotDB: with TransactionID"+transactionsID + " and  screenshot" + screenShot);
+
+  let screenShotLink = screenShot.map(async (item) => {
     const query = `insert into ScreenShot (TransactionID , ScreenShotLink) values ( ?, ?)`;
 
     const path = String(item.url).substring(0, String(item.url).indexOf("?"));
@@ -72,12 +70,11 @@ async function createScreenShot(screenShot, transactionsID) {
 
     try {
       const result = await db(query, values);
-      console.log("result " + result);
-      // console.log("Result: ", result);
+   
       return result.insertId;
     } catch (error) {
-      console.error("Error inserting ScreenShot:", error);
-      return;
+      console.error("Error inserting screenshot:", error);
+      throw new Error("Failed to insert screenshot");
     }
   });
   return screenShotLink;
@@ -96,11 +93,21 @@ async function InsertTransactionLog(transactionId, agentId) {
       console.error("Error inserting log", error);
       return;
     }
+
 }
 
 
 export async function POST(req) {
   try {
+   console.log("RequestBody:", req.body);
+
+   if (!req.body) {
+    console.log("RequestBody:",req.body);
+     return NextResponse.json(
+       { error: "Request body is empty" },
+       { status: 400 }
+     );
+   }
     let json = await req.json();
 
     let {
@@ -125,6 +132,7 @@ export async function POST(req) {
           { status: 400 }
         );
       }
+
       if (contactLink.trim() === "") {
          contactLink = null;
         
@@ -148,6 +156,19 @@ export async function POST(req) {
      console.log("noteId: ", noteId);
   }
 
+    const customerId = await InsertCustomer(
+      customerName,
+      customerEmail,
+      agentId,
+      manyChatId,
+      contactLink,
+      month
+    );
+   // console.log("customerId: ", customerId);
+
+    const noteId = await createNote(note, agentId);
+    //console.log("noteId: ", noteId);
+
 //insert into transaction table
     const query = `
      INSERT INTO Transactions   
@@ -167,14 +188,22 @@ export async function POST(req) {
     const result = await db(query, values);
 
     const transactionId = result.insertId;
-    console.log("Transaction ID " + transactionId);
+    //console.log("Transaction ID " + transactionId);
 
     const screenShotIds = await createScreenShot(screenShot, transactionId);
     const logId = await InsertTransactionLog(transactionId, agentId);
     // console.log("Screenshot ids are: " + screenShotIds)
      console.log("Transaction Result: ", result);
-    return Response.json({ status: "success" });
+    return NextResponse.json({
+      status: "success",
+      transactionId,
+      screenShotIds,
+    });
   } catch (error) {
     console.log(error);
+    return NextResponse.json(
+      { error: error.message || "Something went wrong" },
+      { status: 500 }
+    );
   }
 }

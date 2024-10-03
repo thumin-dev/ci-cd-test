@@ -116,7 +116,7 @@ const CreateForm = ({userInfo, setloading}) => {
     setfiles([]);
 
 
-    window.location.reload();
+   // window.location.reload();
   };
 
     return (
