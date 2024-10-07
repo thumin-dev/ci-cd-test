@@ -109,6 +109,7 @@ export async function POST(req) {
      );
    }
     let json = await req.json();
+    console.log(json)
 
     let {
       customerName,
