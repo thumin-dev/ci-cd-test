@@ -29,7 +29,7 @@ INSERT INTO Wallet (CurrencyId, WalletName) VALUES
 
 -- Create SupportRegion table and insert demo data
 CREATE TABLE SupportRegion (
-    SupportRegionId INT AUTO_INCREMENT PRIMARY KEY,
+    SupportRegionID INT AUTO_INCREMENT PRIMARY KEY,
     Region VARCHAR(255)
 );
 
