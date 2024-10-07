@@ -44,7 +44,6 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
   console.log("agentID is " + agentId);
   console.log("UserInfo", userInfo);
 
-  // // submitpaymentinformation
 
   let raw = JSON.stringify({
     customerName: userInfo.name,
@@ -62,7 +61,8 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
     }),
   });
 
-  console.log("RawData",JSON.parse(raw));
+  console.log("RawData is ");
+  console.log(raw)
 
   let requestOptions = {
     method: "POST",
