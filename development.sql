@@ -110,7 +110,7 @@ CREATE TABLE Transactions (
     Month INT,
     HopeFuelID INT,
     FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerId),
-    FOREIGN KEY (SupportRegionID) REFERENCES SupportRegion(SupportRegionId),
+    FOREIGN KEY (SupportRegionID) REFERENCES SupportRegion(SupportRegionID),
     FOREIGN KEY (WalletID) REFERENCES Wallet(WalletId),
     FOREIGN KEY (NoteID) REFERENCES Note(NoteID)
 );
