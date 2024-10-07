@@ -100,8 +100,8 @@ const PaymentTeam = () => {
   };
 
   const handleAgree = (row) => {
-    console.log("agree");
-    console.log(row);
+   // console.log("agree");
+   // console.log(row);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -109,6 +109,7 @@ const PaymentTeam = () => {
       denied: 0,
       transactionId: row.transactionId,
     });
+    
 
     const requestOptions = {
       method: "POST",
@@ -117,7 +118,15 @@ const PaymentTeam = () => {
       redirect: "follow",
     };
 
-    fetch("api/paymentConfirmOrDeined", requestOptions);
+    fetch("api/paymentConfirmOrDeined", requestOptions)
+    .then((response) => {if(response.ok) {
+      console.log("Payment Confirmed");
+      setData(
+        (prevData) =>
+          prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+      );
+    }
+    });
     setConfirmOpen(false);
   };
 
@@ -139,7 +148,15 @@ const PaymentTeam = () => {
       redirect: "follow",
     };
 
-    fetch("api/paymentConfirmOrDeined", requestOptions);
+    fetch("api/paymentConfirmOrDeined", requestOptions).then((response) => {
+      if (response.ok) {
+        console.log("Payment Denied");
+       setData(
+         (prevData) =>
+           prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+       );
+      }
+    });
     setDeinedOpen(false);
   };
 
@@ -151,7 +168,9 @@ const PaymentTeam = () => {
 
     fetch("/api/transactions?paymentCheckStatus=0", requestOptions)
       .then((response) => response.json())
-      .then((result) => setData(result))
+      .then((result) => {
+        console.log(result);
+        setData(result)})
       .catch((error) => console.error(error));
   }, []);
 
@@ -175,53 +194,64 @@ const PaymentTeam = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.transactionId}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.transactionId}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {row.currency}
-              </TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
-              <TableCell align="right">{row.wallet}</TableCell>
-              <TableCell align="right">{row.customername}</TableCell>
-              <TableCell align="right">{row.formfillperson}</TableCell>
-              <TableCell align="right">{row.month}</TableCell>
-
-              <TableCell align="center">
-                <ButtonGroup variant="text" aria-label="Basic button group">
-                  {row.screenshot.map((sh) => (
-                    <Button onClick={() => handleScreenShotClick(sh)} key={sh}>
-                      One
-                    </Button>
-                  ))}
-                </ButtonGroup>
-              </TableCell>
-              <TableCell align="right">{row.manychatid}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right">{row.email}</TableCell>
-              <TableCell align="right">
-                <ButtonGroup variant="text" aria-label="Basic button group">
-                  <Button
-                    variant="contained"
-                    onClick={() => handleConfirmOpen(row)}
-                  >
-                    Confirm
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleDeinedOpen(row)}
-                  >
-                    Deny
-                  </Button>
-                </ButtonGroup>
+          {rows.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={12} align="center">
+                No data available
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            rows.map((row) => (
+              <TableRow
+                key={row.transactionId}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.transactionId}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {row.currency}
+                </TableCell>
+                <TableCell align="right">{row.amount}</TableCell>
+                <TableCell align="right">{row.wallet}</TableCell>
+                <TableCell align="right">{row.customername}</TableCell>
+                <TableCell align="right">{row.formfillperson}</TableCell>
+                <TableCell align="right">{row.month}</TableCell>
+
+                <TableCell align="center">
+                  <ButtonGroup variant="text" aria-label="Basic button group">
+                    {row.screenshot.map((sh) => (
+                      <Button
+                        onClick={() => handleScreenShotClick(sh)}
+                        key={sh}
+                      >
+                        One
+                      </Button>
+                    ))}
+                  </ButtonGroup>
+                </TableCell>
+                <TableCell align="right">{row.manychatid}</TableCell>
+                <TableCell align="right">{row.status}</TableCell>
+                <TableCell align="right">{row.email}</TableCell>
+                <TableCell align="right">
+                  <ButtonGroup variant="text" aria-label="Basic button group">
+                    <Button
+                      variant="contained"
+                      onClick={() => handleConfirmOpen(row)}
+                    >
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleDeinedOpen(row)}
+                    >
+                      Deny
+                    </Button>
+                  </ButtonGroup>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
       {/* Confirm Dialog */}
