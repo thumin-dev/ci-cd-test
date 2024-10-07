@@ -1,122 +1,125 @@
--- This sql file is for to standarlize database across all developer
--- 1. Create a local developement sql server
--- 2. run file
--- 3. run this sql for restart the database
+-- Drop and create the development database
+DROP DATABASE IF EXISTS development;
+CREATE DATABASE development;
+USE development;
 
-
-
-
-
-Drop database development;
-create database development;
-use development;
--- Create Currency Table
+-- Create Currency table and insert demo data
 CREATE TABLE Currency (
-    CurrencyID INT AUTO_INCREMENT PRIMARY KEY,
+    CurrencyId INT AUTO_INCREMENT PRIMARY KEY,
     CurrencyCode VARCHAR(10)
 );
 
--- Create SupportRegion Table
-CREATE TABLE SupportRegion (
-    SupportRegionID INT AUTO_INCREMENT PRIMARY KEY,
-    Region VARCHAR(100)
+INSERT INTO Currency (CurrencyCode) VALUES 
+('USD'),
+('EUR'),
+('JPY');
+
+-- Create Wallet table and insert demo data
+CREATE TABLE Wallet (
+    WalletId INT AUTO_INCREMENT PRIMARY KEY,
+    CurrencyId INT,
+    WalletName VARCHAR(255),
+    FOREIGN KEY (CurrencyId) REFERENCES Currency(CurrencyId)
 );
 
--- Create UserRole Table
+INSERT INTO Wallet (CurrencyId, WalletName) VALUES 
+(1, 'Personal Wallet'),
+(2, 'Business Wallet'),
+(3, 'Savings Wallet');
+
+-- Create SupportRegion table and insert demo data
+CREATE TABLE SupportRegion (
+    SupportRegionId INT AUTO_INCREMENT PRIMARY KEY,
+    Region VARCHAR(255)
+);
+
+INSERT INTO SupportRegion (Region) VALUES 
+('North America'),
+('Europe'),
+('Asia');
+
+-- Create UserRole table and insert demo data
 CREATE TABLE UserRole (
     UserRoleID INT AUTO_INCREMENT PRIMARY KEY,
-    UserRole VARCHAR(50)
+    UserRole VARCHAR(255)
 );
 
--- Create Agent Table
+INSERT INTO UserRole (UserRole) VALUES 
+('Support Agent'),
+('Admin'),
+('Payment Processor');
+
+-- Create Agent table and insert demo data
 CREATE TABLE Agent (
-    AgentID INT AUTO_INCREMENT PRIMARY KEY,
-    AWSID VARCHAR(50),
-    UserRoleID INT,
-    FOREIGN KEY (UserRoleID) REFERENCES UserRole(UserRoleID)
+    AgentId INT AUTO_INCREMENT PRIMARY KEY,
+    AwsId VARCHAR(255),
+    UserRoleId INT,
+    FOREIGN KEY (UserRoleId) REFERENCES UserRole(UserRoleID)
 );
 
--- Create Customer Table
-CREATE TABLE Customer (
-    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100),
-    Email VARCHAR(100),
-    ManyChatID JSON,
-    ExpireDate DATE,
-    UserCountry VARCHAR(100),
-    ContactLink VARCHAR(100),
-    AgentID INT,
-    CardID INT,
-    FOREIGN KEY (AgentID) REFERENCES Agent(AgentID)
-);
+INSERT INTO Agent (AwsId, UserRoleId) VALUES 
+('AWS123', 1),
+('AWS124', 2),
+('AWS125', 3);
 
--- Create Wallet Table
-CREATE TABLE Wallet (
-    WalletID INT AUTO_INCREMENT PRIMARY KEY,
-    CurrencyID INT,
-    WalletName VARCHAR(100),
-    FOREIGN KEY (CurrencyID) REFERENCES Currency(CurrencyID)
-);
-
--- Create Note Table
+-- Create Note table and insert demo data
 CREATE TABLE Note (
     NoteID INT AUTO_INCREMENT PRIMARY KEY,
-    Note TEXT,
+    Note VARCHAR(255),
     Date DATE,
     AgentID INT,
-    FOREIGN KEY (AgentID) REFERENCES Agent(AgentID)
+    FOREIGN KEY (AgentID) REFERENCES Agent(AgentId)
 );
 
--- Create Transactions Table
+INSERT INTO Note (Note, Date, AgentID) VALUES 
+('Customer requested refund', '2024-01-01', 1),
+('Transaction approved', '2024-02-15', 2),
+('Inquiry about service', '2024-03-05', 3);
+
+-- Create Customer table and insert demo data
+CREATE TABLE Customer (
+    CustomerId INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255),
+    Email VARCHAR(255),
+    ManyChatId VARCHAR(255),
+    ExpireDate DATE,
+    UserCountry VARCHAR(255),
+    ContactLink VARCHAR(255),
+    AgentId INT,
+    CardID INT,
+    FOREIGN KEY (AgentId) REFERENCES Agent(AgentId)
+);
+
+INSERT INTO Customer (Name, Email, ManyChatId, ExpireDate, UserCountry, ContactLink, AgentId, CardID) VALUES 
+('John Doe', 'john@example.com', 'MANY123', '2025-01-01', 'USA', 'contact/johndoe', 1, 101),
+('Jane Smith', 'jane@example.com', 'MANY124', '2024-12-31', 'UK', 'contact/janesmith', 2, 102),
+('Bob Johnson', 'bob@example.com', 'MANY125', '2025-06-30', 'Japan', 'contact/bobjohnson', 3, 103);
+
+-- Create Transactions table and insert demo data
 CREATE TABLE Transactions (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT,
     SupportRegionID INT,
     WalletID INT,
     Amount FLOAT,
-    AgentID INT,
     PaymentCheck BOOLEAN,
-    PaymentCheckTime DATE,
+    PaymentCheckTime TIMESTAMP,
     NoteID INT,
-    TransactionDate DATE,
+    TransactionDate TIMESTAMP,
     PaymentDenied BOOLEAN,
     Month INT,
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-    FOREIGN KEY (SupportRegionID) REFERENCES SupportRegion(SupportRegionID),
-    FOREIGN KEY (WalletID) REFERENCES Wallet(WalletID),
-    FOREIGN KEY (AgentID) REFERENCES Agent(AgentID),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerId),
+    FOREIGN KEY (SupportRegionID) REFERENCES SupportRegion(SupportRegionId),
+    FOREIGN KEY (WalletID) REFERENCES Wallet(WalletId),
     FOREIGN KEY (NoteID) REFERENCES Note(NoteID)
 );
 
+INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES 
+(1, 1, 1, 100.00, TRUE, '2024-01-02 10:00:00', 1, '2024-01-02 09:55:00', FALSE, 1),
+(2, 2, 2, 200.00, FALSE, NULL, 2, '2024-02-20 15:30:00', TRUE, 2),
+(3, 3, 3, 300.00, TRUE, '2024-03-10 12:00:00', 3, '2024-03-10 11:50:00', FALSE, 3);
 
--- Insert data into Currency Table
-INSERT INTO Currency (CurrencyID, CurrencyCode)
-VALUES 
-(1, 'USD'),
-(2, 'EUR'),
-(3, 'JPY');
-
--- Insert data into SupportRegion Table
-INSERT INTO SupportRegion (SupportRegionID, Region)
-VALUES 
-(1, 'North America'),
-(2, 'Europe'),
-(3, 'Asia');
-
--- Insert data into UserRole Table
-INSERT INTO UserRole (UserRoleID, UserRole)
-VALUES 
-(1, 'Support Agent'),
-(2, 'Administrator'),
-(3, 'Payment Processors')
-;
-
--- Insert data into Agent Table
-INSERT INTO Agent (AgentID, AWSID, UserRoleID)
-VALUES 
-(1, 'AWS-1234', 1),
-(2, 'AWS-5678', 2);
-
+-- Create ScreenShot table and insert demo data
 CREATE TABLE ScreenShot (
     ScreenShotID INT AUTO_INCREMENT PRIMARY KEY,
     TransactionID INT,
@@ -124,34 +127,22 @@ CREATE TABLE ScreenShot (
     FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
 );
 
+INSERT INTO ScreenShot (TransactionID, ScreenShotLink) VALUES 
+(1, 'https://example.com/screenshot1'),
+(2, 'https://example.com/screenshot2'),
+(3, 'https://example.com/screenshot3');
 
--- Insert data into Customer Table
-INSERT INTO Customer (CustomerID, Name, Email, ManyChatID, ExpireDate, UserCountry, ContactLink, AgentID, CardID)
-VALUES 
-(1, 'John Doe', 'john.doe@example.com', JSON_ARRAY('Chat1', 'Chat2'), '2025-12-31', 'USA', '1234567890', 1, 1001),
-(2, 'Jane Smith', 'jane.smith@example.com', JSON_ARRAY('Chat3', 'Chat4'), '2025-12-31', 'Germany', '0987654321', 2, 1002);
+-- Create TransactionAgent table and insert demo data
+CREATE TABLE TransactionAgent (
+    TransactionAgentID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT,
+    AgentID INT,
+    LogDate TIMESTAMP,
+    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID),
+    FOREIGN KEY (AgentID) REFERENCES Agent(AgentId)
+);
 
--- Insert data into Wallet Table
-INSERT INTO Wallet (WalletID, CurrencyID, WalletName)
-VALUES 
-(1, 1, 'Personal Wallet'),
-(2, 2, 'Business Wallet'),
-(3, 3, 'Savings Wallet');
-
--- Insert data into Note Table
-INSERT INTO Note (NoteID, Note, Date, AgentID)
-VALUES 
-(1, 'Transaction processed successfully.', '2024-07-01', 1),
-(2, 'Customer requested refund.', '2024-07-02', 2);
-
--- Insert data into Transactions Table
-INSERT INTO Transactions (TransactionID, CustomerID, SupportRegionID, WalletID, Amount, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month)
-VALUES 
-(1, 1, 1, 1, 100.00, 1, TRUE, '2024-07-01', 1, '2024-07-01', FALSE, 7),
-(2, 2, 2, 2, 200.00, 2, FALSE, '2024-07-02', 2, '2024-07-02', TRUE, 7);
-
-INSERT INTO ScreenShot (TransactionID, ScreenShotLink)
-VALUES 
-(1, 'http://example.com/screenshot1.png'),
-(1, 'http://example.com/screenshot2.png'),
-(2, 'http://example.com/screenshot3.png');
+INSERT INTO TransactionAgent (TransactionID, AgentID, LogDate) VALUES 
+(1, 1, '2024-01-02 10:05:00'),
+(2, 2, '2024-02-20 15:35:00'),
+(3, 3, '2024-03-10 12:05:00');
