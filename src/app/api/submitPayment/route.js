@@ -137,22 +137,13 @@ export async function POST(req) {
          contactLink = null;
         
       }
-     
-         const customerId = await InsertCustomer(
-           customerName,
-           customerEmail,
-           agentId,
-           manyChatId,
-           contactLink,
-           month
-         );
-         console.log("customerId: ", customerId);
       
    
 
     let noteId = null;
     if (note && note !== "")
-   { const noteId = await createNote(note, agentId);
+   { 
+    noteId = await createNote(note, agentId);
      console.log("noteId: ", noteId);
   }
 
@@ -164,10 +155,8 @@ export async function POST(req) {
       contactLink,
       month
     );
-   // console.log("customerId: ", customerId);
-
-    const noteId = await createNote(note, agentId);
-    //console.log("noteId: ", noteId);
+    
+    
 
 //insert into transaction table
     const query = `
