@@ -107,10 +107,9 @@ async function maxHopeFuelID() {
 
 export async function POST(req) {
   try {
-   console.log("RequestBody:", req.body);
-
+  
    if (!req.body) {
-    console.log("RequestBody:",req.body);
+
      return NextResponse.json(
        { error: "Request body is empty" },
        { status: 400 }

@@ -37,7 +37,7 @@ LEFT JOIN
 WHERE 
     t.PaymentCheck = ${status} OR t.PaymentCheck IS NULL
 GROUP BY 
-    t.HopeFuelID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode,   a.AWSID ;
+    t.HopeFuelID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode, a.AWSID ;
     
 
 `;
