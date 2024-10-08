@@ -28,7 +28,7 @@ const PaymentTeam = () => {
 
 
   function createData(
-    transactionId,
+    HopeFuelID,
     currency,
     amount,
     wallet,
@@ -41,7 +41,7 @@ const PaymentTeam = () => {
     email
   ) {
     return {
-      transactionId,
+      HopeFuelID,
       currency,
       amount,
       wallet,
@@ -59,7 +59,7 @@ const PaymentTeam = () => {
 
   const rows = data.map((row) => {
     return createData(
-      row["TransactionID"],
+      row["HopeFuelID"],
       row["CurrencyCode"],
       row["Amount"],
       row["WalletName"],
@@ -107,7 +107,7 @@ const PaymentTeam = () => {
 
     const raw = JSON.stringify({
       denied: 0,
-      transactionId: row.transactionId,
+      HopeFuelID: row.HopeFuelID,
     });
     
 
@@ -123,7 +123,7 @@ const PaymentTeam = () => {
       console.log("Payment Confirmed");
       setData(
         (prevData) =>
-          prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+          prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID) 
       );
     }
     });
@@ -138,7 +138,7 @@ const PaymentTeam = () => {
 
     const raw = JSON.stringify({
       denied: 1,
-      transactionId: row.transactionId,
+      HopeFuelID: row.HopeFuelID,
     });
 
     const requestOptions = {
@@ -153,7 +153,7 @@ const PaymentTeam = () => {
         console.log("Payment Denied");
        setData(
          (prevData) =>
-           prevData.filter((item) => item.TransactionID !== row.transactionId) // Use TransactionID here
+           prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID) // Use TransactionID here
        );
       }
     });
@@ -203,11 +203,11 @@ const PaymentTeam = () => {
           ) : (
             rows.map((row) => (
               <TableRow
-                key={row.transactionId}
+                key={row.HopeFuelID}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.transactionId}
+                  {row.HopeFuelID}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {row.currency}

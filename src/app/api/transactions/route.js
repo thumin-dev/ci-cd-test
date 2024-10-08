@@ -7,7 +7,7 @@ async function PaymentCheckQuery(status) {
   /* amount, month, screenshot, formfill person
    manychat id, wallet, currency, status, customer name and email. */
   const query = `SELECT 
-    t.TransactionID,
+    t.HopeFuelID,
     c.Name,           
     c.Email,                     
     t.Amount,           
@@ -37,7 +37,7 @@ LEFT JOIN
 WHERE 
     t.PaymentCheck = ${status} OR t.PaymentCheck IS NULL
 GROUP BY 
-    t.TransactionID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode,   a.AWSID ;
+    t.HopeFuelID, c.Name, c.Email, t.Amount, t.Month, c.ManyChatID, w.WalletName, cu.CurrencyCode,   a.AWSID ;
     
 
 `;
