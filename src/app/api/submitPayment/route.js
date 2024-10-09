@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 import calculateExpireDate from "../../utilites/calculateExpireDate";
+import { max } from "date-fns";
 
 //Insert Into Customer Table
 async function InsertCustomer(
@@ -96,13 +97,19 @@ async function InsertTransactionLog(transactionId, agentId) {
 
 }
 
+async function maxHopeFuelID() {
+  const maxHopeFuelID_Query = `SELECT MAX(HopeFuelID) AS maxHopeFuelID FROM Transactions`; 
+  const result = await db(maxHopeFuelID_Query);
+
+   console.log(result);
+   return result[0]["maxHopeFuelID"];
+}
 
 export async function POST(req) {
   try {
-   console.log("RequestBody:", req.body);
-
+  
    if (!req.body) {
-    console.log("RequestBody:",req.body);
+
      return NextResponse.json(
        { error: "Request body is empty" },
        { status: 400 }
@@ -156,14 +163,21 @@ export async function POST(req) {
       contactLink,
       month
     );
-    
-    
+  
+ let  nextHopeFuelID = await maxHopeFuelID(); 
+ console.log("nextHopeFuelID", nextHopeFuelID);
+
+ if (nextHopeFuelID === null) {
+   nextHopeFuelID = 0;
+ }
+ nextHopeFuelID++; 
+  console.log("Incremented maxHopeFuelID:", nextHopeFuelID);
 
 //insert into transaction table
     const query = `
      INSERT INTO Transactions   
-    (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+    (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month,HopeFuelID) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 
     `;
     const values = [
@@ -173,7 +187,9 @@ export async function POST(req) {
       walletId,
       new Date(),
       noteId,
-      month
+      month,
+      nextHopeFuelID
+     
     ];
     const result = await db(query, values);
 
