@@ -1,5 +1,5 @@
 
-export default async function extendUserSubmit(event,userInfo, currency, supportRegion ,files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, wallets) {
+export default async function extendUserSubmit(event,userInfo, currency, supportRegion ,files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, wallets, agentId) {
     event.preventDefault();
     // setloading(true)
     setAmountValidate(false);
@@ -121,7 +121,7 @@ export default async function extendUserSubmit(event,userInfo, currency, support
           "supportRegionId": supportRegionID,
           "walletId": wallet,
           "amount": amount,
-          
+          "agentId": agentId,
           "noteId": note['id'],
           "transactionDate": new Date(),
           "month": month,
