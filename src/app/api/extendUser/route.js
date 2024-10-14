@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic' // defaults to force-static
 import db from "../../utilites/db";
 import calculateExpireDate from '../../utilites/calculateExpireDate'
+import recentExpireDate from '../../utilites/recentExpireDate.js'
 
 async function createScreenShot(screenShot,transactionsID) {
   console.log(transactionsID +  "  " + screenShot)
@@ -44,11 +45,22 @@ export async function POST(request) {
     let [result] = await db("Select ExpireDate from Customer where CustomerID=?", [obj['customerId']])
     console.log("Result is " + result)
     let nextExpireDate = null;
+
+
     if(result['ExpireDate'])
     {
       let currentExpireDate = new Date(result['ExpireDate'])
-      nextExpireDate = calculateExpireDate(currentExpireDate, parseInt(obj['month']))
-      console.log(nextExpireDate)
+
+      let isExpired = (recentExpireDate(new Date(), currentExpireDate).getMonth() == new Date().getMonth()) && (recentExpireDate(new Date(), currentExpireDate).getFullYear() == new Date().getFullYear())
+
+      if(isExpired)
+      {
+        nextExpireDate = calculateExpireDate(new Date(), parseInt(obj['month']), isExpired)
+      }
+      else
+      {
+        nextExpireDate = calculateExpireDate(currentExpireDate, parseInt(obj['month']), isExpired)
+      }
     }
     else
     {
@@ -56,8 +68,8 @@ export async function POST(request) {
     }
   let now = Date.now();
     const rows = await db(
-      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, AgentID, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-      [obj['customerId'], obj['supportRegionId'], obj['walletId'], parseInt(obj['amount']), obj['agentId'], false, null, obj['noteId'], new Date(), false, obj['month']]
+      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+      [obj['customerId'], obj['supportRegionId'], obj['walletId'], parseInt(obj['amount']), false, null, obj['noteId'], new Date(), false, obj['month']]
   );
   const transactionId = rows.insertId;
 
@@ -69,6 +81,16 @@ export async function POST(request) {
     let result = await db(sql, value);
     // console.log("Result: ", result);
     console.log("Transaction ID is " + transactionId)
+    await db(
+      `INSERT INTO TransactionAgent (
+          TransactionID, AgentID, LogDate
+      ) VALUES (?, ?, ?)`,
+      [
+          transactionId, obj['agentId'], new Date()
+      ]
+  );
+    // add the transaction id and agentid in the same one
+
 
     // const screenShotIds = await createScreenShot(obj['screenShot'], transactionId)
     return Response.json(result)
