@@ -13,7 +13,7 @@ async function InsertCustomer(
   month
 ) {
   let currentDay = new Date();
-  let nextExpireDate = calculateExpireDate(currentDay, month);
+  let nextExpireDate = calculateExpireDate(currentDay, month, true);
   const query = `
     INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink, ExpireDate ) VALUES (?, ?, ?, ?, ?, ?)
     `;
