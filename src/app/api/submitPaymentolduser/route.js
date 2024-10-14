@@ -174,23 +174,11 @@
 
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
+import recentExpireDate from '../../utilites/recentExpireDate.js'
+import calculateExpireDate from '../../utilites/calculateExpireDate'
 
-/**
- * Calculate the next expire date based on the current expire date and additional month.
- * Month > 0 (Must)
- * @param {Date} currentExpireDate 
- * @param {Number} month 
- * @returns Date Object: contains the final expire date
- */
-function calculateExpireDate(currentExpireDate, month)
-{
-  // we will assume that currentExpireDate will be always at the end of the month
-  console.log(currentExpireDate.getFullYear())
-  console.log(currentExpireDate.getMonth())
-  console.log(month)
-  return new Date(currentExpireDate.getFullYear(), currentExpireDate.getMonth() + 1 + month, 0);
+import maxHopeFuelID from '../../utilites/maxHopeFuelID.js'
 
-}
 
 async function InsertCustomer(
   customerName,
@@ -213,8 +201,26 @@ async function InsertCustomer(
     cardId,
     month
   }
-  console.log(raw)
-  let nextExpireDate = calculateExpireDate(expireDate, month)
+
+  let isExpired = (recentExpireDate(new Date(), expireDate).getMonth() == new Date().getMonth()) && (recentExpireDate(new Date(), expireDate).getFullYear() == new Date().getFullYear())
+  let nextExpireDate = null;
+      
+      console.log("The expire date is ")
+      console.log(expireDate)
+      console.log(isExpired)
+      if(isExpired)
+        {
+          nextExpireDate = calculateExpireDate(new Date(), parseInt(month), isExpired)
+          console.log("The calcualte expire date is .")
+          console.log(expireDate)
+
+        }
+        else
+        {
+          nextExpireDate = calculateExpireDate(expireDate, parseInt(month), isExpired)
+        }
+
+
   console.log(nextExpireDate)
   const query = `
     INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink, ExpireDate, CardID ) VALUES (?, ?, ?, ?, ?, ? , ?)
@@ -298,10 +304,13 @@ export async function POST(req) {
       cardId
     } = json;
     month = parseInt(month)
+    console.log(json)
+
 
     if(expireDate)
     {
       expireDate = new Date(expireDate)
+     
     }
 
     if (!screenShot) {
@@ -325,22 +334,32 @@ export async function POST(req) {
     const noteId = await createNote(note, agentId);
     console.log("noteId: ", noteId);
 
+
+    let  nextHopeFuelID = await maxHopeFuelID(); 
+    console.log("nextHopeFuelID", nextHopeFuelID);
+   
+    if (nextHopeFuelID === null) {
+      nextHopeFuelID = 0;
+    }
+    nextHopeFuelID++; 
+     console.log("Incremented maxHopeFuelID:", nextHopeFuelID);
+
     const query = `
      INSERT INTO Transactions   
-    (CustomerID, Amount, AgentID, SupportRegionID, WalletID, TransactionDate, NoteID, Month, PaymentCheck) 
+    (CustomerID, Amount, SupportRegionID, WalletID, TransactionDate, NoteID, Month, PaymentCheck, HopeFuelID) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 
     `;
     const values = [
       customerId,
       amount,
-      agentId,
       supportRegionId,
       walletId,
       new Date(),
       noteId,
       month,
-      false
+      false,
+      nextHopeFuelID
     ];
     const result = await db(query, values);
 
@@ -350,6 +369,15 @@ export async function POST(req) {
     const screenShotIds = await createScreenShot(screenShot, transactionId)
     console.log("Screenshot ids are: " + screenShotIds)
     console.log("Result: ", result);
+
+    await db(
+      `INSERT INTO TransactionAgent (
+          TransactionID, AgentID, LogDate
+      ) VALUES (?, ?, ?)`,
+      [
+          transactionId, agentId, new Date()
+      ]
+  );
     return Response.json({ status: "success" });
   } catch (error) {
     console.log(error);

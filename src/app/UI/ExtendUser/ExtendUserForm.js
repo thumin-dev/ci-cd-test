@@ -47,6 +47,7 @@ const ExtendUserForm = ({userRole}) => {
   const [hasContinue, sethasContinue] = useState(false);
   const [hasPermissonThisMonth, setHasPermissonThisMonth] = useState(true);
   const [fileExist, setfileExist] = useState(true);
+  const [uploadProgress, setUploadProgress] = useState("");
 
   //Load the Wallet on Component Mount
   useEffect(() => {
@@ -96,7 +97,7 @@ const ExtendUserForm = ({userRole}) => {
   };
 
 
-  //const agentId = useContext(AgentContext).id;
+  const agentId = useContext(AgentContext).id;
  // console.log("AgentId from createform: " + agentId)
 
   return (
@@ -205,6 +206,8 @@ const ExtendUserForm = ({userRole}) => {
         <Box
           component="form"
           onSubmit={(event) =>
+        
+            console.log("submitting ", event)||
             extendUserSubmit(
               event,
               userInfo,
@@ -262,16 +265,16 @@ const ExtendUserForm = ({userRole}) => {
             onChange={(event) => setcurrency(event.target.value)}
             sx={{ mx: 2 }}
           >
-            {
-              currencies.map(item => {
-                return <FormControlLabel
+            {currencies.map((item) => {
+              return (
+                <FormControlLabel
                   value={item.CurrencyCode}
                   control={<Radio required={true} />}
                   label={item.CurrencyCode}
                   id={item.CurrencyID}
                 />
-              })
-            }
+              );
+            })}
           </RadioGroup>
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
@@ -291,15 +294,18 @@ const ExtendUserForm = ({userRole}) => {
             <h1>No wallets selected.</h1>
           )}
 
-            <Autocomplete
+          <Autocomplete
             disablePortal
             id="supportRegion"
-            onChange={(event, value) => {console.log(value);setsupportRegion(value)}}
+            onChange={(event, value) => {
+              console.log(value);
+              setsupportRegion(value);
+            }}
             required
             options={supportRegions}
             sx={{ width: 300, marginTop: 2 }}
             value={supportRegion}
-            defaultValue={()=>setsupportRegion('choose a region')}
+            defaultValue={() => setsupportRegion("choose a region")}
             getOptionLabel={(option) => option.Region || ""}
             renderInput={(params) => (
               <TextField {...params} label="Support Region" required />
@@ -358,7 +364,7 @@ const ExtendUserForm = ({userRole}) => {
           >
             <Dropzone
               onDrop={(acceptedFiles) =>
-                filehandler(acceptedFiles, setfiles, files)
+                filehandler(acceptedFiles, setfiles, files, setUploadProgress)
               }
               accept={["text/*, img/*"]}
             >
@@ -367,7 +373,8 @@ const ExtendUserForm = ({userRole}) => {
                   <div {...getRootProps()} style={{ padding: "20% 20%" }}>
                     <input {...getInputProps()} />
                     <p>
-                      Drag 'n' drop some files here, or click to select files
+                      {uploadProgress ||
+                        "Drag & drop some files here, or click to select files"}
                     </p>
                   </div>
                 </section>

@@ -12,6 +12,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
     const notes = data.get("notes")
     const contactLink = data.get("contactLink");
     let cardId = String(userInfo['prf_no'])
+    console.log(cardId)
     //if cardID exist for the extend user
     if(cardId)
     {
@@ -116,7 +117,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
         console.log(ans)
        raw = JSON.stringify(
         {
-          "customerId": ans["CustomerID"],
+          "customerId": ans["CustomerId"],
           "supportRegionId": supportRegionID,
           "walletId": wallet,
           "amount": amount,
@@ -139,7 +140,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       };
   
         let response = await fetch(`/api/extendUser`, requestOptions)
-         location.reload()
+        location.reload()
       }
 
       else // treat this as new customer but get the requried user information from airtable
@@ -189,6 +190,6 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       let answ = await fetch('/api/submitPaymentolduser/', requestOptions)
       let {status} =  await answ.json()
       console.log(status)
-       location.reload()
+      location.reload()
     }
 }
