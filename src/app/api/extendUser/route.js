@@ -32,7 +32,7 @@ export async function POST(request) {
     
 
     const obj = await request.json()
-    console.log(obj['customerId'])
+    console.log("Obj from extendUserAPI: ", obj)
 
     // if (!obj['screenShot']) {
     //   return NextResponse.json(

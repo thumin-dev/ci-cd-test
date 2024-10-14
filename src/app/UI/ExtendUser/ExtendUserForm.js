@@ -206,6 +206,8 @@ const ExtendUserForm = ({userRole}) => {
         <Box
           component="form"
           onSubmit={(event) =>
+        
+            console.log("submitting ", event)||
             extendUserSubmit(
               event,
               userInfo,
@@ -219,8 +221,7 @@ const ExtendUserForm = ({userRole}) => {
               setmanyChatValidate,
               fileExist,
               setfileExist,
-              wallets,
-              agentId
+              wallets
             )
           }
           sx={{ mt: 1 }}
