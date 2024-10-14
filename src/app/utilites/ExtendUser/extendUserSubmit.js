@@ -37,7 +37,6 @@ export default async function extendUserSubmit(event,userInfo, currency, support
       contactLink,
       supportRegionID,
       files,
-      agentId,
       "expireDate": expireDate,
       "cardID": cardId
     }
@@ -118,7 +117,7 @@ export default async function extendUserSubmit(event,userInfo, currency, support
       console.log(ans)
       raw = JSON.stringify(
         {
-          "customerId": ans["CustomerID"],
+          "customerId": ans["CustomerId"],
           "supportRegionId": supportRegionID,
           "walletId": wallet,
           "amount": amount,
@@ -131,7 +130,7 @@ export default async function extendUserSubmit(event,userInfo, currency, support
       }
       )
     
-
+console.log("Raw:"+ raw);
 
     var requestOptions = {
       method: 'POST',
@@ -141,7 +140,8 @@ export default async function extendUserSubmit(event,userInfo, currency, support
     };
 
       let response = await fetch(`/api/extendUser`, requestOptions)
-      location.reload()
+      console.log("response from extendUser API: ", response);
+    location.reload()
     }
 
     else // treat this as new customer but get the requried user information from airtable
@@ -168,7 +168,7 @@ export default async function extendUserSubmit(event,userInfo, currency, support
     let raw = JSON.stringify({
       "customerName": userInfo.name,
       "customerEmail": userInfo.email,
-      "agentId": agentId,
+      
       "supportRegionId": supportRegionID,
       "manyChatId": manychat,
       "contactLink": contactLink,
