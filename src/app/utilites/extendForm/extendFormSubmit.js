@@ -190,6 +190,6 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       let answ = await fetch('/api/submitPaymentolduser/', requestOptions)
       let {status} =  await answ.json()
       console.log(status)
-      //  location.reload()
+      location.reload()
     }
 }
