@@ -177,7 +177,7 @@ import db from "../../utilites/db";
 import recentExpireDate from '../../utilites/recentExpireDate.js'
 import calculateExpireDate from '../../utilites/calculateExpireDate'
 
-
+import maxHopeFuelID from '../../utilites/maxHopeFuelID.js'
 
 
 async function InsertCustomer(
@@ -201,8 +201,26 @@ async function InsertCustomer(
     cardId,
     month
   }
-  console.log(raw)
-  let nextExpireDate = calculateExpireDate(expireDate, month)
+
+  let isExpired = (recentExpireDate(new Date(), expireDate).getMonth() == new Date().getMonth()) && (recentExpireDate(new Date(), expireDate).getFullYear() == new Date().getFullYear())
+  let nextExpireDate = null;
+      
+      console.log("The expire date is ")
+      console.log(expireDate)
+      console.log(isExpired)
+      if(isExpired)
+        {
+          nextExpireDate = calculateExpireDate(new Date(), parseInt(month), isExpired)
+          console.log("The calcualte expire date is .")
+          console.log(expireDate)
+
+        }
+        else
+        {
+          nextExpireDate = calculateExpireDate(expireDate, parseInt(month), isExpired)
+        }
+
+
   console.log(nextExpireDate)
   const query = `
     INSERT INTO Customer (Name, Email, AgentID, ManyChatID, ContactLink, ExpireDate, CardID ) VALUES (?, ?, ?, ?, ?, ? , ?)
@@ -288,21 +306,10 @@ export async function POST(req) {
     month = parseInt(month)
     console.log(json)
 
+
     if(expireDate)
     {
       expireDate = new Date(expireDate)
-
-      let isExpired = (recentExpireDate(new Date(), expireDate).getMonth() == new Date().getMonth()) && (recentExpireDate(new Date(), expireDate).getFullYear() == new Date().getFullYear())
-      console.log(isExpired)
-      if(isExpired)
-        {
-          expireDate = calculateExpireDate(new Date(), parseInt(month), isExpired)
-        }
-        else
-        {
-          expireDate = calculateExpireDate(expireDate, parseInt(month), isExpired)
-        }
-
      
     }
 
@@ -327,10 +334,20 @@ export async function POST(req) {
     const noteId = await createNote(note, agentId);
     console.log("noteId: ", noteId);
 
+
+    let  nextHopeFuelID = await maxHopeFuelID(); 
+    console.log("nextHopeFuelID", nextHopeFuelID);
+   
+    if (nextHopeFuelID === null) {
+      nextHopeFuelID = 0;
+    }
+    nextHopeFuelID++; 
+     console.log("Incremented maxHopeFuelID:", nextHopeFuelID);
+
     const query = `
      INSERT INTO Transactions   
-    (CustomerID, Amount, SupportRegionID, WalletID, TransactionDate, NoteID, Month, PaymentCheck) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (CustomerID, Amount, SupportRegionID, WalletID, TransactionDate, NoteID, Month, PaymentCheck, HopeFuelID) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 
     `;
     const values = [
@@ -341,7 +358,8 @@ export async function POST(req) {
       new Date(),
       noteId,
       month,
-      false
+      false,
+      nextHopeFuelID
     ];
     const result = await db(query, values);
 

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic' // defaults to force-static
 import db from "../../utilites/db";
 import calculateExpireDate from '../../utilites/calculateExpireDate'
 import recentExpireDate from '../../utilites/recentExpireDate.js'
-
+import maxHopeFuelID from '../../utilites/maxHopeFuelID.js'
 async function createScreenShot(screenShot,transactionsID) {
   console.log(transactionsID +  "  " + screenShot)
 
@@ -66,10 +66,19 @@ export async function POST(request) {
     {
       // return Response.error("Cannot find ExpireDate")
     }
+
+    let  nextHopeFuelID = await maxHopeFuelID(); 
+    console.log("nextHopeFuelID", nextHopeFuelID);
+   
+    if (nextHopeFuelID === null) {
+      nextHopeFuelID = 0;
+    }
+    nextHopeFuelID++; 
+     console.log("Incremented maxHopeFuelID:", nextHopeFuelID);
   let now = Date.now();
     const rows = await db(
-      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-      [obj['customerId'], obj['supportRegionId'], obj['walletId'], parseInt(obj['amount']), false, null, obj['noteId'], new Date(), false, obj['month']]
+      "INSERT INTO Transactions (CustomerID, SupportRegionID, WalletID, Amount, PaymentCheck, PaymentCheckTime, NoteID, TransactionDate, PaymentDenied, Month, HopeFuelID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+      [obj['customerId'], obj['supportRegionId'], obj['walletId'], parseInt(obj['amount']), false, null, obj['noteId'], new Date(), false, obj['month'], nextHopeFuelID]
   );
   const transactionId = rows.insertId;
 

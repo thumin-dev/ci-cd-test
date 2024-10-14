@@ -97,7 +97,7 @@ const ExtendUserForm = ({userRole}) => {
   };
 
 
-  //const agentId = useContext(AgentContext).id;
+  const agentId = useContext(AgentContext).id;
  // console.log("AgentId from createform: " + agentId)
 
   return (
@@ -221,7 +221,8 @@ const ExtendUserForm = ({userRole}) => {
               setmanyChatValidate,
               fileExist,
               setfileExist,
-              wallets
+              wallets,
+              agentId
             )
           }
           sx={{ mt: 1 }}
