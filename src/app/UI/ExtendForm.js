@@ -32,6 +32,7 @@ const ExtendForm = ({userInfo, setloading}) => {
     const [monthValidate, setmonthValidate] = useState(false)
     const [manyChatValidate, setmanyChatValidate] = useState(false)
     const [fileExist, setfileExist] = useState(true)
+    const [uploadProgress, setUploadProgress] = useState("");
 
     const agentId = useContext(AgentContext).id;
 
