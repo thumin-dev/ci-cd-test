@@ -32,24 +32,35 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const router = useRouter();
-  
+  const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect to handle the delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Set to false after 4 seconds to stop loading
+    }, 3000);
+
+    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+  }, []);
 
   //Check if the user is Admin or not
-  let navItems =
-    userRole !== "admin"
-      ? ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
-      : ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"];
-    
-    if(userRole == "admin")
-    {
-      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"]
-    }else if(userRole == "Support Agent")
-    {
-      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း"]
-    }
-    else{
-      navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
-    }
+  let navItems = null;
+  //   userRole !== "admin"
+  //     ? ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
+  //     : ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"];
+
+  if (userRole == "admin") {
+    navItems = [
+      "အသစ်သွင်းခြင်း",
+      "သက်တမ်းတိုးခြင်း",
+      "ဖောင်အဖွင့်အပိတ်",
+      "ငွေစစ်ဆေးခြင်း",
+    ];
+  } else if (userRole == "Support Agent") {
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း"];
+  } else {
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"];
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -66,8 +77,6 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   };
 
   const handleCloseUserMenu = (event, setting) => {
-
-   
     setAnchorElUser(null);
     switch (setting.label) {
       case "Account":
@@ -95,8 +104,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
       setPage(3);
     } else if (page == "သက်တမ်းတိုးခြင်း") {
       setPage(2);
-    } else if (page == "ငွေစစ်ဆေးခြင်း")
-    {
+    } else if (page == "ငွေစစ်ဆေးခြင်း") {
       setPage(4);
     }
   };
@@ -125,22 +133,28 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
           </Typography>
 
           <Box sx={{ display: { xs: "none", sm: "block" }, flexGrow: 1 }}>
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{
-                  color: "#fff",
-                  ":hover": {
-                    cursor: "pointer",
-                    color: "secondary.yellow400",
-                    textDecoration: "none",
-                  },
-                }}
-                onClick={() => handleClick(item)}
-              >
-                {item}
-              </Button>
-            ))}
+            {isLoading ? ( // Conditionally render "Loading" or nav items
+              <Typography variant="h6" sx={{ color: "#fff" }}>
+                Loading...
+              </Typography>
+            ) : (
+              navItems.map((item) => (
+                <Button
+                  key={item}
+                  sx={{
+                    color: "#fff",
+                    ":hover": {
+                      cursor: "pointer",
+                      color: "secondary.yellow400",
+                      textDecoration: "none",
+                    },
+                  }}
+                  onClick={() => handleClick(item)}
+                >
+                  {item}
+                </Button>
+              ))
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
