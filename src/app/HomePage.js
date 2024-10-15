@@ -39,7 +39,7 @@ import PaymentTeam from "./UI/PaymentTeam/PaymentTeam"
 Amplify.configure(config);
 
 const client = generateClient();
-let isCreatingAgent = false;
+
 export const UserContext = React.createContext();
 export const AgentContext = React.createContext();
 
@@ -133,7 +133,7 @@ function HomePage({ signOut, user }) {
     
   }, []);
   //Get the page is unable or not
-  React.useEffect(() => {
+ // React.useEffect(() => {
     // checkAgentStatus();
 
 
@@ -154,7 +154,7 @@ function HomePage({ signOut, user }) {
   //       },
   //       error: (error) => console.warn(error),
   //     });
-  }, []);
+  //}, []);
 
 
 
