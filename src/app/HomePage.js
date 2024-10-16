@@ -48,10 +48,11 @@ function HomePage({ signOut, user }) {
   //It can be loading, enable, disable
   const [status, setStatus] = React.useState("loading");
   //User Role = admin | user
-  const [userRole, setUserRole] = React.useState("admin");
+  const [userRole, setUserRole] = React.useState("pending");
   const [agentId, setAgentId] = React.useState(null);
   // let agentId = null;
   const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
+  const [isSettingUpDone, setisSettingUpDone] = React.useState(false);
   const currentUser = React.useRef(null);
 
   //getting current AgentId
@@ -125,6 +126,8 @@ function HomePage({ signOut, user }) {
         if (!hasChecked.current) {
         await checkAgentStatus();
         await getAgentRole();
+
+
         // check if this is 
 
       }
@@ -132,6 +135,14 @@ function HomePage({ signOut, user }) {
     hasChecked.current = true; // Mark as true after first execution
     
   }, []);
+
+  React.useEffect(() => {
+    if(userRole !== 'pending')
+    {
+      setisSettingUpDone(true);
+    }
+
+  }, [userRole])
   //Get the page is unable or not
  // React.useEffect(() => {
     // checkAgentStatus();
@@ -179,52 +190,63 @@ function HomePage({ signOut, user }) {
   // }
   // ,[])
 
-  return (
-    <AgentContext.Provider value={agentId}>
-    <UserContext.Provider value={user}>
-      <Container component="main" maxWidth="xl" disableGutters>
-        <ResponsiveAppBar
-          setPage={setPage}
-          signOut={signOut}
-          userRole={userRole}
-        />
-        <CssBaseline />
-
-        <Container component="section" maxWidth="xs">
-          {"enable" === "loading" && <CircularProgress />}
-          {(userRole == "admin" || "enable" === "enable") && page == 1 && (
-            <CreateOrExtend userRole={userRole} />
-          )}
-          {(userRole == "admin" || "enable" === "enable") && page == 2 && (
-            <ExtendUser userRole={userRole} />
-          )}
-          {userRole == "admin" && page == 3 && (
-            <OpenCloseForm status={"enable"} />
-          )}
-          {"enable" === "disable" && userRole == "user" && (
-            <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-            >
-              <Alert severity="warning">
-                Form ခဏပိတ်ထားပါတယ်။ တခုခု လိုချင်ပါက admin ကို ဆက်သွယ်ပါ။
-              </Alert>
-            </Box>
-          )}
+  if(isSettingUpDone)
+  {
+    return (
+    
+      <AgentContext.Provider value={agentId}>
+      <UserContext.Provider value={user}>
+        <Container component="main" maxWidth="xl" disableGutters>
+          <ResponsiveAppBar
+            setPage={setPage}
+            signOut={signOut}
+            userRole={userRole}
+          />
+          <CssBaseline />
+  
+          <Container component="section" maxWidth="xs">
+            {"enable" === "loading" && <CircularProgress />}
+            {(userRole == "admin" || "enable" === "enable") && page == 1 && (
+              <CreateOrExtend userRole={userRole} />
+            )}
+            {(userRole == "admin" || "enable" === "enable") && page == 2 && (
+              <ExtendUser userRole={userRole} />
+            )}
+            {userRole == "admin" && page == 3 && (
+              <OpenCloseForm status={"enable"} />
+            )}
+            {"enable" === "disable" && userRole == "user" && (
+              <Box
+              sx={{
+                marginTop: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+              >
+                <Alert severity="warning">
+                  Form ခဏပိတ်ထားပါတယ်။ တခုခု လိုချင်ပါက admin ကို ဆက်သွယ်ပါ။
+                </Alert>
+              </Box>
+            )}
+          </Container>
+            {
+              page == 4 && (
+                <PaymentTeam />
+              )
+            }
         </Container>
-          {
-            page == 4 && (
-              <PaymentTeam />
-            )
-          }
-      </Container>
-    </UserContext.Provider>
-    </AgentContext.Provider>
-  );
+      </UserContext.Provider>
+      </AgentContext.Provider>
+    );
+  }
+  else
+
+  {
+    return <h>The agent ID is still loading. Please wait a moments</h>
+  }
+
+  
 }
 
 export default withAuthenticator(HomePage);
