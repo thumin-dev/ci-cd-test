@@ -96,12 +96,8 @@ const ExtendUserForm = ({userRole}) => {
     setOtp(newValue);
   };
 
-let agentId = null;
- 
-setTimeout(() => {
-   agentId = useContext(AgentContext).id;
-  // console.log("AgentId from createform: " + agentId)
-}, 3000);
+let agentId = useContext(AgentContext).id;;
+
   return (
     <>
       <MuiOtpInput
