@@ -140,7 +140,7 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       };
   
         let response = await fetch(`/api/extendUser`, requestOptions)
-        location.reload()
+        //location.reload()
       }
 
       else // treat this as new customer but get the requried user information from airtable
@@ -190,6 +190,6 @@ export default async function extendFormSubmit(event, currency, supportRegion, f
       let answ = await fetch('/api/submitPaymentolduser/', requestOptions)
       let {status} =  await answ.json()
       console.log(status)
-      location.reload()
+      //location.reload()
     }
 }
