@@ -34,7 +34,7 @@ function ItemCard({ item }) {
         }}
       />
       <div sx={{
-        display:"block"
+        display: "block"
       }}>
         <CardContent sx={{ flex: 1 }}>
           <Typography variant="h6" fontWeight="bold">

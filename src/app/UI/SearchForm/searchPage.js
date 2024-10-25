@@ -1,41 +1,56 @@
+import React, { useState, useEffect } from "react";
 import SearchBar from "../Components/SearchBar";
 import Divider from "@mui/material/Divider";
-import { Box, Container, Typography } from "@mui/material";
+import { Container, Typography, CircularProgress } from "@mui/material";
 import ItemList from "../Components/ItemList";
-import { useState, useEffect } from "react";
 
 export default function SearchBarForm() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false); // Manage loading state
+  const [error, setError] = useState(null); // Manage error state
 
-    const [items, setItems] = useState([]);
+  // Function to fetch data from the API
+  const handleSearch = async (HopeFuelID) => {
+    setLoading(true); 
+    setError(null); 
 
-    //fetch data from the server
-    const fetchData = async () => {
-    let requestOptions = {
-        method: 'GET',
-        "Content-Type": "application/json",
-        redirect: 'follow'
-    };
-      
-    let response = await fetch("/api/searchDB", requestOptions)
-    let data =  await response.json();
-    console.log("Response from DB for card:",data)
-    setItems(data);
+    try {
+      const url = HopeFuelID
+        ? `/api/searchDB?HopeFuelID=${HopeFuelID}`
+        : `/api/searchDB`;
 
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Fetched Data:", data);
+      setItems(data); // Update items state with fetched data
+    } catch (error) {
+      console.error("Search Error:", error);
+      setError(error.message); // Update error state
+    } finally {
+      setLoading(false); // Stop loading
     }
-    useEffect(() => {
-        fetchData();    
-    },[]);
+  };
+
+  // Fetch initial data for October transactions on component mount
+  useEffect(() => {
+    handleSearch(); // Fetch all October transactions
+  }, []);
 
   return (
     <Container
       maxWidth="md"
       sx={{
-        minHeight: "100vh", // Full viewport height
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-start", // Align content towards the top
+        justifyContent: "flex-start",
         alignItems: "center",
-        paddingTop: { xs: "8%", md: "5%" }, // Top padding: 10% for small screens, 8% for medium+ screens
+        paddingTop: { xs: "8%", md: "5%" },
         boxSizing: "border-box",
         textAlign: "center",
       }}
@@ -44,19 +59,26 @@ export default function SearchBarForm() {
         Search Page
       </Typography>
 
-      <SearchBar />
+      {/* Search Bar with search handler */}
+      <SearchBar onSearch={handleSearch} />
 
       <Divider
         sx={{
           width: "100%",
-          marginTop: 4, 
+          marginTop: 4,
           borderColor: "rgba(0, 0, 0, 0.12)",
           marginBottom: 4,
         }}
       />
-      {console.log("Items", items)}
-    <ItemList items={items}/>
+
+      {/* Conditional Rendering */}
+      {loading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Typography color="error">Error: {error}</Typography>
+      ) : (
+        <ItemList items={items} />
+      )}
     </Container>
-    
   );
 }
