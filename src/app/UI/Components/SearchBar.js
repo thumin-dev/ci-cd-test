@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
-function SearchBar() {
+function SearchBar({ onSearch }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    // Trigger search when input is not empty
+    if (value.trim() !== "") {
+      onSearch(value);
+    }
+  };
+
   return (
     <TextField
-      placeholder="Search..."
+      placeholder="Search HopeFuelID..."
       variant="outlined"
       fullWidth
+      value={searchTerm}
+      onChange={handleInputChange}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
