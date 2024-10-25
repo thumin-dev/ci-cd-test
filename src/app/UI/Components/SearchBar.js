@@ -9,10 +9,9 @@ function SearchBar({ onSearch }) {
     const value = event.target.value;
     setSearchTerm(value);
 
-    // Trigger search when input is not empty
-    if (value.trim() !== "") {
+   
       onSearch(value);
-    }
+    
   };
 
   return (
