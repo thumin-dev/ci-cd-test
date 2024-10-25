@@ -3,16 +3,19 @@ import SearchBar from "../Components/SearchBar";
 import Divider from "@mui/material/Divider";
 import { Container, Typography, CircularProgress } from "@mui/material";
 import ItemList from "../Components/ItemList";
+import { set } from "date-fns";
 
 export default function SearchBarForm() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false); // Manage loading state
-  const [error, setError] = useState(null); // Manage error state
+  const [error, setError] = useState(null); 
+   const [noResults, setNoResults] = useState(false);
 
   // Function to fetch data from the API
   const handleSearch = async (HopeFuelID) => {
     setLoading(true); 
     setError(null); 
+    setNoResults(false); 
 
     try {
       const url = HopeFuelID
@@ -27,12 +30,17 @@ export default function SearchBarForm() {
 
       const data = await response.json();
       console.log("Fetched Data:", data);
-      setItems(data); // Update items state with fetched data
+        if (data.length === 0) {
+          setNoResults(true); // Set no-results flag if API returns an empty array
+        } else {
+          setItems(data); // Update items state with fetched data
+        }
+    
     } catch (error) {
       console.error("Search Error:", error);
-      setError(error.message); // Update error state
+      setError(error.message);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false); 
     }
   };
 
@@ -76,7 +84,12 @@ export default function SearchBarForm() {
         <CircularProgress />
       ) : error ? (
         <Typography color="error">Error: {error}</Typography>
-      ) : (
+      ) : noResults ? (
+        <Typography variant="body1" color="textSecondary">
+          No matching items found. Please try a different search term.
+        </Typography>
+      
+      ) :(
         <ItemList items={items} />
       )}
     </Container>
