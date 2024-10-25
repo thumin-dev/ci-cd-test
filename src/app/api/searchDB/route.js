@@ -7,7 +7,9 @@ async function DataForCard() {
 SELECT 
     C.CurrencyCode,
     Cu.Name AS CustomerName,
-    T.HopeFuelID
+    T.HopeFuelID,
+    S.ScreenShotLink
+    
 FROM 
     Transactions T
 JOIN 
@@ -16,10 +18,11 @@ JOIN
     Wallet W ON T.WalletID = W.WalletId
 JOIN 
     Currency C ON W.CurrencyId = C.CurrencyId
+JOIN 
+	ScreenShot S ON S.TransactionID = T.TransactionID
 WHERE
    MONTH(T.TransactionDate) = 10 
     AND YEAR(T.TransactionDate) = YEAR(CURDATE());
-
 
     `;
       try {
@@ -42,9 +45,9 @@ export async function GET() {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("[Error] Cannot get dashboard data", error);
+    console.error("[Error] Cannot get card data", error);
     return NextResponse.json(
-      { error: "Cannot get dashboard data " },
+      { error: "Cannot get card data " },
       { status: 500 }
     );
   }
