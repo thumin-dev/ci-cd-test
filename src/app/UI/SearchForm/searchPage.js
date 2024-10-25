@@ -1,8 +1,31 @@
 import SearchBar from "../Components/SearchBar";
 import Divider from "@mui/material/Divider";
 import { Box, Container, Typography } from "@mui/material";
+import ItemList from "../Components/ItemList";
+import { useState, useEffect } from "react";
 
 export default function SearchBarForm() {
+
+    const [items, setItems] = useState([]);
+
+    //fetch data from the server
+    const fetchData = async () => {
+    let requestOptions = {
+        method: 'GET',
+        "Content-Type": "application/json",
+        redirect: 'follow'
+    };
+      
+    let response = await fetch("/api/searchDB", requestOptions)
+    let data =  await response.json();
+    console.log("Response from DB for card:",data)
+    setItems(data);
+
+    }
+    useEffect(() => {
+        fetchData();    
+    },[]);
+
   return (
     <Container
       maxWidth="md"
@@ -28,8 +51,12 @@ export default function SearchBarForm() {
           width: "100%",
           marginTop: 4, 
           borderColor: "rgba(0, 0, 0, 0.12)",
+          marginBottom: 4,
         }}
       />
+      {console.log("Items", items)}
+    <ItemList items={items}/>
     </Container>
+    
   );
 }
