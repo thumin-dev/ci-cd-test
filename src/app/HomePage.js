@@ -36,6 +36,7 @@ import getScreenShotUrl from "./utilites/getScreenShotUrl";
 
 import OpenCloseForm from "./UI/OpenCloseForm.js";
 import PaymentTeam from "./UI/PaymentTeam/PaymentTeam"
+import SearchPage from "./UI/SearchForm/searchPage";
 Amplify.configure(config);
 
 const client = generateClient();
@@ -233,6 +234,11 @@ function HomePage({ signOut, user }) {
             {
               page == 4 && (
                 <PaymentTeam />
+              )
+            }
+            {
+              page == 5 && (
+                <SearchPage />
               )
             }
         </Container>
