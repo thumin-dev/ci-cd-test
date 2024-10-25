@@ -26,7 +26,7 @@ export default function SearchBarForm() {
       <Divider
         sx={{
           width: "100%",
-          marginTop: 4, // Add space between the SearchBar and Divider
+          marginTop: 4, 
           borderColor: "rgba(0, 0, 0, 0.12)",
         }}
       />
