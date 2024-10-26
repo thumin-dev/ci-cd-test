@@ -60,7 +60,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   } else if (userRole == "Support Agent") {
     navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ရှာဖွေခြင်း"];
   } else {
-    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"];
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း","ရှာဖွေခြင်း"];
   }
 
   const handleOpenNavMenu = (event) => {
