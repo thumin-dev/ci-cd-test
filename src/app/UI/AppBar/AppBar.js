@@ -32,7 +32,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+
 
   // useEffect to handle the delay
   useEffect(() => {
@@ -55,9 +55,10 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
       "သက်တမ်းတိုးခြင်း",
       "ဖောင်အဖွင့်အပိတ်",
       "ငွေစစ်ဆေးခြင်း",
+      "ရှာဖွေခြင်း",
     ];
   } else if (userRole == "Support Agent") {
-    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း"];
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ရှာဖွေခြင်း"];
   } else {
     navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"];
   }
@@ -107,6 +108,9 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
     } else if (page == "ငွေစစ်ဆေးခြင်း") {
       setPage(4);
     }
+    else if (page == "ရှာဖွေခြင်း") {
+      setPage(5);
+    }
   };
 
   return (
@@ -133,11 +137,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
           </Typography>
 
           <Box sx={{ display: { xs: "none", sm: "block" }, flexGrow: 1 }}>
-            {isLoading ? ( // Conditionally render "Loading" or nav items
-              <Typography variant="h6" sx={{ color: "#fff" }}>
-                Loading...
-              </Typography>
-            ) : (
+            {(
               navItems.map((item) => (
                 <Button
                   key={item}

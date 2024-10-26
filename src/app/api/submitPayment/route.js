@@ -177,7 +177,7 @@ export async function POST(req) {
     const query = `
      INSERT INTO Transactions   
     (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month,HopeFuelID) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?,  CONVERT_TZ(?, '+00:00', '+07:00'), ?, ?, ?)
 
     `;
     const values = [
