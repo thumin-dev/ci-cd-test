@@ -82,11 +82,13 @@ const PaymentTeam = () => {
   };
 
   const handleConfirmOpen = (row) => {
+    handleAgree(row);
     setSelectedRow(row); // Set the row that's being confirmed
     setConfirmOpen(true);
   };
 
   const handleDeinedOpen = (row) => {
+    handleDeined(row);
     setSelectedRow(row); // Set the row that's being denied
     setDeinedOpen(true);
   };
@@ -254,7 +256,7 @@ const PaymentTeam = () => {
           )}
         </TableBody>
       </Table>
-      {/* Confirm Dialog */}
+      {/* Confirm Dialog
       <Dialog
         open={confirmOpen}
         onClose={handleConfirmClose}
@@ -276,7 +278,7 @@ const PaymentTeam = () => {
         </DialogActions>
       </Dialog>
       {/* Deny Dialog */}
-      <Dialog
+      {/* <Dialog
         open={deinedOpen}
         onClose={handleDeinedClose}
         aria-labelledby="alert-dialog-title"
@@ -295,7 +297,7 @@ const PaymentTeam = () => {
             Deny
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */} 
     </TableContainer>
   );
 };
