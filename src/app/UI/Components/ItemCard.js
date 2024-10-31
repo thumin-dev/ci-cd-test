@@ -28,14 +28,16 @@ function ItemCard({ item }) {
           width: 64,
           height: 64,
           marginRight: "16px",
-          borderRadius: "8px", // Optional: Rounded corners
-          objectFit: "cover", // Ensures image covers the box properly
+          borderRadius: "8px",
+          objectFit: "cover",
           backgroundColor: "#c4c4c4",
         }}
       />
-      <div sx={{
-        display: "block"
-      }}>
+      <div
+        sx={{
+          display: "block",
+        }}
+      >
         <CardContent sx={{ flex: 1 }}>
           <Typography variant="h6" fontWeight="bold">
             HOPEID - {item.HopeFuelID}
@@ -45,7 +47,13 @@ function ItemCard({ item }) {
           </Typography>
         </CardContent>
         <Box>
-          <Chip label={item.CurrencyCode} color="primary" variant="outlined" />
+          <Chip
+            label={item.CurrencyCode}
+            sx={{
+              backgroundColor: "#fecaca",
+              color: "black",
+            }}
+          />
         </Box>
       </div>
     </Card>

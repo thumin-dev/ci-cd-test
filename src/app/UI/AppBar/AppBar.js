@@ -33,21 +33,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const router = useRouter();
 
-
-  // useEffect to handle the delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Set to false after 4 seconds to stop loading
-    }, 3000);
-
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
-  }, []);
-
-  //Check if the user is Admin or not
-  let navItems = null;
-  //   userRole !== "admin"
-  //     ? ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"]
-  //     : ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ဖောင်အဖွင့်အပိတ်", "ငွေစစ်ဆေးခြင်း"];
+  let navItems = [];
 
   if (userRole == "admin") {
     navItems = [
@@ -60,7 +46,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
   } else if (userRole == "Support Agent") {
     navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ရှာဖွေခြင်း"];
   } else {
-    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း"];
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း","ရှာဖွေခြင်း"];
   }
 
   const handleOpenNavMenu = (event) => {
