@@ -20,7 +20,7 @@ async function DataForCard() {
     JOIN 
         ScreenShot S ON S.TransactionID = T.TransactionID
     WHERE
-        MONTH(T.TransactionDate) = 10 
+        MONTH(T.TransactionDate) = 11
         AND YEAR(T.TransactionDate) = YEAR(CURDATE());
   `;
   try {
@@ -52,7 +52,7 @@ async function searchBoxQuery(HopeFuelID) {
     JOIN 
         ScreenShot S ON S.TransactionID = T.TransactionID
     WHERE
-        MONTH(T.TransactionDate) = 10 
+        MONTH(T.TransactionDate) = 11
         AND YEAR(T.TransactionDate) = YEAR(CURDATE())
         AND T.HopeFuelID = ?;  -- Use placeholder for safe query execution
   `;
