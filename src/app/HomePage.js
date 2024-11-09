@@ -37,6 +37,7 @@ import getScreenShotUrl from "./utilites/getScreenShotUrl";
 import OpenCloseForm from "./UI/OpenCloseForm.js";
 import PaymentTeam from "./UI/PaymentTeam/PaymentTeam"
 import SearchPage from "./UI/SearchForm/searchPage";
+import PaymentDetails from "./UI/DetailPage/PaymentDetailsForm";
 Amplify.configure(config);
 
 const client = generateClient();
@@ -194,55 +195,47 @@ function HomePage({ signOut, user }) {
   if(isSettingUpDone)
   {
     return (
-    
       <AgentContext.Provider value={agentId}>
-      <UserContext.Provider value={user}>
-        <Container component="main" maxWidth="xl" disableGutters>
-          <ResponsiveAppBar
-            setPage={setPage}
-            signOut={signOut}
-            userRole={userRole}
-          />
-          <CssBaseline />
-  
-          <Container component="section" maxWidth="xs">
-            {"enable" === "loading" && <CircularProgress />}
-            {(userRole == "admin" || "enable" === "enable") && page == 1 && (
-              <CreateOrExtend userRole={userRole} />
-            )}
-            {(userRole == "admin" || "enable" === "enable") && page == 2 && (
-              <ExtendUser userRole={userRole} />
-            )}
-            {userRole == "admin" && page == 3 && (
-              <OpenCloseForm status={"enable"} />
-            )}
-            {"enable" === "disable" && userRole == "user" && (
-              <Box
-              sx={{
-                marginTop: 8,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-              >
-                <Alert severity="warning">
-                  Form ခဏပိတ်ထားပါတယ်။ တခုခု လိုချင်ပါက admin ကို ဆက်သွယ်ပါ။
-                </Alert>
-              </Box>
-            )}
+        <UserContext.Provider value={user}>
+          <Container component="main" maxWidth="xl" disableGutters>
+            <ResponsiveAppBar
+              setPage={setPage}
+              signOut={signOut}
+              userRole={userRole}
+            />
+            <CssBaseline />
+
+            <Container component="section" maxWidth="xs">
+              {"enable" === "loading" && <CircularProgress />}
+              {(userRole == "admin" || "enable" === "enable") && page == 1 && (
+                <CreateOrExtend userRole={userRole} />
+              )}
+              {(userRole == "admin" || "enable" === "enable") && page == 2 && (
+                <ExtendUser userRole={userRole} />
+              )}
+              {userRole == "admin" && page == 3 && (
+                <OpenCloseForm status={"enable"} />
+              )}
+              {"enable" === "disable" && userRole == "user" && (
+                <Box
+                  sx={{
+                    marginTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Alert severity="warning">
+                    Form ခဏပိတ်ထားပါတယ်။ တခုခု လိုချင်ပါက admin ကို ဆက်သွယ်ပါ။
+                  </Alert>
+                </Box>
+              )}
+            </Container>
+            {page == 4 && <PaymentTeam />}
+            {page == 5 && <SearchPage />}
+            {page == 6 && <PaymentDetails />}
           </Container>
-            {
-              page == 4 && (
-                <PaymentTeam />
-              )
-            }
-            {
-              page == 5 && (
-                <SearchPage />
-              )
-            }
-        </Container>
-      </UserContext.Provider>
+        </UserContext.Provider>
       </AgentContext.Provider>
     );
   }

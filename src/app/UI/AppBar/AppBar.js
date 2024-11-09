@@ -42,11 +42,12 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
       "ဖောင်အဖွင့်အပိတ်",
       "ငွေစစ်ဆေးခြင်း",
       "ရှာဖွေခြင်း",
+      "HopeFuelDetail",
     ];
   } else if (userRole == "Support Agent") {
-    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ရှာဖွေခြင်း"];
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ရှာဖွေခြင်း","HopeFuelDetail"];
   } else {
-    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း","ရှာဖွေခြင်း"];
+    navItems = ["အသစ်သွင်းခြင်း", "သက်တမ်းတိုးခြင်း", "ငွေစစ်ဆေးခြင်း","ရှာဖွေခြင်း","HopeFuelDetail"];
   }
 
   const handleOpenNavMenu = (event) => {
@@ -93,9 +94,10 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
       setPage(2);
     } else if (page == "ငွေစစ်ဆေးခြင်း") {
       setPage(4);
-    }
-    else if (page == "ရှာဖွေခြင်း") {
+    } else if (page == "ရှာဖွေခြင်း") {
       setPage(5);
+    } else if (page == "HopeFuelDetail") {
+      setPage(6);
     }
   };
 
