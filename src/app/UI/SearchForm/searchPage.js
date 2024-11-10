@@ -69,9 +69,6 @@ export default function SearchBarForm() {
         textAlign: "center",
       }}
     >
-      <Typography variant="h4" gutterBottom>
-        Search Page
-      </Typography>
       {/* Search Bar with search handler */}
       <SearchBar onSearch={handleSearchChange} />
 

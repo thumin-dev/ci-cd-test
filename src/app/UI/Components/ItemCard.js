@@ -1,10 +1,15 @@
 import { Box, Chip, Typography } from "@mui/material";
 
 function ItemCard({ item }) {
-  console.log("Item:", item);
+
+  const handleClick = () => {
+    console.log("Clicked");
+
+  };
 
   return (
     <Box
+      onClick={handleClick}
       sx={{
         display: "flex",
         alignItems: "center",
