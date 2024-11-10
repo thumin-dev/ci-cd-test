@@ -8,9 +8,7 @@ function SearchBar({ onSearch }) {
   const handleInputChange = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-
-   
-      onSearch(value);
+     onSearch(value);
     
   };
 
@@ -29,6 +27,9 @@ function SearchBar({ onSearch }) {
         ),
       }}
       sx={{
+        border: "none",
+        borderColor: "transparent",
+        "& fieldset": { border: "none" },
         backgroundColor: "white",
         borderRadius: "30px",
         marginBottom: "16px",

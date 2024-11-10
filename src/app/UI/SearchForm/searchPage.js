@@ -3,19 +3,19 @@ import SearchBar from "../Components/SearchBar";
 import Divider from "@mui/material/Divider";
 import { Container, Typography, CircularProgress } from "@mui/material";
 import ItemList from "../Components/ItemList";
-import { set } from "date-fns";
 
 export default function SearchBarForm() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false); // Manage loading state
-  const [error, setError] = useState(null); 
-   const [noResults, setNoResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [noResults, setNoResults] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // Add searchQuery state
 
   // Function to fetch data from the API
   const handleSearch = async (HopeFuelID) => {
-    setLoading(true); 
-    setError(null); 
-    setNoResults(false); 
+    setLoading(true);
+    setError(null);
+    setNoResults(false);
 
     try {
       const url = HopeFuelID
@@ -30,23 +30,29 @@ export default function SearchBarForm() {
 
       const data = await response.json();
       console.log("Fetched Data:", data);
-        if (data.length === 0) {
-          setNoResults(true); // Set no-results flag if API returns an empty array
-        } else {
-          setItems(data); // Update items state with fetched data
-        }
-    
+
+      if (data.length === 0) {
+        setNoResults(true);
+      } else {
+        setItems(data);
+      }
     } catch (error) {
       console.error("Search Error:", error);
       setError(error.message);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
-  // Fetch initial data for October transactions on component mount
+  // Handle search input changes
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    handleSearch(query);
+  };
+
+  // Fetch initial data on mount
   useEffect(() => {
-    handleSearch(); // Fetch all October transactions
+    handleSearch(""); // Fetch all data initially
   }, []);
 
   return (
@@ -66,9 +72,8 @@ export default function SearchBarForm() {
       <Typography variant="h4" gutterBottom>
         Search Page
       </Typography>
-
       {/* Search Bar with search handler */}
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearchChange} />
 
       <Divider
         sx={{
@@ -88,9 +93,8 @@ export default function SearchBarForm() {
         <Typography variant="body1" color="textSecondary">
           No matching items found. Please try a different search term.
         </Typography>
-      
-      ) :(
-        <ItemList items={items} />
+      ) : (
+        <ItemList items={items} searchQuery={searchQuery} />
       )}
     </Container>
   );
