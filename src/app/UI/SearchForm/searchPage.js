@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import SearchBar from "../Components/SearchBar";
-import Divider from "@mui/material/Divider";
-import { Container, Typography, CircularProgress } from "@mui/material";
+import {
+  Container,
+  Typography,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
 import ItemList from "../Components/ItemList";
 
 export default function SearchBarForm() {
@@ -11,7 +14,8 @@ export default function SearchBarForm() {
   const [error, setError] = useState(null);
   const [noResults, setNoResults] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
+  const [inputText, setInputText] = useState("");
+  const [page, setPage] = useState(1);
 
   // Function to fetch data from the API
   const handleSearch = async (HopeFuelID) => {
@@ -21,8 +25,8 @@ export default function SearchBarForm() {
 
     try {
       const url = HopeFuelID
-        ? `/api/searchDB?HopeFuelID=${HopeFuelID}`
-        : `/api/searchDB`;
+        ? `/api/searchDB?HopeFuelID=${HopeFuelID}&page=${page}`
+        : `/api/searchDB?page=${page}`;
 
       const response = await fetch(url);
 
@@ -33,10 +37,10 @@ export default function SearchBarForm() {
       const data = await response.json();
       console.log("Fetched Data:", data);
 
-      if (data.length === 0) {
+      if (data.length === 0 && page === 1) {
         setNoResults(true);
       } else {
-        setItems(data);
+        setItems((prevItems) => (page === 1 ? data : [...prevItems, ...data]));
       }
     } catch (error) {
       console.error("Search Error:", error);
@@ -49,18 +53,21 @@ export default function SearchBarForm() {
   // Handle search input changes
   const handleSearchChange = (query) => {
     setSearchQuery(query);
+    setPage(1); // Reset to first page on new search
     handleSearch(query);
   };
 
-  // Fetch initial data on mount
-  useEffect(() => {
-    handleSearch(""); // Fetch all data initially
-  }, []);
-
-  // Navigate to the PaymentDetails page when an item is clicked
-  const handleItemClick = (HopeFuelID) => {
-    router.push(`/details/${HopeFuelID}`);
+  // Load More items
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
   };
+
+  // Fetch initial data
+  useEffect(() => {
+    if (page > 1 || searchQuery === "") {
+      handleSearch(searchQuery);
+    }
+  }, [page]);
 
   return (
     <Container
@@ -76,17 +83,10 @@ export default function SearchBarForm() {
         textAlign: "center",
       }}
     >
+      {/* Search Bar */}
       <SearchBar onSearch={handleSearchChange} />
 
-      <Divider
-        sx={{
-          width: "100%",
-          marginTop: 4,
-          borderColor: "rgba(0, 0, 0, 0.12)",
-          marginBottom: 4,
-        }}
-      />
-
+      {/* Conditional Rendering */}
       {loading ? (
         <CircularProgress />
       ) : error ? (
@@ -98,8 +98,9 @@ export default function SearchBarForm() {
       ) : (
         <ItemList
           items={items}
-          searchQuery={searchQuery}
-          onItemClick={handleItemClick}
+          hasInput={searchQuery.length > 0 || inputText.length > 0}
+          onLoadMore={handleLoadMore}
+          onItemClick={(HopeFuelID) => console.log("Item clicked:", HopeFuelID)}
         />
       )}
     </Container>

@@ -1,26 +1,82 @@
-import { Box, Typography, Chip } from "@mui/material";
+import React from "react";
+import { Box, Chip, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-export default function ItemCard({ item, onClick }) {
+function ItemCard({ item, onClick }) {
+  const router = useRouter();
+
+  // Safely access properties using optional chaining (?.)
+  const handleClick = () => {
+    onClick(item?.HopeFuelID); // Trigger the callback function to navigate
+    if (item?.HopeFuelID) {
+      router.push(`/details?HopeFuelID=${item.HopeFuelID}`);
+    }
+  };
+
   return (
     <Box
-      onClick={onClick}
+      onClick={handleClick}
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: 2,
-        borderBottom: "1px solid #f0f0f0",
+        borderBottom: "1px solid #e0e0e0",
         cursor: "pointer",
         "&:hover": {
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "#f9f9f9",
         },
       }}
     >
+      {/* Left Section with Thumbnail and Text */}
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography variant="body1">{item.HopeFuelID}</Typography>
-        <Typography variant="caption">{item.CustomerName}</Typography>
+        {/* Placeholder for Screenshot Image */}
+        {item?.ScreenShotLink ? (
+          <Box
+            component="img"
+            src={item.ScreenShotLink}
+            alt="Payment Screenshot"
+            sx={{
+              width: 50,
+              height: 50,
+              marginRight: 2,
+              borderRadius: 2,
+              objectFit: "cover",
+            }}
+          />
+        ) : (
+          <Box
+            sx={{
+              width: 50,
+              height: 50,
+              bgcolor: "#f0f0f0",
+              marginRight: 2,
+              borderRadius: 2,
+            }}
+          />
+        )}
+        {/* Display HopeFuelID and Customer Name if available */}
+        <Box>
+          <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+            {item?.HopeFuelID || "N/A"}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {item?.CustomerName || "No Name"}
+          </Typography>
+        </Box>
       </Box>
-      <Chip label={item.CurrencyCode} size="small" />
+
+      {/* Right Section with Currency Code */}
+      {item?.CurrencyCode && (
+        <Chip
+          label={item.CurrencyCode}
+          color="primary"
+          size="small"
+          sx={{ fontWeight: "bold" }}
+        />
+      )}
     </Box>
   );
 }
+
+export default ItemCard;

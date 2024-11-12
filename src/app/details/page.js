@@ -23,6 +23,8 @@ import SupportRegion from "../UI/Components/SupportRegion";
 import UserInfo from "../UI/Components/UserInfo";
 import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
 import SearchBarForm from "../UI/SearchForm/searchPage";
+import ResponsiveAppBar from "../UI/AppBar/AppBar";
+
 
 export default function PaymentDetails() {
   const searchParams = useSearchParams();
@@ -51,24 +53,27 @@ export default function PaymentDetails() {
   // Handle case where no HopeFuelID is selected
   if (!HopeFuelID) {
     return (
-      <Box sx={{ display: "flex", height: "100vh" }}>
-        {/* Left Section: Search Bar */}
-        <Box sx={{ width: 300, marginRight: 3, border: "none" }}>
-          <SearchBarForm />
+      <>
+        <ResponsiveAppBar />
+        <Box sx={{ display: "flex", height: "100vh" }}>
+          {/* Left Section: Search Bar */}
+          <Box sx={{ width: 300, marginRight: 3, border: "none" }}>
+            <SearchBarForm />
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Typography variant="h6">
+              Please select a transaction to view details
+            </Typography>
+          </Box>
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="h6">
-            Please select a transaction to view details
-          </Typography>
-        </Box>
-      </Box>
+      </>
     );
   }
 
