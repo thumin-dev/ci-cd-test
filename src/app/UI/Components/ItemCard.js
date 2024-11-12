@@ -1,57 +1,26 @@
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Typography, Chip } from "@mui/material";
 
-function ItemCard({ item }) {
-
-  const handleClick = () => {
-    console.log("Clicked");
-
-  };
-
+export default function ItemCard({ item, onClick }) {
   return (
     <Box
-      onClick={handleClick}
+      onClick={onClick}
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: 2,
         borderBottom: "1px solid #f0f0f0",
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "#f5f5f5",
+        },
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        {/* Conditional rendering for the screenshot */}
-        {item.ScreenShotLink ? (
-          <Box
-            component="img"
-            src={item.ScreenShotLink}
-            alt="Payment screenshot"
-            sx={{
-              width: 40,
-              height: 40,
-              objectFit: "cover",
-              marginRight: 2,
-              borderRadius: 2,
-            }}
-          />
-        ) : (
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              bgcolor: "#f0f0f0",
-              marginRight: 2,
-              borderRadius: 2,
-            }}
-          />
-        )}
-        <Box>
-          <Typography variant="body1">{item.HopeFuelID}</Typography>
-          <Typography variant="caption">{item.CustomerName}</Typography>
-        </Box>
+        <Typography variant="body1">{item.HopeFuelID}</Typography>
+        <Typography variant="caption">{item.CustomerName}</Typography>
       </Box>
-      <Chip label={item.CurrencyCode} color="primary" size="small" />
+      <Chip label={item.CurrencyCode} size="small" />
     </Box>
   );
 }
-
-export default ItemCard;

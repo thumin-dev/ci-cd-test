@@ -12,13 +12,13 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-const UserInfo = () => (
+const UserInfo = ({user}) => (
   <Stack spacing={1}>
-    <Typography variant="h6">Geek Squad Studio</Typography>
-    <Typography>Email: geeksquadstudio@domain.com</Typography>
+    <Typography variant="h6">{user.Name}</Typography>
+    <Typography>Email: {user.email}</Typography>
     <Stack direction="row" spacing={2}>
-      <Typography>Expire Date: 17/11/2024</Typography>
-      <Typography>Card No: H-1112223</Typography>
+      <Typography>Expire Date: {user.ExpireDate}</Typography>
+      <Typography>Card No: {user.CardID}</Typography>
     </Stack>
   </Stack>
 );

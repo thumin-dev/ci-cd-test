@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import SearchBar from "../Components/SearchBar";
 import Divider from "@mui/material/Divider";
 import { Container, Typography, CircularProgress } from "@mui/material";
@@ -9,7 +10,8 @@ export default function SearchBarForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [noResults, setNoResults] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // Add searchQuery state
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   // Function to fetch data from the API
   const handleSearch = async (HopeFuelID) => {
@@ -55,6 +57,11 @@ export default function SearchBarForm() {
     handleSearch(""); // Fetch all data initially
   }, []);
 
+  // Navigate to the PaymentDetails page when an item is clicked
+  const handleItemClick = (HopeFuelID) => {
+    router.push(`/details/${HopeFuelID}`);
+  };
+
   return (
     <Container
       maxWidth="md"
@@ -69,7 +76,6 @@ export default function SearchBarForm() {
         textAlign: "center",
       }}
     >
-      {/* Search Bar with search handler */}
       <SearchBar onSearch={handleSearchChange} />
 
       <Divider
@@ -81,7 +87,6 @@ export default function SearchBarForm() {
         }}
       />
 
-      {/* Conditional Rendering */}
       {loading ? (
         <CircularProgress />
       ) : error ? (
@@ -91,7 +96,11 @@ export default function SearchBarForm() {
           No matching items found. Please try a different search term.
         </Typography>
       ) : (
-        <ItemList items={items} searchQuery={searchQuery} />
+        <ItemList
+          items={items}
+          searchQuery={searchQuery}
+          onItemClick={handleItemClick}
+        />
       )}
     </Container>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Box,
   Typography,
@@ -15,50 +15,76 @@ import {
   InputLabel,
   Divider,
 } from "@mui/material";
-import ActionButtons from "../../UI/Components/ActionButton";
-import AmountDetails from "../../UI/Components/AmountDetails";
-import CardsIssuedList from "../../UI/Components/CardIssuedList";
-import CreatorInfo from "../../UI/Components/CreatorInfo";
-import SupportRegion from "../../UI/Components/SupportRegion";
-import UserInfo from "../../UI/Components/UserInfo";
-import HopeFuelIdStatus from "../../UI/Components/HopeIdStatus";
-import SearchBarForm from "../../UI/SearchForm/searchPage";
+import ActionButtons from "../UI/Components/ActionButton";
+import AmountDetails from "../UI/Components/AmountDetails";
+import CardsIssuedList from "../UI/Components/CardIssuedList";
+import CreatorInfo from "../UI/Components/CreatorInfo";
+import SupportRegion from "../UI/Components/SupportRegion";
+import UserInfo from "../UI/Components/UserInfo";
+import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
+import SearchBarForm from "../UI/SearchForm/searchPage";
 
 export default function PaymentDetails() {
-  const { HopeFuelID } = useParams();
+  const searchParams = useSearchParams();
+  const HopeFuelID = searchParams.get("HopeFuelID");
+  const router = useRouter();
   const [data, setData] = useState(null);
 
-  // Fetch data from the API
+  // Fetch data based on HopeFuelID
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `/api/paymentDetails?HopeFuelID=${HopeFuelID}`
-        );
-        const result = await response.json();
-        setData(result[0]);
-      } catch (error) {
-        console.error("Error fetching payment details:", error);
-      }
-    };
-
-    fetchData();
+    if (HopeFuelID) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `/api/paymentDetails?HopeFuelID=${HopeFuelID}`
+          );
+          const result = await response.json();
+          setData(result[0]);
+        } catch (error) {
+          console.error("Error fetching payment details:", error);
+        }
+      };
+      fetchData();
+    }
   }, [HopeFuelID]);
 
-  if (!data) return <Typography>Loading...</Typography>;
-
-  return (
-    <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh", padding: 4 }}>
-      <Stack direction="row" spacing={3} alignItems="flex-start">
+  // Handle case where no HopeFuelID is selected
+  if (!HopeFuelID) {
+    return (
+      <Box sx={{ display: "flex", height: "100vh" }}>
         {/* Left Section: Search Bar */}
         <Box sx={{ width: 300, marginRight: 3, border: "none" }}>
           <SearchBarForm />
         </Box>
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6">
+            Please select a transaction to view details
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
 
-        {/* Right Section: Payment Details */}
+  if (!data) return <Typography>Loading...</Typography>;
+
+  return (
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      {/* Left Section: Search Bar */}
+      <Box sx={{ width: 300, marginRight: 3, border: "none" }}>
+        <SearchBarForm />
+      </Box>
+
+      {/* Right Section: Payment Details */}
+      <Box sx={{ flex: 1, padding: 4, backgroundColor: "#f5f5f5" }}>
         <Card sx={{ padding: 3, flex: 1, borderRadius: 5 }}>
           <Stack spacing={2}>
-            {/* Status Header */}
             <HopeFuelIdStatus data={data} />
             <Divider />
 
@@ -75,19 +101,10 @@ export default function PaymentDetails() {
 
               {/* Right Section */}
               <Stack spacing={2} sx={{ flex: 1 }}>
-                {/* User Info Section */}
                 <UserInfo user={data} />
-
-                {/* Amount and Currency Section */}
                 <AmountDetails amount={data} />
-
-                {/* Support Region Section */}
                 <SupportRegion region={data} />
-
-                {/* Creator Information Section */}
                 <CreatorInfo creator={data} />
-
-                {/* Notes Input */}
                 <TextField
                   fullWidth
                   label="Note"
@@ -95,8 +112,6 @@ export default function PaymentDetails() {
                   rows={3}
                   defaultValue={data.Note}
                 />
-
-                {/* Status Selection */}
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Select defaultValue={data.Status || 1}>
@@ -105,17 +120,14 @@ export default function PaymentDetails() {
                     <MenuItem value={3}>၃ - ပြီးစီး</MenuItem>
                   </Select>
                 </FormControl>
-
-                {/* Confirm and Deny Buttons */}
                 <ActionButtons />
               </Stack>
             </Stack>
 
-            {/* List of Cards Issued */}
             <CardsIssuedList />
           </Stack>
         </Card>
-      </Stack>
+      </Box>
     </Box>
   );
 }

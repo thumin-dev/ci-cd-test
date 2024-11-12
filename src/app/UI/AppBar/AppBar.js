@@ -97,7 +97,7 @@ function ResponsiveAppBar({ setPage, signOut, userRole }) {
     } else if (page == "ရှာဖွေခြင်း") {
       setPage(5);
     } else if (page == "HopeFuelDetail") {
-      setPage(6);
+       router.push("/details");
     }
   };
 
