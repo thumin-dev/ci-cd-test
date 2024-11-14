@@ -1,10 +1,7 @@
 
 export default async function extendUserSubmit(event,userInfo, currency, supportRegion ,files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, wallets, agentId) {
-    event.preventDefault();
-    // setloading(true)
-    setAmountValidate(false);
-    setmonthValidate(false)
-    setmanyChatValidate(false)
+  
+  
     const data = new FormData(event.currentTarget);
     const amount = data.get("amount")
     const month = data.get("month");
@@ -131,7 +128,7 @@ export default async function extendUserSubmit(event,userInfo, currency, support
       }
       )
     
-console.log("Raw:"+ raw);
+    console.log("Raw:"+ raw);
 
     var requestOptions = {
       method: 'POST',
