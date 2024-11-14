@@ -16,12 +16,13 @@ import {
 } from "@mui/material";
 
 const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
+  console.log("userInfo from ExtendOrNot: ", userInfo);
   return (
     <Box sx={{ mt: 4 }}>
       {/* Warning alert message */}
       <Alert severity="warning">
         <AlertTitle>User Already Exists</AlertTitle>
-        The user <strong>{userInfo.name}</strong> already exists. Do you want to
+        The user <strong>{userInfo.Name}</strong> already exists. Do you want to
         extend their membership?
       </Alert>
 
@@ -46,10 +47,10 @@ const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>{userInfo.name || "N/A"}</TableCell>
-              <TableCell>{userInfo.email || "N/A"}</TableCell>
-              <TableCell>{userInfo.prf_no || "N/A"}</TableCell>
-              <TableCell>{userInfo.expire_date || "N/A"}</TableCell>
+              <TableCell>{userInfo.Name || "N/A"}</TableCell>
+              <TableCell>{userInfo.Email || "N/A"}</TableCell>
+              <TableCell>{userInfo.CardID || "N/A"}</TableCell>
+              <TableCell>{userInfo.ExpireDate || "N/A"}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

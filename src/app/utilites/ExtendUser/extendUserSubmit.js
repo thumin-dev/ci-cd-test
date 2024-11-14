@@ -1,6 +1,6 @@
 
 export default async function extendUserSubmit(event,userInfo, currency, supportRegion ,files, setloading, formFillingPerson, setAmountValidate, setmonthValidate, setmanyChatValidate, fileExist, setfileExist, wallets, agentId) {
-  
+  event.preventDefault();
   
     const data = new FormData(event.currentTarget);
     const amount = data.get("amount")
