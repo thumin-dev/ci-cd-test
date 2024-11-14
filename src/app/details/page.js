@@ -23,7 +23,7 @@ import SupportRegion from "../UI/Components/SupportRegion";
 import UserInfo from "../UI/Components/UserInfo";
 import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
 import SearchBarForm from "../UI/SearchForm/searchPage";
-import ResponsiveAppBar from "../UI/AppBar/AppBar";
+
 
 
 export default function PaymentDetails() {
@@ -54,7 +54,7 @@ export default function PaymentDetails() {
   if (!HopeFuelID) {
     return (
       <>
-        <ResponsiveAppBar />
+       
         <Box sx={{ display: "flex", height: "100vh" }}>
           {/* Left Section: Search Bar */}
           <Box sx={{ width: 300, marginRight: 3, border: "none" }}>

@@ -1,3 +1,4 @@
+"use client";
 import React, { useContext } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,17 +16,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import getScreenShotUrl from "../../utilites/getScreenShotUrl";
+import getScreenShotUrl from "../utilites/getScreenShotUrl";
 
 const PaymentTeam = () => {
   // State for holding the row that's being confirmed/denied
   const [selectedRow, setSelectedRow] = React.useState(null); // Holds the row data for the active dialog
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [deinedOpen, setDeinedOpen] = React.useState(false);
-
-
-  
-
 
   function createData(
     HopeFuelID,
@@ -75,8 +72,8 @@ const PaymentTeam = () => {
   });
 
   const handleScreenShotClick = async (url) => {
-    let tmpURLObj = url
-    if (tmpURLObj ) {
+    let tmpURLObj = url;
+    if (tmpURLObj) {
       window.open(tmpURLObj, "_blank");
     }
   };
@@ -102,8 +99,8 @@ const PaymentTeam = () => {
   };
 
   const handleAgree = (row) => {
-   // console.log("agree");
-   // console.log(row);
+    // console.log("agree");
+    // console.log(row);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -111,7 +108,6 @@ const PaymentTeam = () => {
       denied: 0,
       HopeFuelID: row.HopeFuelID,
     });
-    
 
     const requestOptions = {
       method: "POST",
@@ -120,14 +116,13 @@ const PaymentTeam = () => {
       redirect: "follow",
     };
 
-    fetch("api/paymentConfirmOrDeined", requestOptions)
-    .then((response) => {if(response.ok) {
-      console.log("Payment Confirmed");
-      setData(
-        (prevData) =>
-          prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID) 
-      );
-    }
+    fetch("api/paymentConfirmOrDeined", requestOptions).then((response) => {
+      if (response.ok) {
+        console.log("Payment Confirmed");
+        setData((prevData) =>
+          prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID)
+        );
+      }
     });
     setConfirmOpen(false);
   };
@@ -153,10 +148,10 @@ const PaymentTeam = () => {
     fetch("api/paymentConfirmOrDeined", requestOptions).then((response) => {
       if (response.ok) {
         console.log("Payment Denied");
-       setData(
-         (prevData) =>
-           prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID) // Use TransactionID here
-       );
+        setData(
+          (prevData) =>
+            prevData.filter((item) => item.HopeFuelID !== row.HopeFuelID) // Use TransactionID here
+        );
       }
     });
     setDeinedOpen(false);
@@ -172,7 +167,8 @@ const PaymentTeam = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
-        setData(result)})
+        setData(result);
+      })
       .catch((error) => console.error(error));
   }, []);
 
@@ -297,7 +293,7 @@ const PaymentTeam = () => {
             Deny
           </Button>
         </DialogActions>
-      </Dialog> */} 
+      </Dialog> */}
     </TableContainer>
   );
 };
