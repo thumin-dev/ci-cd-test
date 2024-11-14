@@ -57,7 +57,8 @@ const ExtendUserForm = ({ userRole }) => {
   const [uploadProgress, setUploadProgress] = useState("");
   const [fileExist, setFileExist] = useState(true);
 
-  const formFillingPerson = user?.email || "Unknown User";
+  const formFillingPerson = user?.Email || "Unknown User";
+  console.log("formFillingPerson", formFillingPerson);
   const agentId = agent || "No Agent";
 
   // Fetch currencies, wallets, and support regions
@@ -86,15 +87,19 @@ const ExtendUserForm = ({ userRole }) => {
   const handleOtpComplete = async (value) => {
     setCheckInputComplete(true);
     setIsChecking(true);
+    
     await checkPrfSubmit(
       value,
       setUserExist,
       setHasPermissionThisMonth,
       setIsChecking,
-      setUserInfo
+      setUserInfo,
+      userRole
     );
     setIsChecking(false);
   };
+  // Log userInfo to ensure it's an object and not a boolean
+  console.log("User Info after check:", userInfo);
 
   // Handle decline action
   const handleDecline = () => {
@@ -114,6 +119,7 @@ const ExtendUserForm = ({ userRole }) => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     await extendUserSubmit(
+      event,
       userInfo,
       amount,
       month,
@@ -133,7 +139,7 @@ const ExtendUserForm = ({ userRole }) => {
     await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
     setFileExist(acceptedFiles.length > 0);
   };
-
+  console.log("userInfo", userInfo);
   return (
     <Box sx={{ mt: 4, marginLeft: 15, marginRight: 15 }}>
       <MuiOtpInput
