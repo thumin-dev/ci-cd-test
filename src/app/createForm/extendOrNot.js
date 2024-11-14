@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const ExtendOrNot = ({ userInfo, onConfirm }) => {
+const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
   return (
     <Box sx={{ mt: 4 }}>
       {/* Warning alert message */}
@@ -75,7 +75,7 @@ const ExtendOrNot = ({ userInfo, onConfirm }) => {
         <Button
           variant="outlined"
           color="error"
-          onClick={() => onConfirm(false)}
+          onClick={() => onDecline()}
         >
           Decline
         </Button>

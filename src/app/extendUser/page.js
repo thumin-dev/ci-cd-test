@@ -17,6 +17,8 @@ const ExtendUserPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            marginLeft: 15,
+            marginRight: 15,
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
