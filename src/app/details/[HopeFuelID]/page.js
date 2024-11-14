@@ -23,7 +23,7 @@ import SupportRegion from "../../UI/Components/SupportRegion";
 import UserInfo from "../../UI/Components/UserInfo";
 import HopeFuelIdStatus from "../../UI/Components/HopeIdStatus";
 import SearchBarForm from "../../UI/SearchForm/searchPage";
-import ResponsiveAppBar from "../../UI/AppBar/AppBar";
+
 
 
 export default function PaymentDetails() {
@@ -51,7 +51,7 @@ export default function PaymentDetails() {
 
   return (
     <>
-    <ResponsiveAppBar />
+
       <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh", padding: 4 }}>
         <Stack direction="row" spacing={3} alignItems="flex-start">
           {/* Left Section: Search Bar */}

@@ -1,12 +1,13 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import SearchBar from "../Components/SearchBar";
+import SearchBar from "../UI/Components/SearchBar";
 import {
   Container,
   Typography,
   CircularProgress,
   TextField,
 } from "@mui/material";
-import ItemList from "../Components/ItemList";
+import ItemList from "../UI/Components/ItemList";
 
 export default function SearchBarForm() {
   const [items, setItems] = useState([]);
