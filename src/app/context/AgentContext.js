@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import getAuthCurrentUser from "../utilites/getAuthCurrentUser";
 
+
 const AgentContext = createContext();
 
 export const useAgent = () => {
@@ -24,6 +25,7 @@ export const AgentProvider = ({ children }) => {
         const data = await response.json();
         if (data.code === 1) {
           setAgentId(data.user.AgentID);
+          console.log("Agent ID from AgentContext: ", data.user.AgentID);
         }
       } catch (error) {
         console.error("Error checking agent status:", error);
@@ -33,6 +35,8 @@ export const AgentProvider = ({ children }) => {
   }, []);
 
   return (
-    <AgentContext.Provider value={agentId}>{children}</AgentContext.Provider>
+    <AgentContext.Provider value={agentId}>
+      {children}
+    </AgentContext.Provider>
   );
 };

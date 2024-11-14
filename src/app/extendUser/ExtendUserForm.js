@@ -7,17 +7,26 @@ import {
   TextField,
   Alert,
   AlertTitle,
-  Typography
+  Typography,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Autocomplete,
+  ImageList,
+  ImageListItem,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import { useAgent } from "../context/AgentContext";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import checkPrfSubmit from "../utilites/ExtendUser/checkPrfSubmit";
 import extendUserSubmit from "../utilites/ExtendUser/extendUserSubmit";
 import ExtendOrNot from "../createForm/extendOrNot";
+import Dropzone from "react-dropzone";
+import filehandler from "../utilites/createForm/fileHandler";
 
-const ExtendUserForm = () => {
+const ExtendUserForm = ({ userRole }) => {
   const user = useUser();
   const agent = useAgent();
 
@@ -28,16 +37,55 @@ const ExtendUserForm = () => {
   const [hasPermissionThisMonth, setHasPermissionThisMonth] = useState(true);
   const [checkInputComplete, setCheckInputComplete] = useState(false);
   const [hasContinue, setHasContinue] = useState(false);
+
+  // Form fields
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState("");
+  const [manyChat, setManyChat] = useState("");
+  const [contactLink, setContactLink] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const formFillingPerson = user?.username || "Unknown User";
+  // Dropdowns and Autocomplete
+  const [currency, setCurrency] = useState("");
+  const [currencies, setCurrencies] = useState([]);
+  const [wallets, setWallets] = useState([]);
+  const [supportRegion, setSupportRegion] = useState("");
+  const [supportRegions, setSupportRegions] = useState([]);
+
+  // File handling
+  const [files, setFiles] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState("");
+  const [fileExist, setFileExist] = useState(true);
+
+  const formFillingPerson = user?.email || "Unknown User";
   const agentId = agent || "No Agent";
 
-  // Handle OTP completion and check if the user exists
+  // Fetch currencies, wallets, and support regions
+  useEffect(() => {
+    fetch("/api/getCurrencies")
+      .then((res) => res.json())
+      .then(setCurrencies)
+      .catch(console.error);
+
+    fetch("/api/loadSupportRegion")
+      .then((res) => res.json())
+      .then(setSupportRegions)
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (currency) {
+      fetch(`/api/loadWalletByCurrency?currencyCode=${currency}`)
+        .then((res) => res.json())
+        .then(setWallets)
+        .catch(console.error);
+    }
+  }, [currency]);
+
+  // Handle OTP completion
   const handleOtpComplete = async (value) => {
     setCheckInputComplete(true);
-    setIsChecking(true); // Start loading indicator
+    setIsChecking(true);
     await checkPrfSubmit(
       value,
       setUserExist,
@@ -45,29 +93,49 @@ const ExtendUserForm = () => {
       setIsChecking,
       setUserInfo
     );
-    setIsChecking(false); // Stop loading indicator
+    setIsChecking(false);
   };
 
+  // Handle decline action
+  const handleDecline = () => {
+    setOtp("");
+    setUserInfo({});
+    setHasContinue(false);
+    setUserExist(false);
+    setCheckInputComplete(false);
+    setAmount("");
+    setMonth("");
+    setCurrency("");
+    setSupportRegion("");
+    setFiles([]);
+  };
+
+  // Handle form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    await extendUserSubmit(userInfo, amount, month, formFillingPerson, agentId);
+    await extendUserSubmit(
+      userInfo,
+      amount,
+      month,
+      formFillingPerson,
+      agentId,
+      currency,
+      supportRegion,
+      files,
+      manyChat,
+      contactLink,
+      notes
+    );
   };
 
-  if (user === null || agent === null) {
-    return <CircularProgress />;
-  }
-const handleDecline = () => {
-  console.log("User clicked decline");
-  setOtp("");
-  setUserInfo({});
-  setHasContinue(false);
-  setUserExist(false);
-  setCheckInputComplete(false);
-  // You can redirect or reset state here if needed
-};
+  // Handle file upload
+  const handleDrop = async (acceptedFiles) => {
+    await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
+    setFileExist(acceptedFiles.length > 0);
+  };
+
   return (
     <Box sx={{ mt: 4, marginLeft: 15, marginRight: 15 }}>
-      {/* OTP Input Field */}
       <MuiOtpInput
         value={otp}
         length={7}
@@ -75,7 +143,6 @@ const handleDecline = () => {
         onChange={setOtp}
       />
 
-      {/* Loading Spinner for checking user */}
       {isChecking && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <CircularProgress />
@@ -83,18 +150,20 @@ const handleDecline = () => {
         </Box>
       )}
 
-      {/* If the user exists, show ExtendOrNot component for confirmation */}
-      {!isChecking && userExist && !hasContinue && (
+      {!isChecking && userExist && !hasContinue && !hasPermissionThisMonth && (
         <ExtendOrNot
           userInfo={userInfo}
-          onConfirm={(confirm) => setHasContinue(confirm)}
+          onConfirm={() => setHasContinue(true)}
           onDecline={handleDecline}
         />
       )}
 
-      {/* If the user confirms to proceed, show the extension form */}
       {hasContinue && (
         <Box component="form" onSubmit={handleFormSubmit}>
+          <Typography component="h1" variant="h5" sx={{ mt: 8, mb: 4 }}>
+            Extend User Membership
+          </Typography>
+
           <TextField
             label="Amount"
             fullWidth
@@ -111,18 +180,115 @@ const handleDecline = () => {
             onChange={(e) => setMonth(e.target.value)}
             sx={{ mt: 2 }}
           />
+
+          <FormLabel>Currency</FormLabel>
+          <RadioGroup row onChange={(e) => setCurrency(e.target.value)}>
+            {currencies.map((item) => (
+              <FormControlLabel
+                key={item.CurrencyID}
+                value={item.CurrencyCode}
+                control={<Radio />}
+                label={item.CurrencyCode}
+              />
+            ))}
+          </RadioGroup>
+          {wallets.length > 0 && (
+            <>
+              <FormLabel>Wallets</FormLabel>
+              <RadioGroup
+                onChange={(e) =>
+                  console.log("Selected wallet:", e.target.value)
+                }
+              >
+                {wallets.map((wallet) => (
+                  <FormControlLabel
+                    key={wallet.WalletID}
+                    value={wallet.WalletID}
+                    control={<Radio />}
+                    label={wallet.WalletName}
+                  />
+                ))}
+              </RadioGroup>
+            </>
+          )}
+          {wallets.length === 0 && currency && (
+            <Typography>
+              No wallets available for the selected currency.
+            </Typography>
+          )}
+
+          <Autocomplete
+            options={supportRegions}
+            getOptionLabel={(option) => option.Region || ""}
+            onChange={(event, value) => setSupportRegion(value)}
+            renderInput={(params) => (
+              <TextField {...params} label="Support Region" />
+            )}
+          />
+
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Many Chat ID"
+            required
+            value={manyChat}
+            onChange={(e) => setManyChat(e.target.value)}
+          />
+
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Contact Link"
+            value={contactLink}
+            onChange={(e) => setContactLink(e.target.value)}
+          />
+
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+
+          <Dropzone onDrop={handleDrop}>
+            {({ getRootProps, getInputProps }) => (
+              <div
+                {...getRootProps()}
+                style={{
+                  border: "2px dashed #ddd",
+                  padding: "20px",
+                  marginTop: "20px",
+                }}
+              >
+                <input {...getInputProps()} />
+                <Typography>
+                  {uploadProgress ||
+                    "Drag & drop files here, or click to select"}
+                </Typography>
+              </div>
+            )}
+          </Dropzone>
+          {!fileExist && (
+            <p style={{ color: "red" }}>You need to have a file</p>
+          )}
+          {files.length != 0 && (
+            <ImageList
+              sx={{ width: 500, height: 200 }}
+              cols={3}
+              rowHeight={164}
+            >
+              {files.map((item) => (
+                <ImageListItem key={item.href}>
+                  <img src={`${item.href}`} alt={"hello"} loading="lazy" />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          )}
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
             Submit
           </Button>
         </Box>
-      )}
-
-      {/* If user does not exist and OTP is complete */}
-      {!isChecking && !userExist && checkInputComplete && (
-        <Alert severity="warning" sx={{ mt: 3 }}>
-          <AlertTitle>User Not Found</AlertTitle>
-          Please register this user before extending membership.
-        </Alert>
       )}
     </Box>
   );

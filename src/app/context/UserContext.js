@@ -16,6 +16,7 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await getAuthCurrentUser();
+        console.log("User Form UserContext: ", user);
         setCurrentUser(user);
       } catch (error) {
         console.error("Failed to fetch user:", error);
