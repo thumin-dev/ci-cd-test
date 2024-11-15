@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import getAuthCurrentUser from "../utilites/getAuthCurrentUser";
 
-
 const AgentContext = createContext();
 
 export const useAgent = () => {
@@ -16,6 +15,7 @@ export const AgentProvider = ({ children }) => {
   useEffect(() => {
     const checkAgentStatus = async () => {
       try {
+        console.log("This is running");
         const currentUser = await getAuthCurrentUser();
         if (!currentUser) return;
 
@@ -35,8 +35,6 @@ export const AgentProvider = ({ children }) => {
   }, []);
 
   return (
-    <AgentContext.Provider value={agentId}>
-      {children}
-    </AgentContext.Provider>
+    <AgentContext.Provider value={agentId}>{children}</AgentContext.Provider>
   );
 };

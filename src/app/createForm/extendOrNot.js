@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
+const ExtendOrNot = ({ userInfo, onConfirm, onDecline }) => {
   console.log("userInfo from ExtendOrNot: ", userInfo);
   return (
     <Box sx={{ mt: 4 }}>
@@ -47,10 +47,10 @@ const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>{userInfo.Name || "N/A"}</TableCell>
-              <TableCell>{userInfo.Email || "N/A"}</TableCell>
-              <TableCell>{userInfo.CardID || "N/A"}</TableCell>
-              <TableCell>{userInfo.ExpireDate || "N/A"}</TableCell>
+              <TableCell>{userInfo.name}</TableCell>
+              <TableCell>{userInfo.email || "N/A"}</TableCell>
+              <TableCell>{userInfo.prf_no || "N/A"}</TableCell>
+              <TableCell>{userInfo.expire_date || "N/A"}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -73,11 +73,7 @@ const ExtendOrNot = ({ userInfo, onConfirm ,onDecline}) => {
         </Button>
 
         {/* Cancel button */}
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => onDecline()}
-        >
+        <Button variant="outlined" color="error" onClick={() => onDecline()}>
           Decline
         </Button>
       </Stack>

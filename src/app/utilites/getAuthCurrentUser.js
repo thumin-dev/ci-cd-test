@@ -1,26 +1,30 @@
-import {
-  getCurrentUser,
-  fetchUserAttributes,
-  fetchAuthSession,
-} from "aws-amplify/auth";
+import { Auth } from "aws-amplify";
 
 export default async function getAuthCurrentUser() {
   try {
-    const { email_verified } = await fetchUserAttributes();
-    
-    const session = await fetchAuthSession();
-    const userRole = session.tokens.accessToken.payload["cognito:groups"];
-    const email = session.tokens.idToken.payload.email;
-    const userId = session.tokens.idToken.payload.sub;
+    // Check if the user is authenticated
+    const currentUser = await Auth.currentAuthenticatedUser();
+    console.log("Authenticated user:", currentUser);
 
-    //console.log("The email:", email);
-   // console.log("The userRole:", userRole[0]);
-    // console.log("The session:", JSON.stringify(session, null, 2));
-    // console.log("The details:", JSON.stringify(email_verified, null, 2));
-    //console.log(`The userId: ${userId}`);
-    // console.log("The signInDetails:", JSON.stringify(signInDetails, null, 2)); // Pretty-print the JSON object
+    const userAttributes = await Auth.userAttributes(currentUser);
+    const email_verified = userAttributes.find(
+      (attr) => attr.Name === "email_verified"
+    ).Value;
+
+    const session = await Auth.currentSession();
+    const accessTokenPayload = session.getAccessToken().decodePayload();
+    const idTokenPayload = session.getIdToken().decodePayload();
+
+    const userRole = accessTokenPayload["cognito:groups"];
+    const email = idTokenPayload.email;
+    const userId = idTokenPayload.sub;
+
     return { userId, email, email_verified, userRole };
   } catch (err) {
-    console.log(err);
+    if (err === "not authenticated") {
+      console.error("User is not authenticated");
+    } else {
+      console.error("Error fetching authentication details:", err);
+    }
   }
 }

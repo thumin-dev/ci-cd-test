@@ -53,7 +53,7 @@ const CreateForm = ({ userInfo, setloading }) => {
       fetch(`/api/loadWalletByCurrency?currencyCode=${currency}`)
         .then((response) => response.json())
         .then((data) => {
-            console.log("wallets", data);   
+          console.log("wallets", data);
           setWallets(data);
         })
         .catch((error) => console.error("Error fetching wallets:", error));
@@ -173,7 +173,10 @@ const CreateForm = ({ userInfo, setloading }) => {
           <RadioGroup
             row
             value={walletId}
-            onChange={(e) => setWalletId(e.target.value)}
+            onChange={(e) => {
+              console.log(e.target.value);
+              setWalletId(e.target.value);
+            }}
           >
             {wallets.map((wallet) => (
               <FormControlLabel
