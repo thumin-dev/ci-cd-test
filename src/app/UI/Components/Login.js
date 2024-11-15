@@ -11,8 +11,7 @@ function Login({ user }) {
     console.log("This is running");
     console.log(user);
     if (user) {
-      console.log(user);
-      //   redirect("/");
+      redirect("/createForm");
     }
   }, [user]);
   return null;
