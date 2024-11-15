@@ -9,7 +9,7 @@ function App({ signOut, user }) {
   return (
     <AgentProvider>
       <UserProvider user={user}>
-        <HomePage signOut={signOut} user={user} />
+        {/* <HomePage signOut={signOut} user={user} /> */}
       </UserProvider>
     </AgentProvider>
   );
