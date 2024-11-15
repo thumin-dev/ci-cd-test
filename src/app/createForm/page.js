@@ -10,8 +10,9 @@ import { AgentProvider } from "../context/AgentContext";
 import { Avatar, Typography, Box } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import getAuthCurrentUser from "../utilites/getAuthCurrentUser";
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
-export default function CreateOrExtendPage() {
+function CreateOrExtendPage() {
   const [userInfo, setUserInfo] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showExtendOrNot, setShowExtendOrNot] = useState(false);
@@ -81,3 +82,5 @@ export default function CreateOrExtendPage() {
     </AgentProvider>
   );
 }
+
+export default withAuthenticator(CreateOrExtendPage);
