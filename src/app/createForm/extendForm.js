@@ -26,7 +26,7 @@ const ExtendForm = ({ userInfo, setloading }) => {
   const agent = useAgent();
 
   const formFillingPerson = user?.username || "Unknown User";
-  const agentId = agent?.id || "No Agent";
+
 
   const [wallets, setWallets] = useState([]);
   const [currency, setCurrency] = useState("");
@@ -103,11 +103,11 @@ const ExtendForm = ({ userInfo, setloading }) => {
       setManyChatValidate,
       fileExist,
       setFileExist,
-      agentId,
+      agent,
       contactLink,
       notes,
       manyChatId,
-      walletId // Include the selected walletId in the submission
+      walletId
     );
 
     setFiles([]);
@@ -173,25 +173,23 @@ const ExtendForm = ({ userInfo, setloading }) => {
         ))}
       </RadioGroup>
 
-      {/* Wallet Selection */}
-      {wallets.length > 0 && (
-        <>
-          <FormLabel>Wallets</FormLabel>
-          <RadioGroup
-            row
-            value={walletId}
-            onChange={(e) => setWalletId(e.target.value)}
-          >
-            {wallets.map((wallet) => (
-              <FormControlLabel
-                key={wallet.WalletID}
-                value={wallet.WalletID}
-                control={<Radio />}
-                label={wallet.WalletName}
-              />
-            ))}
-          </RadioGroup>
-        </>
+      {/* wallet selection*/}
+      <FormLabel id="wallets">Wallets</FormLabel>
+      {wallets && wallets.length > 0 ? (
+        <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
+          {wallets.map((wallet) => (
+            <FormControlLabel
+              value={wallet.WalletID}
+              control={<Radio />}
+              label={wallet.WalletName}
+              key={wallet.WalletID}
+              required={true}
+              sx={{ mx: 1 }}
+            />
+          ))}
+        </RadioGroup>
+      ) : (
+        <h1>No wallets selected.</h1>
       )}
 
       {/* Support Region Selection */}
