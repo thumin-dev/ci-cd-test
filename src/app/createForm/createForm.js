@@ -24,9 +24,11 @@ import { useAgent } from "../context/AgentContext";
 const CreateForm = ({ userInfo, setloading }) => {
   const user = useUser();
   const agent = useAgent();
+  console.log("User from CreateForm: ", user);
+  console.log("Agent from CreateForm: ", agent);
 
-  const formFillingPerson = user?.username || "Unknown User";
-  const agentId = agent?.id || "No Agent";
+  const formFillingPerson = user?.Name || "Unknown User";
+  const agentId = agent?.agentId || "No Agent";
   const [walletId, setWalletId] = useState(null);
   const [wallets, setWallets] = useState([]);
   const [currency, setCurrency] = useState("");
@@ -92,6 +94,7 @@ const CreateForm = ({ userInfo, setloading }) => {
       setFileExist(false);
       return;
     }
+    console.log("AgentId before Form Submit:", agentId);
 
     createFormSubmit(
       event,
