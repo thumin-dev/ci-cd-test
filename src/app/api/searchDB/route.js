@@ -4,16 +4,12 @@ import db from "../../utilites/db";
 // Function to fetch paginated data
 async function getPaginatedData(page) {
   const itemsPerPage = 10;
-  const offset = (parseInt(page, 10) - 1) * parseInt(itemsPerPage);
+  const offset = (parseInt(page, 10) - 1) * itemsPerPage;
 
-  console.log(
-    "Type of Offet:",
-    typeof offset,
-    "Type of ItemsPerPage:",
-    typeof itemsPerPage
-  );
+  // Ensure offset and itemsPerPage are integers
+  console.log("Is Offset an integer?", Number.isInteger(offset));
+  console.log("Is ItemsPerPage an integer?", Number.isInteger(itemsPerPage));
 
-  // Ensure that offset and itemsPerPage are integers
   if (isNaN(offset) || isNaN(itemsPerPage)) {
     console.error("Invalid pagination parameters");
     throw new Error("Invalid pagination parameters");
@@ -44,10 +40,12 @@ async function getPaginatedData(page) {
     ORDER BY T.TransactionDate DESC
     LIMIT ${offset}, ${itemsPerPage};
   `;
+
   console.log("Query:", query);
+
   try {
     const rows = await db(query);
-    console.log("Fetched paginated data from rows:", rows);
+    console.log("Fetched paginated data:", rows);
     return rows;
   } catch (error) {
     console.error("Error fetching paginated data:", error);

@@ -16,5 +16,6 @@ const pool = mysql.createPool({
 
 export default async function db(query, params) {
   const [rows] = await pool.execute(query, params);
-  return rows;
+  console.log("Rows form db:", rows); 
+  return rows; // Return only the rows
 }
