@@ -72,7 +72,7 @@ export default async function checkPrfSubmit(
 
     let response1 = await fetch("api/checkolduserpermission", requestOptions);
     let res1 = await response1.json();
-   
+
     // if user don't have permission
     if (!res1) {
       setisChecking(false);
@@ -90,16 +90,17 @@ export default async function checkPrfSubmit(
 
       return;
     }
+
     // if user has permission
     setHasPermissonThisMonth(true);
-
+    console.log(res);
     setUserInfo({
       name: res["Name"],
       email: res["Email"],
       prf_no: res["CardID"],
       expire_date: res["ExpireDate"],
     });
-    console.log("user info, res", res);
+    console.log("user info, res", res["Name"]);
     setuserExist(true);
     setisChecking(false);
   } else {

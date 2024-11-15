@@ -3,13 +3,24 @@ import db from "../../utilites/db";
 
 // Function to fetch paginated data
 async function getPaginatedData(page) {
-  const itemsPerPage = 10; // Number of items per page
-  const offset = (page - 1) * itemsPerPage;
+  const itemsPerPage = 10;
+  const offset = (parseInt(page, 10) - 1) * parseInt(itemsPerPage);
 
-  // Validate offset and itemsPerPage
+  console.log(
+    "Type of Offet:",
+    typeof offset,
+    "Type of ItemsPerPage:",
+    typeof itemsPerPage
+  );
+
+  // Ensure that offset and itemsPerPage are integers
   if (isNaN(offset) || isNaN(itemsPerPage)) {
+    console.error("Invalid pagination parameters");
     throw new Error("Invalid pagination parameters");
   }
+
+  console.log("Fetching paginated data for page:", page);
+  console.log("Offset:", offset, "Items Per Page:", itemsPerPage);
 
   const query = `
     SELECT 
@@ -28,16 +39,16 @@ async function getPaginatedData(page) {
     LEFT JOIN 
       ScreenShot S ON S.TransactionID = T.TransactionID
     WHERE 
-      MONTH(T.TransactionDate) = MONTH(CURDATE())
+      MONTH(T.TransactionDate) = 11
       AND YEAR(T.TransactionDate) = YEAR(CURDATE())
     ORDER BY T.TransactionDate DESC
-    LIMIT ?, ?;
+    LIMIT ${offset}, ${itemsPerPage};
   `;
-
+  console.log("Query:", query);
   try {
-    // Convert the offset and itemsPerPage to integers before passing
-    const result = await db.execute(query, [offset, itemsPerPage]);
-    return result[0]; // `db.execute()` returns an array with [rows, fields]
+    const rows = await db(query);
+    console.log("Fetched paginated data from rows:", rows);
+    return rows;
   } catch (error) {
     console.error("Error fetching paginated data:", error);
     throw new Error("Error fetching paginated data");
@@ -46,6 +57,7 @@ async function getPaginatedData(page) {
 
 // Function to search by HopeFuelID
 async function searchByHopeFuelID(HopeFuelID) {
+  console.log("Searching for HopeFuelID from api:", HopeFuelID);
   const query = `
     SELECT 
       C.CurrencyCode,
@@ -67,8 +79,8 @@ async function searchByHopeFuelID(HopeFuelID) {
   `;
 
   try {
-    const result = await db.execute(query, [HopeFuelID]);
-    return result[0];
+    const [rows] = await db(query, [HopeFuelID]);
+    return rows;
   } catch (error) {
     console.error("Error fetching search data:", error);
     throw new Error("Error fetching search data");
@@ -83,17 +95,20 @@ export async function GET(req) {
   try {
     let data;
     if (HopeFuelID) {
+      console.log(`Searching for HopeFuelID: ${HopeFuelID}`);
       data = await searchByHopeFuelID(HopeFuelID);
     } else {
+      console.log(`Fetching paginated data for page: ${page}`);
       data = await getPaginatedData(page);
+    }
+
+    if (!data || data.length === 0) {
+      return NextResponse.json({ message: "No data found" }, { status: 404 });
     }
 
     return NextResponse.json(data);
   } catch (error) {
     console.error("API Error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -87,15 +87,16 @@ const ExtendUserForm = ({ userRole }) => {
   const handleOtpComplete = async (value) => {
     setCheckInputComplete(true);
     setIsChecking(true);
-    
+
     await checkPrfSubmit(
       value,
       setUserExist,
-      setHasPermissionThisMonth,
       setIsChecking,
       setUserInfo,
+      setHasPermissionThisMonth,
       userRole
     );
+    console.log;
     setIsChecking(false);
   };
   // Log userInfo to ensure it's an object and not a boolean
@@ -156,7 +157,7 @@ const ExtendUserForm = ({ userRole }) => {
         </Box>
       )}
 
-      {!isChecking && userExist && !hasContinue && !hasPermissionThisMonth && (
+      {!isChecking && userExist && !hasContinue && hasPermissionThisMonth && (
         <ExtendOrNot
           userInfo={userInfo}
           onConfirm={() => setHasContinue(true)}
