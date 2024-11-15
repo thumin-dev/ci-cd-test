@@ -16,6 +16,7 @@ import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Divider from "@mui/material/Divider";
 import { useRouter } from "next/navigation";
+import { signOut } from "aws-amplify/auth";
 
 const settings = [
   { icon: <PersonOutlineIcon />, label: "Account" },
@@ -23,7 +24,7 @@ const settings = [
   { icon: <LogoutIcon />, label: "Logout" },
 ];
 
-export default function ResponsiveAppBar({ signOut, userRole }) {
+export default function ResponsiveAppBar({ userRole }) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const router = useRouter();
 
@@ -64,7 +65,7 @@ export default function ResponsiveAppBar({ signOut, userRole }) {
     setAnchorElUser(null);
   };
 
-  const handleUserMenuClick = (setting) => {
+  const handleUserMenuClick = async (setting) => {
     handleCloseUserMenu();
     switch (setting.label) {
       case "Account":
@@ -74,7 +75,8 @@ export default function ResponsiveAppBar({ signOut, userRole }) {
         router.push("/dashboard");
         break;
       case "Logout":
-        signOut();
+        await signOut();
+        router.push("/login");
         break;
       default:
         break;
