@@ -19,37 +19,38 @@ export default function SearchBarForm() {
   const [page, setPage] = useState(1);
 
   // Function to fetch data from the API
-  const handleSearch = async (HopeFuelID) => {
-    setLoading(true);
-    setError(null);
-    setNoResults(false);
+ const handleSearch = async (HopeFuelID) => {
+   setLoading(true);
+   setError(null);
+   setNoResults(false);
 
-    try {
-      const url = HopeFuelID
-        ? `/api/searchDB?HopeFuelID=${HopeFuelID}&page=${page}`
-        : `/api/searchDB?page=${page}`;
+   try {
+     const url = HopeFuelID
+       ? `/api/searchDB?HopeFuelID=${HopeFuelID}&page=${page}`
+       : `/api/searchDB?page=${page}`;
 
-      const response = await fetch(url);
+     const response = await fetch(url);
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
+     if (!response.ok) {
+       const errorData = await response.json();
+       throw new Error(errorData.error || "Failed to fetch data");
+     }
 
-      const data = await response.json();
-      console.log("Fetched Data:", data);
+     const data = await response.json();
+     console.log("Fetched Data:", data);
 
-      if (data.length === 0 && page === 1) {
-        setNoResults(true);
-      } else {
-        setItems((prevItems) => (page === 1 ? data : [...prevItems, ...data]));
-      }
-    } catch (error) {
-      console.error("Search Error:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+     if (data.length === 0 && page === 1) {
+       setNoResults(true);
+     } else {
+       setItems((prevItems) => (page === 1 ? data : [...prevItems, ...data]));
+     }
+   } catch (error) {
+     console.error("Search Error:", error);
+     setError(error.message);
+   } finally {
+     setLoading(false);
+   }
+ };
 
   // Handle search input changes
   const handleSearchChange = (query) => {
