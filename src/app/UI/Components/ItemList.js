@@ -3,6 +3,8 @@ import { Stack, Box, Button, Typography } from "@mui/material";
 import ItemCard from "./ItemCard";
 
 function ItemList({ items, onItemClick, onLoadMore, hasInput }) {
+  console.log("Items are ");
+  console.log(JSON.stringify(items) + "hello");
   return (
     <Box
       sx={{
@@ -15,13 +17,17 @@ function ItemList({ items, onItemClick, onLoadMore, hasInput }) {
     >
       {/* List of Items */}
       <Stack spacing={2}>
-        {items.map((item, index) => (
-          <ItemCard
-            key={index}
-            item={item}
-            onClick={() => onItemClick(item.HopeFuelID)}
-          />
-        ))}
+        {items.length > 0 ? (
+          items.map((item, index) => (
+            <ItemCard
+              key={index}
+              item={item}
+              onClick={() => onItemClick(item.HopeFuelID)}
+            />
+          ))
+        ) : (
+          <h1>No items is found </h1>
+        )}
       </Stack>
 
       {/* Conditionally show Load More button if there's no input in the search bar */}

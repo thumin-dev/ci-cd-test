@@ -78,7 +78,12 @@ async function searchByHopeFuelID(HopeFuelID) {
 
   try {
     const [rows] = await db(query, [HopeFuelID]);
-    return rows;
+    console.log("Kaung row");
+    console.log(rows);
+    if (rows == undefined) {
+      return [];
+    }
+    return [rows];
   } catch (error) {
     console.error("Error fetching search data:", error);
     throw new Error("Error fetching search data");
