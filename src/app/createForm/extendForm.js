@@ -21,11 +21,12 @@ import filehandler from "../utilites/createForm/fileHandler";
 import { useUser } from "../context/UserContext";
 import { useAgent } from "../context/AgentContext";
 
+
 const ExtendForm = ({ userInfo, setloading }) => {
   const user = useUser();
   const agent = useAgent();
-
-  const formFillingPerson = user?.username || "Unknown User";
+console.log("User from ExtendForm: ", user);
+  const formFillingPerson = user?.email || "Unknown User";
 
 
   const [wallets, setWallets] = useState([]);
@@ -207,6 +208,7 @@ const ExtendForm = ({ userInfo, setloading }) => {
       {/* ManyChat ID Input */}
       <TextField
         fullWidth
+        id="manyChat"
         name="manyChat"
         label="ManyChat ID"
         value={manyChatId}

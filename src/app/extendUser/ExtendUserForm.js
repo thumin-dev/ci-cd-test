@@ -199,25 +199,24 @@ const ExtendUserForm = ({ userRole }) => {
               />
             ))}
           </RadioGroup>
-          {wallets.length > 0 && (
-            <>
-              <FormLabel>Wallets</FormLabel>
-              <RadioGroup
-                onChange={(e) =>
-                  console.log("Selected wallet:", e.target.value)
-                }
-              >
-                {wallets.map((wallet) => (
-                  <FormControlLabel
-                    key={wallet.WalletID}
-                    value={wallet.WalletID}
-                    control={<Radio />}
-                    label={wallet.WalletName}
-                  />
-                ))}
-              </RadioGroup>
-            </>
+          <FormLabel id="wallets">Wallets</FormLabel>
+          {wallets && wallets.length > 0 ? (
+            <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
+              {wallets.map((wallet) => (
+                <FormControlLabel
+                  value={wallet.WalletID}
+                  control={<Radio />}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
+                  required={true}
+                  sx={{ mx: 1 }}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <h1>No wallets selected.</h1>
           )}
+
           {wallets.length === 0 && currency && (
             <Typography>
               No wallets available for the selected currency.
@@ -232,14 +231,16 @@ const ExtendUserForm = ({ userRole }) => {
               <TextField {...params} label="Support Region" />
             )}
           />
-
           <TextField
             margin="normal"
             fullWidth
+            id="manyChat"
             label="Many Chat ID"
             required
-            value={manyChat}
-            onChange={(e) => setManyChat(e.target.value)}
+            name="manyChat"
+            type="text"
+            error={manyChatValidate}
+            helperText={manyChatValidate && "ဂဏန်းဘဲသွင်းပါ"}
           />
 
           <TextField
