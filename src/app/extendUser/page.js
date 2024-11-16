@@ -10,7 +10,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 const ExtendUserPage = () => {
   const user = useUser();
    const userRole = user?.userRole ;
-   console.log("All user Role: ", userRole);
+   console.log("User",user);
+
   return (
     <UserProvider>
       <AgentProvider>
