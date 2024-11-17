@@ -106,10 +106,22 @@ export default function PaymentDetails() {
 
               {/* Right Section */}
               <Stack spacing={2} sx={{ flex: 1 }}>
-                <UserInfo user={data} />
-                <AmountDetails amount={data} />
-                <SupportRegion region={data} />
+                <Card variant="outlined" sx={{ padding: 2 }}>
+                  <UserInfo user={data} />
+                </Card>
+
+                <Card variant="outlined" sx={{ padding: 2 }}>
+                  <AmountDetails amount={data} />
+                </Card>
+
+                <Card variant="outlined" sx={{ padding: 2 }}>
+                  <SupportRegion region={data} />
+                </Card>
+
+                <Card variant="outlined" sx={{ padding: 2 }}>
                 <CreatorInfo creator={data} />
+                </Card>
+                
                 <TextField
                   fullWidth
                   label="Note"

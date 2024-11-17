@@ -1,28 +1,65 @@
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { Box, Typography, Card, CardContent, Chip, Stack } from "@mui/material";
+
 const AmountDetails = () => (
-  <Stack direction="row" spacing={2} alignItems="center">
-    <Chip label="MMK" color="error" />
-    <Typography variant="h5">Total Amount</Typography>
-    <Typography variant="h4" color="primary">
-      100,000.0
-    </Typography>
-    <Typography variant="h5">Total Month</Typography>
-    <Typography variant="h4" color="primary">
-      1
-    </Typography>
-  </Stack>
+  <Box sx={{ padding: 3 }}>
+    {/* Wallet and Currency Information */}
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={2}
+      alignItems="center"
+      mb={3}
+    >
+      <Chip label="MMK" color="error" sx={{ fontWeight: "bold" }} />
+      <Chip
+        label="Testing Wallet"
+        sx={{ fontWeight: "bold" }}
+      />
+    </Stack>
+
+    {/* Total Amount and Total Month */}
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={2}
+      alignItems="center"
+      justifyContent="space-around"
+    >
+      <Card
+        variant="outlined"
+        sx={{
+          flex: 1,
+          minWidth: 180,
+          textAlign: "center",
+          padding: 3,
+          boxShadow: 2,
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          Total Amount
+        </Typography>
+        <Typography variant="h4" color="primary" sx={{ fontWeight: "bold" }}>
+          100,000.0
+        </Typography>
+      </Card>
+
+      <Card
+        variant="outlined"
+        sx={{
+          flex: 1,
+          minWidth: 180,
+          textAlign: "center",
+          padding: 3,
+          boxShadow: 2,
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          Total Month
+        </Typography>
+        <Typography variant="h4" color="primary" sx={{ fontWeight: "bold" }}>
+          1
+        </Typography>
+      </Card>
+    </Stack>
+  </Box>
 );
+
 export default AmountDetails;
