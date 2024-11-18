@@ -12,10 +12,13 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-const SupportRegion = () => (
+const SupportRegion = ({region}) => {
+    if (!region) return <p>No data available in AmountDetails</p>;
+
+    return (
   <Stack direction="row" alignItems="center" spacing={2}>
     <Typography>Support Region:</Typography>
-    <Chip label="Region 1" color="error" />
-  </Stack>
-);
+    <Chip label={region.Region} color="error" />
+  </Stack>)
+};
 export default SupportRegion;

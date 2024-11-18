@@ -12,12 +12,17 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-const CreatorInfo = () => (
+const CreatorInfo = ({creator}) => {
+    if (!creator) return <p>No data available in AmountDetails</p>;
+
+return (
   <Stack spacing={1}>
-    <Typography>Created by aws</Typography>
-    <Typography>Mg Mg</Typography>
-    <Typography>HOPEID: HOPEID-12345</Typography>
-    <Typography>Manychat ID: 222333888</Typography>
+    <Typography>Created by {creator.AwsId}</Typography>
+    <Typography>Mg Mg </Typography>
+    <Typography>HOPEID: {creator.HopeFuelID}</Typography>
+    <Typography>Manychat ID: {creator.ManyChatId}</Typography>
   </Stack>
 );
+
+};
 export default CreatorInfo;
