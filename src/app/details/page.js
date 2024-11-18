@@ -12,6 +12,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  
   Divider,
 } from "@mui/material";
 import ActionButtons from "../UI/Components/ActionButton";
@@ -145,12 +146,11 @@ export default function PaymentDetails() {
                   label="Note"
                   multiline
                   rows={3}
-                  value={data.Note}
                   defaultValue={data.Note}
                 />
 
                 <FormControl fullWidth>
-                  <Label>Status</Label>
+                  <InputLabel>Status</InputLabel>
                   <Select defaultValue={data.Status || 1}>
                     <MenuItem value={1}>၁ - ဖောင်တင်သွင်း</MenuItem>
                     <MenuItem value={2}>၂ - စစ်ဆေးပြီး</MenuItem>
@@ -158,7 +158,7 @@ export default function PaymentDetails() {
                   </Select>
                 </FormControl>
 
-                <ActionButtons />
+                <ActionButtons data={data} />
               </Stack>
             </Stack>
 
