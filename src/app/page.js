@@ -1,15 +1,25 @@
 "use client";
 import React from "react";
-import HomePage from "./HomePage";
+
+import CreateFormPage from "./createForm/page";
+
 import { UserProvider } from "./context/UserContext";
 import { AgentProvider } from "./context/AgentContext";
 import { withAuthenticator } from "@aws-amplify/ui-react";
+import { Amplify  } from "aws-amplify";
+import awsconfig from "../aws-exports";
+
+
+
+Amplify.configure(awsconfig);
+
 
 function App({ signOut, user }) {
   return (
     <AgentProvider>
       <UserProvider user={user}>
-        {/* <HomePage signOut={signOut} user={user} /> */}
+      
+          <CreateFormPage />
         
       </UserProvider>
     </AgentProvider>

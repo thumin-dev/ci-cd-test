@@ -17,6 +17,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Divider from "@mui/material/Divider";
 import { useRouter } from "next/navigation";
 import { signOut } from "aws-amplify/auth";
+import { useUser } from "../../context/UserContext";
+import { set } from "date-fns";
 
 const settings = [
   { icon: <PersonOutlineIcon />, label: "Account" },
@@ -64,6 +66,8 @@ export default function ResponsiveAppBar({ userRole }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+const {setUser} = useUser();
+
 
   const handleUserMenuClick = async (setting) => {
     handleCloseUserMenu();
@@ -76,6 +80,7 @@ export default function ResponsiveAppBar({ userRole }) {
         break;
       case "Logout":
         await signOut();
+        setUser(null);
         router.push("/login");
         break;
       default:
