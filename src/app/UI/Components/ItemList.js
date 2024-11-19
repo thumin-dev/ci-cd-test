@@ -3,8 +3,8 @@ import { Stack, Box, Button, Typography } from "@mui/material";
 import ItemCard from "./ItemCard";
 
 function ItemList({ items, onItemClick, onLoadMore, hasInput }) {
-  console.log("Items are ");
-  console.log(JSON.stringify(items) + "hello");
+  //console.log("Items are ");
+  //console.log(JSON.stringify(items) + "hello");
   return (
     <Box
       sx={{

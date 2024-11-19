@@ -5,13 +5,17 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import { AuthUser } from "aws-amplify/auth";
 import { redirect } from "next/navigation";
 import { use, useEffect } from "react";
+import ResponsiveAppBar from "../AppBar/AppBar";
+import { useUser } from "../../context/UserContext";
 
 function Login({ user }) {
+  const { setUser } = useUser();
   useEffect(() => {
-    console.log("This is running");
-    console.log(user);
+    console.log("User from Login components: ", user);
     if (user) {
-      redirect("/createForm");
+      setUser(user) ;
+      redirect("/createForm") ;
+   
     }
   }, [user]);
   return null;
