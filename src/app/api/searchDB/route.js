@@ -19,26 +19,29 @@ async function getPaginatedData(page) {
   console.log("Offset:", offset, "Items Per Page:", itemsPerPage);
 
   const query = `
-    SELECT 
-      C.CurrencyCode,
-      Cu.Name AS CustomerName,
-      T.HopeFuelID,
-      S.ScreenShotLink
-    FROM 
-      Transactions T
-    JOIN 
-      Customer Cu ON T.CustomerID = Cu.CustomerId
-    JOIN 
-      Wallet W ON T.WalletID = W.WalletId
-    JOIN 
-      Currency C ON W.CurrencyId = C.CurrencyId
-    LEFT JOIN 
-      ScreenShot S ON S.TransactionID = T.TransactionID
-    WHERE 
-      MONTH(T.TransactionDate) = 11
-      AND YEAR(T.TransactionDate) = YEAR(CURDATE())
-    ORDER BY T.TransactionDate DESC
-    LIMIT ${offset}, ${itemsPerPage};
+  SELECT 
+    C.CurrencyCode,
+    Cu.Name AS CustomerName,
+    T.HopeFuelID,
+    JSON_ARRAYAGG(S.ScreenShotLink) AS ScreenShotLinks
+FROM 
+    Transactions T
+JOIN 
+    Customer Cu ON T.CustomerID = Cu.CustomerId
+JOIN 
+    Wallet W ON T.WalletID = W.WalletId
+JOIN 
+    Currency C ON W.CurrencyId = C.CurrencyId
+LEFT JOIN 
+    ScreenShot S ON S.TransactionID = T.TransactionID
+WHERE 
+    MONTH(T.TransactionDate) = 11
+    AND YEAR(T.TransactionDate) = YEAR(CURDATE())
+GROUP BY 
+    T.TransactionID, C.CurrencyCode, Cu.Name, T.HopeFuelID
+ORDER BY 
+    T.TransactionDate DESC
+LIMIT ${offset},${itemsPerPage} ;
   `;
 
   console.log("Query:", query);
@@ -61,7 +64,7 @@ async function searchByHopeFuelID(HopeFuelID) {
       C.CurrencyCode,
       Cu.Name AS CustomerName,
       T.HopeFuelID,
-      S.ScreenShotLink
+      JSON_ARRAYAGG(S.ScreenShotLink) AS ScreenShotLinks
     FROM 
       Transactions T
     JOIN 
@@ -73,7 +76,9 @@ async function searchByHopeFuelID(HopeFuelID) {
     LEFT JOIN 
       ScreenShot S ON S.TransactionID = T.TransactionID
     WHERE 
-      T.HopeFuelID = ?;
+      T.HopeFuelID = ?
+      GROUP BY T.TransactionID
+      ;
   `;
 
   try {
