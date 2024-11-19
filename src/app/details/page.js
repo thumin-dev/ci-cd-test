@@ -109,13 +109,29 @@ export default function PaymentDetails() {
             <Divider />
 
             <Stack direction="row" spacing={4}>
-              {data.ScreenShotLink && (
-                <Box
-                  component="img"
-                  src={data.ScreenShotLink}
-                  alt="Payment Screenshot"
-                  sx={{ width: 200, height: 200, borderRadius: 2 }}
-                />
+              {data.ScreenShotLinks && data.ScreenShotLinks.length > 0 ? (
+                <Stack
+                  direction={{ xs: "column", sm: "column" }}
+                  spacing={{ xs: 1, sm: 2, md: 4 }}
+                >
+                  {data.ScreenShotLinks.map((link, index) => (
+                    <Box
+                      key={index}
+                      component="img"
+                      src={link}
+                      alt={`Screenshot ${index + 1}`}
+                      sx={{
+                        width: 200,
+                        height: 200,
+                        borderRadius: 2,
+                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+                      }}
+                      onClick={() => window.open(link, "_blank")}
+                    />
+                  ))}
+                </Stack>
+              ) : (
+                <Typography>No screenshots available</Typography>
               )}
               <Stack spacing={2} sx={{ flex: 1 }}>
                 <Card variant="outlined" sx={{ padding: 2 }}>

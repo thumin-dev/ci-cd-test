@@ -10,23 +10,21 @@ export async function GET(request) {
   }
 
   const query = `
- SELECT 
-	t.HopeFuelID,
+SELECT 
+    t.HopeFuelID,
     w.WalletName,
     t.Month,
     t.Amount,
     cu.CurrencyCode,
-	c.ManyChatId,
+    c.ManyChatId,
     sr.Region,
     n.Note,
     c.Name,
     c.Email,
     c.ExpireDate,
     c.CardID,
-    s.ScreenShotLink,
-    a.AwsId
-	
-    
+    a.AwsId,
+    JSON_ARRAYAGG(s.ScreenShotLink) AS ScreenShotLinks
 FROM Transactions t
 JOIN Customer c ON t.CustomerID = c.CustomerId
 JOIN Wallet w ON t.WalletID = w.WalletId
@@ -35,7 +33,8 @@ LEFT JOIN SupportRegion sr ON t.SupportRegionID = sr.SupportRegionID
 LEFT JOIN Note n ON t.NoteID = n.NoteID
 LEFT JOIN ScreenShot s ON t.TransactionID = s.TransactionID
 LEFT JOIN Agent a ON c.AgentId = a.AgentId
-WHERE t.HopeFuelID = ?;
+WHERE t.HopeFuelID = ?
+GROUP BY t.TransactionID;
   `;
 
   try {

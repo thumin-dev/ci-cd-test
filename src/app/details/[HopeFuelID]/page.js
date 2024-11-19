@@ -68,10 +68,10 @@ export default function PaymentDetails() {
 
               <Stack direction="row" spacing={4}>
                 {/* Image Placeholder */}
-                {data.ScreenShotLink && (
+                {data.ScreenShotLinks && (
                   <Box
                     component="img"
-                    src={data.ScreenShotLink}
+                    src={data.ScreenShotLinks[0]}
                     alt="Payment Screenshot"
                     sx={{ width: 200, height: 200, borderRadius: 2 }}
                   />

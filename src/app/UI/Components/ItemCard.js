@@ -31,10 +31,10 @@ function ItemCard({ item, onClick }) {
       {/* Left Section with Thumbnail and Text */}
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {/* Placeholder for Screenshot Image */}
-        {item?.ScreenShotLink ? (
+        {item?.ScreenShotLinks ? (
           <Box
             component="img"
-            src={item.ScreenShotLink}
+            src={item.ScreenShotLinks[0]}
             alt="Payment Screenshot"
             sx={{
               width: 50,
@@ -56,9 +56,10 @@ function ItemCard({ item, onClick }) {
           />
         )}
         {/* Display HopeFuelID and Customer Name if available */}
-        <Box>
-          <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-            {item?.HopeFuelID || "N/A"}
+        <Box sx={{ width : 100 }}>
+          <Typography variant="body1" sx={{ fontWeight: "bold" 
+            , width: 100 }}>
+            HOPEID-{item?.HopeFuelID || "N/A"}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {item?.CustomerName || "No Name"}
