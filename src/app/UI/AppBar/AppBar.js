@@ -79,7 +79,7 @@ const {setUser} = useUser();
         router.push("/dashboard");
         break;
       case "Logout":
-        await signOut();
+        await signOut({ global: true });
         setUser(null);
         router.push("/login");
         break;
