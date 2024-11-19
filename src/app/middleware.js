@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { Auth } from "aws-amplify";
+
 import awsConfig from "./aws-exports";
 import { Amplify } from "aws-amplify";
+import { UserProvider, useUser } from "./context/UserContext";
 
 // Initialize Amplify
 Amplify.configure(awsConfig);
@@ -9,6 +10,7 @@ Amplify.configure(awsConfig);
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
+  console.log("Middleware pathname:", pathname);
   // Public routes that do not require authentication
   const publicRoutes = ["/login"];
 
@@ -18,9 +20,19 @@ export async function middleware(req) {
   }
 
   try {
-    // Check if the user is authenticated
-    await Auth.currentAuthenticatedUser();
+ 
+    // // Check if the user is authenticated
+    // const { currentUser } = useUser();
+    // console.log("User from middleware: ", currentUser);
 
+    // if (!currentUser) {
+    //   throw new Error("User is not authenticated");
+    // }
+    const user = await Auth.currentAuthenticatedUser();
+
+    console.log("Authenticated user:", user);
+
+    
     // User is authenticated; allow access
     return NextResponse.next();
   } catch (error) {
