@@ -47,7 +47,7 @@ export default function HopeFuelIdStatus({data}) {
           </h2>
         </Stack>
         <Chip
-          label={`${data.FormStatus} `}
+          label={`${data.TransactionStatus} `}
           sx={{
             backgroundColor: "#ffd700",
             color: "#000",

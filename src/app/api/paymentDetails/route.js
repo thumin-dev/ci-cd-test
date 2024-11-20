@@ -25,7 +25,8 @@ SELECT
     c.ExpireDate,
     c.CardID,
     a.AwsId,
-    JSON_ARRAYAGG(s.ScreenShotLink) AS ScreenShotLinks
+    JSON_ARRAYAGG(s.ScreenShotLink) AS ScreenShotLinks,
+    ts.TransactionStatus -- Retrieve the transaction status
 FROM Transactions t
 JOIN Customer c ON t.CustomerID = c.CustomerId
 JOIN Wallet w ON t.WalletID = w.WalletId
@@ -34,8 +35,26 @@ LEFT JOIN SupportRegion sr ON t.SupportRegionID = sr.SupportRegionID
 LEFT JOIN Note n ON t.NoteID = n.NoteID
 LEFT JOIN ScreenShot s ON t.TransactionID = s.TransactionID
 LEFT JOIN Agent a ON c.AgentId = a.AgentId
+LEFT JOIN FormStatus fs ON t.TransactionID = fs.TransactionID
+LEFT JOIN TransactionStatus ts ON fs.TransactionStatusID = ts.TransactionStatusID
 WHERE t.HopeFuelID = ?
-GROUP BY t.TransactionID;
+GROUP BY 
+    t.TransactionID,
+    t.HopeFuelID,
+    w.WalletName,
+    t.Month,
+    t.Amount,
+    t.TransactionDate,
+    cu.CurrencyCode,
+    c.ManyChatId,
+    sr.Region,
+    n.Note,
+    c.Name,
+    c.Email,
+    c.ExpireDate,
+    c.CardID,
+    a.AwsId,
+    ts.TransactionStatus
   `;
 
   try {
