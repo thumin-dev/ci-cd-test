@@ -1,7 +1,9 @@
 import React from "react";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Typography } from "@mui/material";
 
 const ActionButtons = ({ data }) => {
+  const [confirmDenyFlag, setConfirmDenyFlag] = React.useState(null); // `null` indicates no action yet
+
   // Ensure `data` is defined before accessing its properties
   if (!data || !data.HopeFuelID) {
     console.error("Invalid data passed to ActionButtons:", data);
@@ -33,11 +35,14 @@ const ActionButtons = ({ data }) => {
       );
       if (response.ok) {
         console.log("Payment Confirmed");
+        setConfirmDenyFlag("confirmed"); // Set state to "confirmed"
       } else {
         console.error("Failed to confirm payment");
+        setConfirmDenyFlag("error");
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
+      setConfirmDenyFlag("error");
     }
   };
 
@@ -66,11 +71,14 @@ const ActionButtons = ({ data }) => {
       );
       if (response.ok) {
         console.log("Payment Denied");
+        setConfirmDenyFlag("denied"); // Set state to "denied"
       } else {
         console.error("Failed to deny payment");
+        setConfirmDenyFlag("error");
       }
     } catch (error) {
       console.error("Error denying payment:", error);
+      setConfirmDenyFlag("error");
     }
   };
 
@@ -92,6 +100,23 @@ const ActionButtons = ({ data }) => {
       >
         Deny
       </Button>
+
+      {/* Display message based on `confirmDenyFlag` */}
+      {confirmDenyFlag === "confirmed" && (
+        <Typography variant="body2" color="success.main">
+          Payment Confirmed
+        </Typography>
+      )}
+      {confirmDenyFlag === "denied" && (
+        <Typography variant="body2" color="error">
+          Payment Denied
+        </Typography>
+      )}
+      {confirmDenyFlag === "error" && (
+        <Typography variant="body2" color="error">
+          An error occurred. Please try again.
+        </Typography>
+      )}
     </Stack>
   );
 };
