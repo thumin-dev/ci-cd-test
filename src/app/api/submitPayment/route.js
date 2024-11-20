@@ -96,6 +96,19 @@ async function InsertTransactionLog(transactionId, agentId) {
     }
 
 }
+async function InsertFormStatus(transactionId){
+  const query = `INSERT INTO FormStatus (TransactionID, TransactionStatusID) VALUES (?, ?)`;
+  const values = [transactionId,1];
+  try {
+    const result = await db(query, values);
+    console.log("result " + result);
+  return result.insertId;
+    } catch (error) {
+      console.error("Error inserting log", error);
+      return;
+    }
+}
+
 
 async function maxHopeFuelID() {
   const maxHopeFuelID_Query = `SELECT MAX(HopeFuelID) AS maxHopeFuelID FROM Transactions`; 
@@ -195,6 +208,7 @@ export async function POST(req) {
 
     const transactionId = result.insertId;
     //console.log("Transaction ID " + transactionId);
+   const formStatusId = await InsertFormStatus(transactionId);
 
     const screenShotIds = await createScreenShot(screenShot, transactionId);
     const logId = await InsertTransactionLog(transactionId, agentId);
@@ -204,6 +218,8 @@ export async function POST(req) {
       status: "success",
       transactionId,
       screenShotIds,
+      formStatusId
+
     });
   } catch (error) {
     console.log(error);
