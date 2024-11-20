@@ -3,8 +3,6 @@ import { Stack, Box, Button, Typography } from "@mui/material";
 import ItemCard from "./ItemCard";
 
 function ItemList({ items, onItemClick, onLoadMore, hasInput }) {
-  //console.log("Items are ");
-  //console.log(JSON.stringify(items) + "hello");
   return (
     <Box
       sx={{
@@ -26,12 +24,14 @@ function ItemList({ items, onItemClick, onLoadMore, hasInput }) {
             />
           ))
         ) : (
-          <h1>No items is found </h1>
+          <Typography variant="h6" align="center">
+            No items found
+          </Typography>
         )}
       </Stack>
 
-      {/* Conditionally show Load More button if there's no input in the search bar */}
-      {!hasInput && items.length > 0 && (
+      {/* Conditionally show Load More button if there are 10 or more items */}
+      {!hasInput && items.length >= 10 && (
         <Button
           fullWidth
           variant="outlined"
