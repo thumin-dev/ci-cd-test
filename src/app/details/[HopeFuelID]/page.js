@@ -51,7 +51,6 @@ export default function PaymentDetails() {
 
   return (
     <>
-
       <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh", padding: 4 }}>
         <Stack direction="row" spacing={3} alignItems="flex-start">
           {/* Left Section: Search Bar */}
@@ -67,14 +66,29 @@ export default function PaymentDetails() {
               <Divider />
 
               <Stack direction="row" spacing={4}>
-                {/* Image Placeholder */}
-                {data.ScreenShotLinks && (
-                  <Box
-                    component="img"
-                    src={data.ScreenShotLinks[0]}
-                    alt="Payment Screenshot"
-                    sx={{ width: 200, height: 200, borderRadius: 2 }}
-                  />
+                {data.ScreenShotLinks && data.ScreenShotLinks.length > 0 ? (
+                  <Stack
+                    direction={{ xs: "column", sm: "column" }}
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                  >
+                    {data.ScreenShotLinks.map((link, index) => (
+                      <Box
+                        key={index}
+                        component="img"
+                        src={link}
+                        alt={`Screenshot ${index + 1}`}
+                        sx={{
+                          width: 200,
+                          height: 200,
+                          borderRadius: 2,
+                          boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+                        }}
+                        onClick={() => window.open(link, "_blank")}
+                      />
+                    ))}
+                  </Stack>
+                ) : (
+                  <Typography>No screenshots available</Typography>
                 )}
 
                 {/* Right Section */}

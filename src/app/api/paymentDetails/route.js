@@ -15,6 +15,7 @@ SELECT
     w.WalletName,
     t.Month,
     t.Amount,
+    t.TransactionDate,
     cu.CurrencyCode,
     c.ManyChatId,
     sr.Region,
