@@ -178,7 +178,7 @@ export default function PaymentDetails() {
               </Stack>
             </Stack>
 
-            <CardsIssuedList />
+            <CardsIssuedList data={data} />
           </Stack>
         </Card>
       </Box>
