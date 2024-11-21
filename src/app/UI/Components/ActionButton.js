@@ -51,7 +51,7 @@ const ActionButtons = ({ data }) => {
     <Stack direction="row" spacing={2} sx={{ marginTop: 2 }}>
       <Button
         variant="contained"
-        color="success"
+        color="error"
         sx={{ width: "150px" }}
         onClick={() => handleAction(0)}
         disabled={loading}
