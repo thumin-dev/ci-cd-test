@@ -156,25 +156,25 @@ export default function PaymentDetails() {
                 <Card variant="outlined" sx={{ padding: 2 }}>
                   <CreatorInfo creator={data} />
                 </Card>
-
-                <TextField
-                  fullWidth
-                  label="Note"
-                  multiline
-                  rows={3}
-                  defaultValue={data.Note}
-                />
-
                 <FormControl fullWidth>
+                  <TextField
+                    fullWidth
+                    label="Note"
+                    multiline
+                    rows={3}
+                    defaultValue={data.Note}
+                  />
+
                   <InputLabel>Status</InputLabel>
                   <Select defaultValue={data.Status || 1}>
                     <MenuItem value={1}>၁ - ဖောင်တင်သွင်း</MenuItem>
                     <MenuItem value={2}>၂ - စစ်ဆေးပြီး</MenuItem>
                     <MenuItem value={3}>၃ - ပြီးစီး</MenuItem>
+                    <MenuItem value={4}>၄ - ပယ်ဖျက်</MenuItem>
                   </Select>
+                  
+                  <ActionButtons data={data} />
                 </FormControl>
-
-                <ActionButtons data={data} />
               </Stack>
             </Stack>
 
