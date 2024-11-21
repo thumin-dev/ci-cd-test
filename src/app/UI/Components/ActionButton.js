@@ -2,83 +2,48 @@ import React from "react";
 import { Stack, Button, Typography } from "@mui/material";
 
 const ActionButtons = ({ data }) => {
-  const [confirmDenyFlag, setConfirmDenyFlag] = React.useState(null); // `null` indicates no action yet
+  const [loading, setLoading] = React.useState(false);
+  const [confirmDenyFlag, setConfirmDenyFlag] = React.useState(null);
 
-  // Ensure `data` is defined before accessing its properties
   if (!data || !data.HopeFuelID) {
     console.error("Invalid data passed to ActionButtons:", data);
     return null;
   }
 
-  const handleConfirm = async () => {
-    console.log("Confirm clicked for HopeFuelID:", data.HopeFuelID);
+  const handleAction = async (denied) => {
+    setLoading(true);
 
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      denied: 0,
+    const payload = {
+      denied,
       HopeFuelID: data.HopeFuelID,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
+      note: data.Note,
+      formStatus: data.Status,
+      AgentId: data.AgentId,
     };
 
     try {
-      const response = await fetch(
-        "/api/paymentConfirmOrDeined",
-        requestOptions
-      );
+      const response = await fetch("/api/paymentConfirmOrDeined", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
       if (response.ok) {
-        console.log("Payment Confirmed");
-        setConfirmDenyFlag("confirmed"); // Set state to "confirmed"
+        const result = await response.json();
+        console.log(
+          `Payment ${denied ? "Denied" : "Confirmed"} successfully`,
+          result
+        );
+        setConfirmDenyFlag(denied ? "denied" : "confirmed");
       } else {
-        console.error("Failed to confirm payment");
+        console.error("Failed to process payment");
         setConfirmDenyFlag("error");
       }
     } catch (error) {
-      console.error("Error confirming payment:", error);
+      console.error("Error processing payment:", error);
       setConfirmDenyFlag("error");
-    }
-  };
-
-  const handleDenied = async () => {
-    console.log("Deny clicked for HopeFuelID:", data.HopeFuelID);
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      denied: 1,
-      HopeFuelID: data.HopeFuelID,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(
-        "/api/paymentConfirmOrDeined",
-        requestOptions
-      );
-      if (response.ok) {
-        console.log("Payment Denied");
-        setConfirmDenyFlag("denied"); // Set state to "denied"
-      } else {
-        console.error("Failed to deny payment");
-        setConfirmDenyFlag("error");
-      }
-    } catch (error) {
-      console.error("Error denying payment:", error);
-      setConfirmDenyFlag("error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,9 +51,10 @@ const ActionButtons = ({ data }) => {
     <Stack direction="row" spacing={2} sx={{ marginTop: 2 }}>
       <Button
         variant="contained"
-        color="error"
+        color="success"
         sx={{ width: "150px" }}
-        onClick={handleConfirm}
+        onClick={() => handleAction(0)}
+        disabled={loading}
       >
         Confirm
       </Button>
@@ -96,12 +62,12 @@ const ActionButtons = ({ data }) => {
         variant="outlined"
         color="error"
         sx={{ width: "150px" }}
-        onClick={handleDenied}
+        onClick={() => handleAction(1)}
+        disabled={loading}
       >
         Deny
       </Button>
 
-      {/* Display message based on `confirmDenyFlag` */}
       {confirmDenyFlag === "confirmed" && (
         <Typography variant="body2" color="success.main">
           Payment Confirmed

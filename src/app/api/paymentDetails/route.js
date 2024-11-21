@@ -25,6 +25,7 @@ SELECT
     c.ExpireDate,
     c.CardID,
     a.AwsId,
+    a.AgentId,
     JSON_ARRAYAGG(s.ScreenShotLink) AS ScreenShotLinks,
     ts.TransactionStatus -- Retrieve the transaction status
 FROM Transactions t

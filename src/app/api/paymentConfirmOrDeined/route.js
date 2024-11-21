@@ -10,8 +10,10 @@ export async function POST(req) {
     const denied = json.denied;
     const transactionId = json.HopeFuelID;
     const note = json.note ; 
-    const formStatus = json.formStatus; // The new form status (e.g., 1, 2, 3, etc.)
+    const formStatus = json.formStatus; 
+    const agentId = json.AgentId;
 
+    
     // SQL queries
     const updateTransactionQuery = `
       UPDATE Transactions 
@@ -40,7 +42,7 @@ export async function POST(req) {
 
     // Values for each query
     const transactionValues = [denied, new Date(), transactionId];
-    const noteValues = [note, new Date(), json.agentId , transactionId]; 
+    const noteValues = [note, new Date(), agentId , transactionId]; 
     const formStatusValues = [formStatus, transactionId];
 
     // Execute queries sequentially
