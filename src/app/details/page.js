@@ -12,7 +12,6 @@ import {
   Select,
   FormControl,
   InputLabel,
-  
   Divider,
 } from "@mui/material";
 import ActionButtons from "../UI/Components/ActionButton";
@@ -28,6 +27,8 @@ export default function PaymentDetails() {
   const searchParams = useSearchParams();
   const HopeFuelID = searchParams.get("HopeFuelID");
   const [data, setData] = useState(null);
+  const [status, setStatus] = useState(1);
+  const [note, setNote] = useState("");
 
   // Fetch data based on HopeFuelID
   useEffect(() => {
@@ -41,9 +42,10 @@ export default function PaymentDetails() {
         const result = await response.json();
 
         if (result && result.length > 0) {
-          console.log("Fetched Data:", result[0]);
-          setData(result[0]);
-          console.log("set data done");
+          const transactionData = result[0];
+          setData(transactionData);
+          setNote(transactionData.Note || "");
+          setStatus(transactionData.Status || 1);
         } else {
           console.error("No data found");
           setData(null);
@@ -55,11 +57,6 @@ export default function PaymentDetails() {
     };
     fetchData();
   }, [HopeFuelID]);
-
-  // Log `data` whenever it changes
-  useEffect(() => {
-    console.log("Updated data:", data);
-  }, [data]);
 
   // Handle case where no HopeFuelID is selected
   if (!HopeFuelID) {
@@ -86,16 +83,6 @@ export default function PaymentDetails() {
 
   // Handle loading state
   if (data === null) return <Typography>Loading...</Typography>;
-
-  // Handle case where data is not found
-  if (!data) {
-    
-    return (
-      <Typography variant="h6" color="error">
-        No data found for the given HopeFuelID.
-      </Typography>
-    );
-  }
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
@@ -142,7 +129,6 @@ export default function PaymentDetails() {
                   <AmountDetails amount={data} />
                 </Card>
 
-                {/* Ensure `region` is passed only if `data` is defined */}
                 <Card variant="outlined" sx={{ padding: 2 }}>
                   {data.Region ? (
                     <SupportRegion region={data} />
@@ -156,24 +142,36 @@ export default function PaymentDetails() {
                 <Card variant="outlined" sx={{ padding: 2 }}>
                   <CreatorInfo creator={data} />
                 </Card>
+
                 <FormControl fullWidth>
                   <TextField
                     fullWidth
                     label="Note"
                     multiline
                     rows={3}
-                    defaultValue={data.Note}
+                    value={note} // Use controlled state
+                    onChange={(e) => setNote(e.target.value)}
                   />
 
                   <InputLabel>Status</InputLabel>
-                  <Select defaultValue={data.Status || 1}>
+                  <Select
+                    value={status} // Use controlled state
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
                     <MenuItem value={1}>၁ - ဖောင်တင်သွင်း</MenuItem>
                     <MenuItem value={2}>၂ - စစ်ဆေးပြီး</MenuItem>
                     <MenuItem value={3}>၃ - ပြီးစီး</MenuItem>
                     <MenuItem value={4}>၄ - ပယ်ဖျက်</MenuItem>
                   </Select>
-                  
-                  <ActionButtons data={data} />
+
+                  <ActionButtons
+                    data={{
+                      HopeFuelID: data.HopeFuelID,
+                      Note: note,
+                      Status: status,
+                      AgentId: data.AgentId
+                    }}
+                  />
                 </FormControl>
               </Stack>
             </Stack>
