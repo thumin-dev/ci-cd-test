@@ -1,90 +1,119 @@
 import { NextResponse } from "next/server";
-import db from "../../../app/utilites/db";
+import db from "../../utilites/db";
 
-// Query to fetch data for the card view
-async function DataForCard() {
+// Function to fetch paginated data
+async function getPaginatedData(page) {
+  const itemsPerPage = 10;
+  const offset = (parseInt(page, 10) - 1) * itemsPerPage;
+
+  // Ensure offset and itemsPerPage are integers
+  console.log("Is Offset an integer?", Number.isInteger(offset));
+  console.log("Is ItemsPerPage an integer?", Number.isInteger(itemsPerPage));
+
+  if (isNaN(offset) || isNaN(itemsPerPage)) {
+    console.error("Invalid pagination parameters");
+    throw new Error("Invalid pagination parameters");
+  }
+
+  console.log("Fetching paginated data for page:", page);
+  console.log("Offset:", offset, "Items Per Page:", itemsPerPage);
+
   const query = `
-    SELECT 
-        C.CurrencyCode,
-        Cu.Name AS CustomerName,
-        T.HopeFuelID,
-        S.ScreenShotLink
-    FROM 
-        Transactions T
-    JOIN 
-        Customer Cu ON T.CustomerID = Cu.CustomerId
-    JOIN 
-        Wallet W ON T.WalletID = W.WalletId
-    JOIN 
-        Currency C ON W.CurrencyId = C.CurrencyId
-    JOIN 
-        ScreenShot S ON S.TransactionID = T.TransactionID
-    WHERE
-        MONTH(T.TransactionDate) = 10 
-        AND YEAR(T.TransactionDate) = YEAR(CURDATE());
+  SELECT 
+    C.CurrencyCode,
+    Cu.Name AS CustomerName,
+    T.HopeFuelID,
+    JSON_ARRAYAGG(S.ScreenShotLink) AS ScreenShotLinks
+FROM 
+    Transactions T
+JOIN 
+    Customer Cu ON T.CustomerID = Cu.CustomerId
+JOIN 
+    Wallet W ON T.WalletID = W.WalletId
+JOIN 
+    Currency C ON W.CurrencyId = C.CurrencyId
+LEFT JOIN 
+    ScreenShot S ON S.TransactionID = T.TransactionID
+WHERE 
+    MONTH(T.TransactionDate) = 11
+    AND YEAR(T.TransactionDate) = YEAR(CURDATE())
+GROUP BY 
+    T.TransactionID, C.CurrencyCode, Cu.Name, T.HopeFuelID
+ORDER BY 
+    T.TransactionDate DESC
+LIMIT ${offset},${itemsPerPage} ;
   `;
+
+  console.log("Query:", query);
+
   try {
-    const result = await db(query); // Use correct db method (e.g., query or execute)
-    console.log("Card Data:", result);
-    return result;
+    const rows = await db(query);
+    console.log("Fetched paginated data:", rows);
+    return rows;
   } catch (error) {
-    console.error("Error fetching card data:", error);
-    throw new Error("Error fetching card data");
+    console.error("Error fetching paginated data:", error);
+    throw new Error("Error fetching paginated data");
   }
 }
 
-// Query to fetch data based on search input
-async function searchBoxQuery(HopeFuelID) {
+// Function to search by HopeFuelID
+async function searchByHopeFuelID(HopeFuelID) {
+  console.log("Searching for HopeFuelID from api:", HopeFuelID);
   const query = `
     SELECT 
-        C.CurrencyCode,
-        Cu.Name AS CustomerName,
-        T.HopeFuelID,
-        S.ScreenShotLink
+      C.CurrencyCode,
+      Cu.Name AS CustomerName,
+      T.HopeFuelID,
+      JSON_ARRAYAGG(S.ScreenShotLink) AS ScreenShotLinks
     FROM 
-        Transactions T
+      Transactions T
     JOIN 
-        Customer Cu ON T.CustomerID = Cu.CustomerId
+      Customer Cu ON T.CustomerID = Cu.CustomerId
     JOIN 
-        Wallet W ON T.WalletID = W.WalletId
+      Wallet W ON T.WalletID = W.WalletId
     JOIN 
-        Currency C ON W.CurrencyId = C.CurrencyId
-    JOIN 
-        ScreenShot S ON S.TransactionID = T.TransactionID
-    WHERE
-        MONTH(T.TransactionDate) = 10 
-        AND YEAR(T.TransactionDate) = YEAR(CURDATE())
-        AND T.HopeFuelID = ?;  -- Use placeholder for safe query execution
+      Currency C ON W.CurrencyId = C.CurrencyId
+    LEFT JOIN 
+      ScreenShot S ON S.TransactionID = T.TransactionID
+    WHERE 
+      T.HopeFuelID = ?
+      GROUP BY T.TransactionID
+      ;
   `;
 
   try {
-    const result = await db(query, [HopeFuelID]); // Use parameterized query
-    return result;
+    const [rows] = await db(query, [HopeFuelID]);
+    console.log("Kaung row");
+    console.log(rows);
+    return rows ? [rows] : [];
   } catch (error) {
-    console.error("Error fetching search box data:", error);
-    throw new Error("Error fetching search box data");
+    console.error("Error fetching search data:", error);
+    throw new Error("Error fetching search data");
   }
 }
 
-// Handle GET requests to the /api/searchDB endpoint
 export async function GET(req) {
-  const { searchParams } = new URL(req.url); // Extract query params from request
+  const { searchParams } = new URL(req.url);
   const HopeFuelID = searchParams.get("HopeFuelID");
+  const page = parseInt(searchParams.get("page"), 10) || 1;
 
   try {
     let data;
     if (HopeFuelID) {
-      data = await searchBoxQuery(HopeFuelID); // Fetch data based on search input
+      console.log(`Searching for HopeFuelID: ${HopeFuelID}`);
+      data = await searchByHopeFuelID(HopeFuelID);
     } else {
-      data = await DataForCard(); // Fetch default card data
+      console.log(`Fetching paginated data for page: ${page}`);
+      data = await getPaginatedData(page);
     }
 
-    return NextResponse.json(data); // Return the data as JSON response
+    if (!data || data.length === 0) {
+      return NextResponse.json({ message: "No data found" }, { status: 404 });
+    }
+
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("[Error] Cannot get card data:", error);
-    return NextResponse.json(
-      { error: "Cannot get card data" },
-      { status: 500 }
-    );
+    console.error("API Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -1,62 +1,82 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  
-  Chip,
-  Box,
-} from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-function ItemCard({ item }) {
+function ItemCard({ item, onClick }) {
+  const router = useRouter();
+
+  // Safely access properties using optional chaining (?.)
+  const handleClick = () => {
+    onClick(item?.HopeFuelID); // Trigger the callback function to navigate
+    if (item?.HopeFuelID) {
+      router.push(`/details?HopeFuelID=${item.HopeFuelID}`);
+    }
+  };
+
   return (
-    <Card
+    <Box
+      onClick={handleClick}
       sx={{
         display: "flex",
         alignItems: "center",
-        padding: "8px",
-        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
-        "&:hover": { backgroundColor: "#f0f0f0" },
+        justifyContent: "space-between",
+        padding: 2,
+        borderBottom: "1px solid #e0e0e0",
         cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "#f9f9f9",
+        },
       }}
     >
-      <Box
-        component="img"
-        src={item.ScreenShotLink} // Replace with dynamic image URL if available
-        alt="Customer Image"
-        sx={{
-          width: 64,
-          height: 64,
-          marginRight: "16px",
-          borderRadius: "8px",
-          objectFit: "cover",
-          backgroundColor: "#c4c4c4",
-        }}
-      />
-      <div
-        sx={{
-          display: "block",
-        }}
-      >
-        <CardContent sx={{ flex: 1 }}>
-          <Typography variant="h6" fontWeight="bold">
-            HOPEID - {item.HopeFuelID}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {item.CustomerName}
-          </Typography>
-        </CardContent>
-        <Box>
-          <Chip
-            label={item.CurrencyCode}
+      {/* Left Section with Thumbnail and Text */}
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        {/* Placeholder for Screenshot Image */}
+        {item?.ScreenShotLinks ? (
+          <Box
+            component="img"
+            src={item.ScreenShotLinks[0]}
+            alt="Payment Screenshot"
             sx={{
-              backgroundColor: "#fecaca",
-              color: "black",
+              width: 50,
+              height: 50,
+              marginRight: 2,
+              borderRadius: 2,
+              objectFit: "cover",
             }}
           />
+        ) : (
+          <Box
+            sx={{
+              width: 50,
+              height: 50,
+              bgcolor: "#f0f0f0",
+              marginRight: 2,
+              borderRadius: 2,
+            }}
+          />
+        )}
+        {/* Display HopeFuelID and Customer Name if available */}
+        <Box sx={{ width : 100 }}>
+          <Typography variant="body1" sx={{ fontWeight: "bold" 
+            , width: 100 }}>
+            HOPEID-{item?.HopeFuelID || "N/A"}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {item?.CustomerName || "No Name"}
+          </Typography>
         </Box>
-      </div>
-    </Card>
+      </Box>
+
+      {/* Right Section with Currency Code */}
+      {item?.CurrencyCode && (
+        <Chip
+          label={item.CurrencyCode}
+          color="primary"
+          size="small"
+          sx={{ fontWeight: "bold" }}
+        />
+      )}
+    </Box>
   );
 }
 
