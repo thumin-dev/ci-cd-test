@@ -30,6 +30,7 @@ export default function PaymentDetails() {
   const [status, setStatus] = useState(1);
   const [note, setNote] = useState("");
 
+
   // Fetch data based on HopeFuelID
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +44,7 @@ export default function PaymentDetails() {
 
         if (result && result.length > 0) {
           const transactionData = result[0];
+          console.log("TransactionData:", transactionData);
           setData(transactionData);
           setNote(transactionData.Note || "");
           setStatus(transactionData.Status || 1);
@@ -63,7 +65,7 @@ export default function PaymentDetails() {
     return (
       <Box sx={{ display: "flex", height: "100vh" }}>
         <Box sx={{ width: 300, marginRight: 3 }}>
-          <SearchBarForm url={"/api/searchDB"} />
+          <SearchBarForm  url={'/api/entryFormStatus'}/>
         </Box>
         <Box
           sx={{
@@ -87,7 +89,7 @@ export default function PaymentDetails() {
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <Box sx={{ width: 300, marginRight: 3 }}>
-        <SearchBarForm url={"/api/searchDB"} />
+        <SearchBarForm url={"/api/entryFormStatus"} />
       </Box>
       <Box sx={{ flex: 1, padding: 4, backgroundColor: "#f5f5f5" }}>
         <Card sx={{ padding: 3, borderRadius: 5 }}>

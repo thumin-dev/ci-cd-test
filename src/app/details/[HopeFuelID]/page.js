@@ -14,16 +14,14 @@ import {
   InputLabel,
   Divider,
 } from "@mui/material";
-import ActionButtons from "../../UI/Components/ActionButtons";
-import AmountDetails from "../../UI/Components/AmountDetails";
-import CardsIssuedList from "../../UI/Components/CardIssuedList";
-import CreatorInfo from "../../UI/Components/CreatorInfo";
-import SupportRegion from "../../UI/Components/SupportRegion";
-import UserInfo from "../../UI/Components/UserInfo";
-import HopeFuelIdStatus from "../../UI/Components/HopeIdStatus";
-import SearchBarForm from "../../search/page";
-import { set } from "date-fns";
-import { Agent } from "http";
+import ActionButtons from "../UI/Components/ActionButton";
+import AmountDetails from "../UI/Components/AmountDetails";
+import CardsIssuedList from "../UI/Components/CardIssuedList";
+import CreatorInfo from "../UI/Components/CreatorInfo";
+import SupportRegion from "../UI/Components/SupportRegion";
+import UserInfo from "../UI/Components/UserInfo";
+import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
+import SearchBarForm from "../search/page";
 
 export default function PaymentDetails() {
   const searchParams = useSearchParams();
@@ -44,12 +42,10 @@ export default function PaymentDetails() {
         const result = await response.json();
 
         if (result && result.length > 0) {
-          console.log("Fetched Data:", result[0]);
-          setData(result[0]);
-          setNote(result[0].Note || "");
-          setStatus(result[0].Status || 1);
-
-          console.log("set data done");
+          const transactionData = result[0];
+          setData(transactionData);
+          setNote(transactionData.Note || "");
+          setStatus(transactionData.Status || 1);
         } else {
           console.error("No data found");
           setData(null);
@@ -62,17 +58,12 @@ export default function PaymentDetails() {
     fetchData();
   }, [HopeFuelID]);
 
-  // Log `data` whenever it changes
-  useEffect(() => {
-    console.log("Updated data:", data);
-  }, [data]);
-
   // Handle case where no HopeFuelID is selected
   if (!HopeFuelID) {
     return (
       <Box sx={{ display: "flex", height: "100vh" }}>
         <Box sx={{ width: 300, marginRight: 3 }}>
-          <SearchBarForm />
+          <SearchBarForm url={"/api/searchDB"} />
         </Box>
         <Box
           sx={{
@@ -93,19 +84,10 @@ export default function PaymentDetails() {
   // Handle loading state
   if (data === null) return <Typography>Loading...</Typography>;
 
-  // Handle case where data is not found
-  if (!data) {
-    return (
-      <Typography variant="h6" color="error">
-        No data found for the given HopeFuelID.
-      </Typography>
-    );
-  }
-
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <Box sx={{ width: 300, marginRight: 3 }}>
-        <SearchBarForm />
+        <SearchBarForm url={"/api/searchDB"} />
       </Box>
       <Box sx={{ flex: 1, padding: 4, backgroundColor: "#f5f5f5" }}>
         <Card sx={{ padding: 3, borderRadius: 5 }}>
@@ -131,10 +113,7 @@ export default function PaymentDetails() {
                         borderRadius: 2,
                         boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
                       }}
-                      onClick={() => {
-                        console.log("hello this is me");
-                        window.open(link, "_blank");
-                      }}
+                      onClick={() => window.open(link, "_blank")}
                     />
                   ))}
                 </Stack>
@@ -150,7 +129,6 @@ export default function PaymentDetails() {
                   <AmountDetails amount={data} />
                 </Card>
 
-                {/* Ensure `region` is passed only if `data` is defined */}
                 <Card variant="outlined" sx={{ padding: 2 }}>
                   {data.Region ? (
                     <SupportRegion region={data} />
@@ -164,19 +142,20 @@ export default function PaymentDetails() {
                 <Card variant="outlined" sx={{ padding: 2 }}>
                   <CreatorInfo creator={data} />
                 </Card>
-                <FormControl fullWidth>
-                  <TextField
-                    fullWidth
-                    label="Note"
-                    multiline
-                    rows={3}
-                    defaultValue={data.Note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
 
+                <TextField
+                  fullWidth
+                  label="Note"
+                  multiline
+                  rows={3}
+                  value={note} // Use controlled state
+                  onChange={(e) => setNote(e.target.value)}
+                  sx={{ marginBottom: 2 }}
+                />
+                <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Select
-                    value={data.Status || 1}
+                    value={status} // Use controlled state
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <MenuItem value={1}>၁ - ဖောင်တင်သွင်း</MenuItem>
