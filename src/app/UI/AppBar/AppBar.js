@@ -66,8 +66,7 @@ export default function ResponsiveAppBar({ userRole }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-const {setUser} = useUser();
-
+  const { setUser } = useUser();
 
   const handleUserMenuClick = async (setting) => {
     handleCloseUserMenu();
