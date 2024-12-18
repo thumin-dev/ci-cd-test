@@ -29,66 +29,66 @@ export default function SearchBarForm() {
  }
 
   
-  // Function to fetch data from the API
-  const handleSearch = async (HopeFuelID, wallet) => {
-     if (!wallet) {
-       console.log("Wallet not ready, skipping search");
-       return; // Skip search if wallet is not ready
-     }
-    console.log("HopeID is " + HopeFuelID, "with Wallet"+ wallet);
-    setLoading(true);
-    setError(null);
-    setNoResults(false);
-    try {
-      const url = HopeFuelID
-        ? `/api/searchDB?HopeFuelID=${HopeFuelID}&page=${page}`
-        : `/api/searchDB?page=${page}&wallet=${wallet}`;
+const handleSearch = async (HopeFuelID, wallet) => {
+  if (!wallet && !HopeFuelID) {
+    console.log("Wallet or HopeFuelID required for search");
+    setError("Please select a wallet or provide a HopeFuelID");
+    setNoResults(true);
+    return; // Skip search if neither wallet nor HopeFuelID is provided
+  }
 
-      const response = await fetch(url);
-      console.log(response);
+  console.log("HopeID is " + HopeFuelID, "with Wallet: " + wallet);
+  setLoading(true);
+  setError(null);
+  setNoResults(false);
 
-      if (!response.ok) {
-        throw new Error("No item found");
-      }
+  try {
+    // Construct API URL based on provided parameters
+    const queryParams = new URLSearchParams();
+    if (HopeFuelID) queryParams.append("HopeFuelID", HopeFuelID);
+    if (wallet) queryParams.append("wallet", wallet);
+    queryParams.append("page", page);
 
-      const data = await response.json();
+    const url = `/api/searchDB?${queryParams.toString()}`;
 
-      if (Array.isArray(data)) {
-        for (let i = 0; i < data.length; i++) {
-          console.log(data[i]);
-          if (Array.isArray(data[i]["ScreenShotLinks"])) {
-            console.log(data[i]["ScreenShotLinks"].length);
-            for (
-              let screenshot = 0;
-              screenshot < data[i]["ScreenShotLinks"].length;
-              screenshot++
-            ) {
-              let tmp = await getScreenShotUrl(
-                data[i]["ScreenShotLinks"][screenshot]
-              );
-              data[i]["ScreenShotLinks"][screenshot] = tmp.href;
-            }
+    const response = await fetch(url);
+    console.log(response);
+
+    if (!response.ok) {
+      throw new Error("No item found");
+    }
+
+    const data = await response.json();
+
+    if (Array.isArray(data)) {
+      for (let i = 0; i < data.length; i++) {
+        if (Array.isArray(data[i]["ScreenShotLinks"])) {
+          for (
+            let screenshot = 0;
+            screenshot < data[i]["ScreenShotLinks"].length;
+            screenshot++
+          ) {
+            let tmp = await getScreenShotUrl(
+              data[i]["ScreenShotLinks"][screenshot]
+            );
+            data[i]["ScreenShotLinks"][screenshot] = tmp.href;
           }
         }
-        console.log("my Data:", data);
-
-        if (data.length === 0 && page === 1) {
-          setNoResults(true);
-        } else {
-          console.log("My final data");
-          console.log(data);
-          setItems((prevItems) =>
-            page === 1 ? data : [...prevItems, ...data]
-          );
-        }
       }
-    } catch (error) {
-      console.error("Search Error:", error);
-      setError("No item found"); // Set error message to "No item found"
-    } finally {
-      setLoading(false);
+      if (data.length === 0 && page === 1) {
+        setNoResults(true);
+      } else {
+        setItems((prevItems) => (page === 1 ? data : [...prevItems, ...data]));
+      }
     }
-  };
+  } catch (error) {
+    console.error("Search Error:", error);
+    setError("No item found");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Handle search input changes
   const handleSearchChange = (query) => {
