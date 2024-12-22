@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import checkUserSubmit from "../utilites/checkUserSubmit";
+import { getCurrentUser } from "aws-amplify/auth";
 
 export default function CheckUser({ onUserCheck, userRole }) {
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function CheckUser({ onUserCheck, userRole }) {
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
+    const { username, userId, signInDetails } = await getCurrentUser();
     const name = formData.get("name").trim();
     const email = formData.get("email").trim();
 
@@ -39,6 +41,18 @@ export default function CheckUser({ onUserCheck, userRole }) {
       body: raw,
       redirect: "follow",
     };
+
+    console.log("This is my agent role");
+    let agentRole = await fetch(`/api/getAgent?awsId=${userId}`);
+    agentRole = await agentRole.json();
+    console.log(agentRole);
+
+    // if user is an admin
+    if (agentRole.data.UserRoleId == 2) {
+      sethasPermissionThisMonth(true);
+      setLoading(false);
+    }
+
     let response = await fetch("/api/checkolduserpermission/", requestOptions);
     let bool = await response.json();
     console.log(bool);
