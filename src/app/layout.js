@@ -43,6 +43,7 @@ export default function RootLayout({ children }) {
                 <UserProvider>
                   <ResponsiveAppBar userRole={"admin"} />
                   {children}
+                  {console.log(user)}
                 </UserProvider>
               </AgentProvider>
             </ThemeProvider>
