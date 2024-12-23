@@ -203,9 +203,7 @@ async function InsertCustomer(
   let lastDayOfthisMonth = calculateExpireDate(new Date(), 0, 0);
   console.log(lastDayOfthisMonth);
   console.log(expireDate);
-  let isEedCurrent =
-    expireDate.getFullYear() >= lastDayOfthisMonth.getFullYear() &&
-    expireDate.getMonth() >= lastDayOfthisMonth.getMonth();
+  let isEedCurrent = expireDate.getTime() >= lastDayOfthisMonth.getTime();
   console.log(expireDate.getDate());
   console.log(lastDayOfthisMonth.getDate());
   console.log("isEedCurrent is ");
