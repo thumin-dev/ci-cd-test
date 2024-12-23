@@ -15,7 +15,7 @@ export async function POST(request) {
         INNER JOIN Customer c ON t.CustomerID = c.CustomerID
         WHERE c.Name = ? 
           AND c.Email = ?
-          AND (t.PaymentDenied IS NULL OR t.PaymentDenied = 1)
+          AND (t.PaymentDenied IS NULL OR t.PaymentDenied = 1 OR t.PaymentDenied = 0)
         ORDER BY t.TransactionDate DESC
         LIMIT 1;`,
       [name, email]
@@ -26,10 +26,12 @@ export async function POST(request) {
 
     // if transacation hasn't been checked yet
     if (transaction.length > 0 && transaction[0]["PaymentDenied"] == 1) {
+      console.log("hello world");
       return Response.json(true);
     } else if (
       transaction.length > 0 &&
-      transaction[0]["PaymentDenied"] == null
+      (transaction[0]["PaymentDenied"] == null ||
+        transaction[0]["PaymentDenied"] == 0)
     ) {
       console.log("transaction this month permission is checking");
       let latestTransaction = transaction[0];

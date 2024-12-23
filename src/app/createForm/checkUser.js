@@ -10,23 +10,28 @@ import {
 import React, { useState } from "react";
 import checkUserSubmit from "../utilites/checkUserSubmit";
 import { getCurrentUser } from "aws-amplify/auth";
+import { useUser } from "../context/UserContext";
 
 export default function CheckUser({ onUserCheck, userRole }) {
   const [loading, setLoading] = useState(false);
   const [hasPermissionThisMonth, sethasPermissionThisMonth] = useState(true);
+  const { currentUser } = useUser();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
-    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(currentUser);
+    const userRole = currentUser["UserRole"];
+
+    // const { username, userId, signInDetails } = await getCurrentUser();
     const name = formData.get("name").trim();
     const email = formData.get("email").trim();
 
     const user = await checkUserSubmit(name, email, userRole);
 
-    // check if the user has permission
+    // // check if the user has permission
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -42,21 +47,21 @@ export default function CheckUser({ onUserCheck, userRole }) {
       redirect: "follow",
     };
 
-    console.log("This is my agent role");
-    let agentRole = await fetch(`/api/getAgent?awsId=${userId}`);
-    agentRole = await agentRole.json();
-    console.log(agentRole);
+    // console.log("This is my agent role");
+    // let agentRole = await fetch(`/api/getAgent?awsId=${userId}`);
+    // agentRole = await agentRole.json();
+    // console.log(agentRole);
+
+    let bool = true;
 
     // if user is an admin
-    if (agentRole.data.UserRoleId == 2) {
-      sethasPermissionThisMonth(true);
-      setLoading(false);
+    if (userRole !== "Admin") {
+      let response = await fetch(
+        "/api/checkolduserpermission/",
+        requestOptions
+      );
+      bool = await response.json();
     }
-
-    let response = await fetch("/api/checkolduserpermission/", requestOptions);
-    let bool = await response.json();
-    console.log(bool);
-    console.log("has permission answer");
 
     if (!bool) {
       sethasPermissionThisMonth(bool);
