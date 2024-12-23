@@ -52,8 +52,7 @@ export async function POST(request) {
 
     let lastDayOfthisMonth = calculateExpireDate(new Date(), 0, 0);
     let isEedCurrent =
-      currentExpireDate.getFullYear() >= lastDayOfthisMonth.getFullYear() &&
-      currentExpireDate.getMonth() >= lastDayOfthisMonth.getMonth();
+      currentExpireDate.getTime() >= lastDayOfthisMonth.getTime();
     if (isEedCurrent) {
       nextExpireDate = calculateExpireDate(
         currentExpireDate,
@@ -103,6 +102,8 @@ export async function POST(request) {
 
   // //update the expire date
   const value = [nextExpireDate, obj["customerId"]];
+  console.log("nextExpireDate is ");
+  console.log(nextExpireDate);
 
   const sql = `UPDATE Customer SET ExpireDate = ? WHERE CustomerID = ? LIMIT 1`;
   try {
