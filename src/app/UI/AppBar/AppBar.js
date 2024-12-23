@@ -82,7 +82,7 @@ export default function ResponsiveAppBar() {
       case "Logout":
         await signOut({ global: true });
         setUser(null);
-        router.push("/login");
+        router.push("/");
         break;
       default:
         break;
