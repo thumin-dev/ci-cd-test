@@ -12,6 +12,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Button,
   Divider,
 } from "@mui/material";
 import ActionButtons from "../UI/Components/ActionButton";
@@ -24,14 +25,17 @@ import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
 import SearchBarForm from "../search/page";
 
 export default function PaymentDetails() {
+  const [isEditing, setIsEditing] = useState(false);
   const searchParams = useSearchParams();
   const HopeFuelID = searchParams.get("HopeFuelID");
   const [data, setData] = useState(null);
   const [status, setStatus] = useState(1);
   const [note, setNote] = useState("");
 
-
   // Fetch data based on HopeFuelID
+
+  async function handleNoteSave() {}
+
   useEffect(() => {
     const fetchData = async () => {
       if (!HopeFuelID) return;
@@ -65,7 +69,7 @@ export default function PaymentDetails() {
     return (
       <Box sx={{ display: "flex", height: "100vh" }}>
         <Box sx={{ width: 300, marginRight: 3 }}>
-          <SearchBarForm  url={'/api/entryFormStatus'}/>
+          <SearchBarForm url={"/api/entryFormStatus"} />
         </Box>
         <Box
           sx={{
@@ -145,15 +149,26 @@ export default function PaymentDetails() {
                   <CreatorInfo creator={data} />
                 </Card>
 
-                <TextField
-                  fullWidth
-                  label="Note"
-                  multiline
-                  rows={3}
-                  value={note} // Use controlled state
-                  onChange={(e) => setNote(e.target.value)}
-                  sx={{ marginBottom: 2 }}
-                />
+                <Stack spacing={2}>
+                  <TextField
+                    fullWidth
+                    label="Note"
+                    multiline
+                    rows={3}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    disabled={!isEditing} // Disable text field when not editing
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={
+                      isEditing ? handleNoteSave : () => setIsEditing(true)
+                    }
+                  >
+                    {isEditing ? "Save" : "Edit"}
+                  </Button>
+                </Stack>
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Select
