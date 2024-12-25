@@ -12,6 +12,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Chip,
   Button,
   Divider,
 } from "@mui/material";
@@ -191,18 +192,16 @@ export default function PaymentDetails() {
                     {isEditing ? "Save" : "Edit"}
                   </Button>
                 </Stack>
+                <Chip
+                  label={`${data.TransactionStatus} `}
+                  sx={{
+                    backgroundColor: "#ffd700",
+                    color: "#000",
+                    fontWeight: "bold",
+                    padding: "4px 8px",
+                  }}
+                />
                 <FormControl fullWidth>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    value={status} // Use controlled state
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <MenuItem value={1}>၁ - ဖောင်တင်သွင်း</MenuItem>
-                    <MenuItem value={2}>၂ - စစ်ဆေးပြီး</MenuItem>
-                    <MenuItem value={3}>၃ - ပြီးစီး</MenuItem>
-                    <MenuItem value={4}>၄ - ပယ်ဖျက်</MenuItem>
-                  </Select>
-
                   <ActionButtons
                     data={{
                       HopeFuelID: data.HopeFuelID,
