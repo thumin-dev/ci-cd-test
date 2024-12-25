@@ -34,7 +34,29 @@ export default function PaymentDetails() {
 
   // Fetch data based on HopeFuelID
 
-  async function handleNoteSave() {}
+  async function handleNoteSave() {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      note: note,
+      noteId: data["NoteID"],
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    await fetch("/api/updateNote", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
+
+    setIsEditing(false);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
