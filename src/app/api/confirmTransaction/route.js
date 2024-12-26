@@ -22,7 +22,8 @@ export async function POST(req) {
 
     const updateTransactionPaymentDenied = `UPDATE Transactions
     SET PaymentDenied = ?,
-    PaymentCheckTime = ?
+    PaymentCheckTime = ?,
+    PaymentCheck = ?
     WHERE TransactionID = ?;`;
 
     // values
@@ -41,6 +42,7 @@ export async function POST(req) {
     const transactionPaymentDeniedValue = [
       0,
       transactionDateWithThailandTimeZone,
+      1,
       transactionId,
     ];
 
