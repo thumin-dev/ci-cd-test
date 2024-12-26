@@ -47,13 +47,32 @@ const ActionButtons = ({ data }) => {
     }
   };
 
+  const handleConfirm = async () => {
+    setLoading(true);
+
+    const payload = {
+      transactionId: data.HopeFuelID,
+      agentId: data.AgentId,
+    };
+
+    try {
+      const response = await fetch("/api/confirmTransaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      console.error("error updating the confirm status");
+    }
+  };
+
   return (
     <Stack direction="row" spacing={2} sx={{ marginTop: 2 }}>
       <Button
         variant="contained"
         color="error"
         sx={{ width: "150px" }}
-        onClick={() => handleAction(0)}
+        onClick={handleConfirm}
         disabled={loading}
       >
         Confirm
