@@ -24,6 +24,7 @@ import SupportRegion from "../UI/Components/SupportRegion";
 import UserInfo from "../UI/Components/UserInfo";
 import HopeFuelIdStatus from "../UI/Components/HopeIdStatus";
 import SearchBarForm from "../search/page";
+import getScreenShotUrl from "../utilites/getScreenShotUrl";
 
 export default function PaymentDetails() {
   const [isEditing, setIsEditing] = useState(false);
@@ -72,6 +73,18 @@ export default function PaymentDetails() {
         if (result && result.length > 0) {
           const transactionData = result[0];
           console.log("TransactionData:", transactionData);
+          if (transactionData.hasOwnProperty("ScreenShotLinks")) {
+            console.log("Screenshot has been found");
+            let screenShots = transactionData["ScreenShotLinks"];
+
+            if (Array.isArray(screenShots)) {
+              for (let i = 0; i < screenShots.length; i++) {
+                screenShots[i] = await getScreenShotUrl(screenShots[i]);
+              }
+            }
+            
+            transactionData["ScreenShotLinks"] = screenShots;
+          }
           setData(transactionData);
           setNote(transactionData.Note || "");
           setStatus(transactionData.Status || 1);
