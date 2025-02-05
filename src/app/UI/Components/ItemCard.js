@@ -1,19 +1,26 @@
 import React from "react";
 import { Box, Chip, Typography } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-function ItemCard({ item, onClick ,}) {
+function ItemCard({ item, onClick }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const walletId = searchParams.get("walletId")
 
   // Safely access properties using optional chaining (?.)
   const handleClick = () => {
     onClick(item?.HopeFuelID); // Trigger the callback function to navigate
-     if (pathname === "/entryForm") {
-        router.push(`/entryForm?HopeFuelID=${item.HopeFuelID}`);
-      } else if (pathname === "/details") {
-        router.push(`/details?HopeFuelID=${item.HopeFuelID}`);
-      }
+    if (pathname === "/entryForm") {
+      router.push(
+        `/entryForm?HopeFuelID=${item.HopeFuelID}&walletId=${walletId}`
+      );
+    } else if (pathname === "/details") {
+      router.push(
+        `/details?HopeFuelID=${item.HopeFuelID}&walletId=${walletId}`
+      );
+    }
     
   };
 
