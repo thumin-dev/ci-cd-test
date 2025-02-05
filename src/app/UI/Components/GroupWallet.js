@@ -1,10 +1,14 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Select, MenuItem, Typography, Box } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 
 const WalletSelect = ({ onWalletSelected }) => {
   const [currentWallet, setCurrentWallet] = useState("Select Wallet");
+
   const [wallets, setWallets] = useState([]);
 
+  const searchParams = useSearchParams();
+  const walletId = searchParams.get("walletId");
 
   const handleChange = (event) => {
     const wallet = event.target.value;
@@ -12,29 +16,36 @@ const WalletSelect = ({ onWalletSelected }) => {
     onWalletSelected(wallet);
   };
 
-useEffect(() => {
-  const fetchAllWallets = async () => {
-    try {
-      const response = await fetch(`/api/loadWalletByCurrency`);
-      const result = await response.json();
-      console.log("Wallets from DB:", result);
-      setWallets(result);
+  useEffect(() => {
+    const fetchAllWallets = async () => {
+      try {
+        const response = await fetch(`/api/loadWalletByCurrency`);
+        const result = await response.json();
+        console.log("Wallets from DB:", result);
+        setWallets(result);
 
-      if (result.length > 0) {
-        setCurrentWallet(result[0].WalletName); // Set default wallet
-        onWalletSelected(result[0].WalletName); // Notify parent
-      } else {
+        // Check if walletId exists and is valid
+        const walletFromParam = result.find(
+          (wallet) => wallet.WalletName === walletId
+        );
+
+        if (walletFromParam) {
+          setCurrentWallet(walletFromParam.WalletName); // Set wallet from query param
+          onWalletSelected(walletFromParam.WalletName);
+        } else if (result.length > 0) {
+          setCurrentWallet(result[0].WalletName); // Set default wallet
+          onWalletSelected(result[0].WalletName); // Notify parent
+        } else {
+          onWalletSelected(""); // Notify parent of no wallets
+        }
+      } catch (error) {
+        console.error("Cannot fetch wallets from API");
         onWalletSelected(""); // Notify parent of no wallets
       }
-    } catch (error) {
-      console.error("Cannot fetch wallets from API");
-      onWalletSelected(""); // Notify parent of no wallets
-    }
-  };
+    };
 
-  fetchAllWallets();
-}, []);
-
+    fetchAllWallets();
+  }, []);
 
   return (
     <Box display="flex" alignItems="center" gap={1}>
