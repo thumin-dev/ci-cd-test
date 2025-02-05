@@ -49,7 +49,7 @@ WHERE
 GROUP BY 
     T.TransactionID, C.CurrencyCode, Cu.Name, T.HopeFuelID
 ORDER BY 
-    T.TransactionDate DESC
+    T.TransactionDate ASC
 LIMIT ${offset},${itemsPerPage} ;
   `;
 
