@@ -1,11 +1,21 @@
 "use client";
 
-import { Box, Divider, TextField } from "@mui/material";
-import React from "react";
+import { Box, Divider, TextField, Typography } from "@mui/material";
+import React, { useMemo, useState } from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
 import { HOPEFUEL_ID_LISTS } from "../variables/const";
 
 const HopeFuelIdListPage = () => {
+  const [searchText, setSearchText] = useState("");
+
+  const filteredData = useMemo(() => {
+    return HOPEFUEL_ID_LISTS.filter(
+      (item) =>
+        item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.Email.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [searchText]);
+
   return (
     <>
       <Box
@@ -26,6 +36,8 @@ const HopeFuelIdListPage = () => {
           fullWidth
           variant="standard"
           placeholder="Search..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           InputProps={{
             disableUnderline: true,
           }}
@@ -38,7 +50,29 @@ const HopeFuelIdListPage = () => {
           borderColor: "#CBD5E1",
         }}
       />
-      <HopeFuelIDListItem data={HOPEFUEL_ID_LISTS} />
+      {filteredData.length > 0 ? (
+        <>
+          <HopeFuelIDListItem data={filteredData} />
+        </>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "#334155",
+              fontSize: "20px",
+              fontWeight: 400,
+              lineHeight: "28px",
+            }}
+          >
+            No Result Found
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };
