@@ -10,7 +10,9 @@ export async function GET(request) {
   }
 
   const query = `
+  
 SELECT 
+    t.TransactionID
     t.HopeFuelID,
     w.WalletName,
     t.Month,
@@ -26,7 +28,9 @@ SELECT
     c.ExpireDate,
     c.CardID,
     a.AwsId,
-    a.AgentId,
+    a.AgentId AS PrimaryAwsId, - Primary agent's AWS ID,
+    JSON_ARRAYAGG(ta_agent. AwsId) AS LoggedAwsIds, -- Aggregate AWS IDs from
+TransactionAgent
     JSON_ARRAYAGG(s.ScreenShotLink) AS ScreenShotLinks,
     ts.TransactionStatus -- Retrieve the transaction status
 FROM Transactions t
@@ -39,6 +43,8 @@ LEFT JOIN ScreenShot s ON t.TransactionID = s.TransactionID
 LEFT JOIN Agent a ON c.AgentId = a.AgentId
 LEFT JOIN FormStatus fs ON t.TransactionID = fs.TransactionID
 LEFT JOIN TransactionStatus ts ON fs.TransactionStatusID = ts.TransactionStatusID
+LEFT JOIN TransactionAgent ta ON t.TransactionID= ta.TransactionID -- Join TransactionAgent table
+LEFT JOIN Agent ta_agent ON ta.AgentID = ta_agent. AgentId -- Join to get AWS IDs for logged agents
 WHERE t.HopeFuelID = ?
 GROUP BY 
     t.TransactionID,
