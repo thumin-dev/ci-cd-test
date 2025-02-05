@@ -221,6 +221,7 @@ export default function PaymentDetails() {
                       Note: note,
                       Status: status,
                       AgentId: data.AgentId,
+                      TransactionID: data.TransactionID
                     }}
                   />
                 </FormControl>
