@@ -56,9 +56,8 @@ const ActionButtons = ({ data }) => {
 
   const handleConfirm = async () => {
     setLoading(true);
-
     const payload = {
-      transactionId: data.HopeFuelID,
+      transactionId: data.TransactionID,
       agentId: agentId,
     };
 
@@ -80,7 +79,7 @@ const ActionButtons = ({ data }) => {
   const handleDenied = async () => {
     setLoading(true);
     const payload = {
-      transactionId: data.HopeFuelID,
+      transactionId: data.TransactionID,
       agentId: agentId,
     };
 
