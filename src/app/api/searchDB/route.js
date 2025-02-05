@@ -4,7 +4,7 @@ import getScreenShotUrl from "../../utilites/getScreenShotUrl";
 // Function to fetch paginated data
 async function getPaginatedData(page, selectedWallet) {
   console.log("Selected Wallet from api: ", selectedWallet);
-  const itemsPerPage = 10;
+  const itemsPerPage = 100;
   const offset = (parseInt(page, 10) - 1) * itemsPerPage;
 
   // Ensure offset and itemsPerPage are integers
