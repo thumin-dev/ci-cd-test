@@ -2,7 +2,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
 
 const HopeFuelIDListItem = ({ data }) => {
-  const getStatusColor = (status) => {
+  const getStatusByColor = (status) => {
     switch (status) {
       case "Refunded":
         return "#03fc73";
@@ -177,7 +177,7 @@ const HopeFuelIDListItem = ({ data }) => {
                   sx={{
                     minWidth: "140px",
                     width: "140px",
-                    backgroundColor: getStatusColor(item.TransactionStatus),
+                    backgroundColor: getStatusByColor(item.TransactionStatus),
                     color: "#000000",
                     px: "1rem",
                     py: ".5rem",
