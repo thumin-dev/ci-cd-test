@@ -1,14 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../UI/Components/SearchBar";
-import { Container, Typography, CircularProgress, Box , Divider} from "@mui/material";
+import {
+  Container,
+  Typography,
+  CircularProgress,
+  Box,
+  Divider,
+} from "@mui/material";
 import ItemList from "../UI/Components/ItemList";
 import getScreenShotUrl from "../utilites/getScreenShotUrl";
 import WalletSelect from "../UI/Components/GroupWallet";
 
-
-
-
+import { useRouter } from "next/router";
 
 export default function SearchBarForm() {
   const [items, setItems] = useState([]);
@@ -18,77 +22,82 @@ export default function SearchBarForm() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
 
-
   //Select Wallet
 
- const handleSelectedWallet = (wallet)=>{
-  console.log("Selcted wallet:",wallet);
+  const handleSelectedWallet = (wallet) => {
+    console.log("Selcted wallet:", wallet);
 
-  setPage(1)
-  handleSearch(searchQuery,wallet)
- }
+    const currentUrl = new URL(window.location.href);
+    console.log(currentUrl);
 
-  
-const handleSearch = async (HopeFuelID, wallet) => {
-  if (!wallet && !HopeFuelID) {
-    console.log("Wallet or HopeFuelID required for search");
-    setError("Please select a wallet or provide a HopeFuelID");
-    setNoResults(true);
-    return; // Skip search if neither wallet nor HopeFuelID is provided
-  }
+    currentUrl.searchParams.set("walletId", wallet);
+    window.history.replaceState(null, "", currentUrl);
 
-  console.log("HopeID is " + HopeFuelID, "with Wallet: " + wallet);
-  setLoading(true);
-  setError(null);
-  setNoResults(false);
+    setPage(1);
+    handleSearch(searchQuery, wallet);
+  };
 
-  try {
-    // Construct API URL based on provided parameters
-    const queryParams = new URLSearchParams();
-    if (HopeFuelID) queryParams.append("HopeFuelID", HopeFuelID);
-    if (wallet) queryParams.append("wallet", wallet);
-    queryParams.append("page", page);
-
-    const url = `/api/searchDB?${queryParams.toString()}`;
-
-    const response = await fetch(url);
-    console.log(response);
-
-    if (!response.ok) {
-      throw new Error("No item found");
+  const handleSearch = async (HopeFuelID, wallet) => {
+    if (!wallet && !HopeFuelID) {
+      console.log("Wallet or HopeFuelID required for search");
+      setError("Please select a wallet or provide a HopeFuelID");
+      setNoResults(true);
+      return; // Skip search if neither wallet nor HopeFuelID is provided
     }
 
-    const data = await response.json();
+    console.log("HopeID is " + HopeFuelID, "with Wallet: " + wallet);
+    setLoading(true);
+    setError(null);
+    setNoResults(false);
 
-    if (Array.isArray(data)) {
-      for (let i = 0; i < data.length; i++) {
-        if (Array.isArray(data[i]["ScreenShotLinks"])) {
-          for (
-            let screenshot = 0;
-            screenshot < data[i]["ScreenShotLinks"].length;
-            screenshot++
-          ) {
-            let tmp = await getScreenShotUrl(
-              data[i]["ScreenShotLinks"][screenshot]
-            );
-            data[i]["ScreenShotLinks"][screenshot] = tmp.href;
+    try {
+      // Construct API URL based on provided parameters
+      const queryParams = new URLSearchParams();
+      if (HopeFuelID) queryParams.append("HopeFuelID", HopeFuelID);
+      if (wallet) queryParams.append("wallet", wallet);
+      queryParams.append("page", page);
+
+      const url = `/api/searchDB?${queryParams.toString()}`;
+
+      const response = await fetch(url);
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("No item found");
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        for (let i = 0; i < data.length; i++) {
+          if (Array.isArray(data[i]["ScreenShotLinks"])) {
+            for (
+              let screenshot = 0;
+              screenshot < data[i]["ScreenShotLinks"].length;
+              screenshot++
+            ) {
+              let tmp = await getScreenShotUrl(
+                data[i]["ScreenShotLinks"][screenshot]
+              );
+              data[i]["ScreenShotLinks"][screenshot] = tmp.href;
+            }
           }
         }
+        if (data.length === 0 && page === 1) {
+          setNoResults(true);
+        } else {
+          setItems((prevItems) =>
+            page === 1 ? data : [...prevItems, ...data]
+          );
+        }
       }
-      if (data.length === 0 && page === 1) {
-        setNoResults(true);
-      } else {
-        setItems((prevItems) => (page === 1 ? data : [...prevItems, ...data]));
-      }
+    } catch (error) {
+      console.error("Search Error:", error);
+      setError("No item found");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Search Error:", error);
-    setError("No item found");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   // Handle search input changes
   const handleSearchChange = (query) => {
@@ -124,7 +133,7 @@ const handleSearch = async (HopeFuelID, wallet) => {
       }}
     >
       {/* Search Bar */}
-      <Box sx={{ width: "100%" , marginTop: "3px"}}>
+      <Box sx={{ width: "100%", marginTop: "3px" }}>
         <SearchBar onSearch={handleSearchChange} />
       </Box>
 
@@ -145,8 +154,11 @@ const handleSearch = async (HopeFuelID, wallet) => {
           marginBottom: "16px",
         }}
       >
-        <WalletSelect onWalletSelected={(wallet)=>handleSelectedWallet(wallet)}/> {/* select wallet from DB*/}
-      </Box>
+        <WalletSelect
+          onWalletSelected={(wallet) => handleSelectedWallet(wallet)}
+        />{" "}
+        {/* select wallet from DB*/}
+      `</Box>`
 
       {/* Conditional Rendering */}
       {loading ? (
