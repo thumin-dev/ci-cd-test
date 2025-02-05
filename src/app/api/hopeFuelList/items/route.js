@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 import db from "../../../utilites/db";
 
-async function retrieveCurrentMonthHopeFuelCards() {
+async function retrieveCurrentMonthHopeFuelCards(page, limit) {
+    const offset = (page - 1) * limit;
+    console.log("Page:", page, "Limit:", limit, "Offset:", offset);
+
   let query = `
    SELECT
             t.HopeFuelID,
@@ -54,9 +57,11 @@ async function retrieveCurrentMonthHopeFuelCards() {
     t.Month, 
     c.ManyChatId, 
     ts.TransactionStatus, 
-    n.Note;
+    n.Note
+    LIMIT ${limit} OFFSET ${offset};
   `;
   try {
+
     const result = await db(query);
     return result;
     
@@ -67,9 +72,24 @@ async function retrieveCurrentMonthHopeFuelCards() {
   }
 }
 export async function GET(req) {
+ const params = new URLSearchParams(req.url);
+ 
+
+    const parsedPage = parseInt(params.get('page') || 1,10);
+    const parsedLimit = parseInt(params.get('limit') || 10,10 );
+
+    
     try {
-        const result = await retrieveCurrentMonthHopeFuelCards();
-        return NextResponse.json(result);
+        const result = await retrieveCurrentMonthHopeFuelCards(parsedPage, parsedLimit);
+        return NextResponse.json({
+          page: parsedPage,
+          limit: parsedLimit,
+          data:
+            result
+        ,
+        },
+         { status: 200 });
+
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
