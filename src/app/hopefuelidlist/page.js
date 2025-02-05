@@ -3,6 +3,7 @@
 import { Box, Divider, TextField } from "@mui/material";
 import React from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
+import { HOPEFUEL_ID_LISTS } from "../variables/const";
 
 const HopeFuelIdListPage = () => {
   return (
@@ -32,12 +33,12 @@ const HopeFuelIdListPage = () => {
       </Box>
       <Divider
         sx={{
-          mx: "4rem",
+          mx: "2rem",
           my: "2rem",
           borderColor: "#CBD5E1",
         }}
       />
-      <HopeFuelIDListItem />
+      <HopeFuelIDListItem data={HOPEFUEL_ID_LISTS} />
     </>
   );
 };
