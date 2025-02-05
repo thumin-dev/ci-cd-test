@@ -4,11 +4,13 @@ import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 import { redirect } from "next/dist/server/api-utils";
+import { useAgent } from "@/app/context/AgentContext";
 
 const ActionButtons = ({ data }) => {
   const [loading, setLoading] = React.useState(false);
   const [confirmDenyFlag, setConfirmDenyFlag] = React.useState(null);
   const route = useRouter();
+  const agentId = useAgent
 
   if (!data || !data.HopeFuelID) {
     console.error("Invalid data passed to ActionButtons:", data);
@@ -57,7 +59,7 @@ const ActionButtons = ({ data }) => {
 
     const payload = {
       transactionId: data.HopeFuelID,
-      agentId: data.AgentId,
+      agentId: agentId,
     };
 
     try {
@@ -79,7 +81,7 @@ const ActionButtons = ({ data }) => {
     setLoading(true);
     const payload = {
       transactionId: data.HopeFuelID,
-      agentId: data.AgentId,
+      agentId: agentId,
     };
 
     try {
