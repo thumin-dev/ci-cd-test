@@ -33,7 +33,7 @@ const HopeFuelIdListPage = () => {
       </Box>
       <Divider
         sx={{
-          mx: "2rem",
+          mx: "5rem",
           my: "2rem",
           borderColor: "#CBD5E1",
         }}

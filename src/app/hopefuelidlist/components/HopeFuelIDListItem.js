@@ -2,7 +2,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import React from "react";
 
 const HopeFuelIDListItem = ({ data }) => {
-  const getStatusColor = (status) => {
+  const getStatusByColor = (status) => {
     switch (status) {
       case "Refunded":
         return "#03fc73";
@@ -22,7 +22,7 @@ const HopeFuelIDListItem = ({ data }) => {
               sx={{
                 backgroundColor: "#FFFFFF",
                 borderRadius: "8px",
-                mx: { xs: "1rem", sm: "2rem", md: "2rem" },
+                mx: { xs: "1rem", sm: "2rem", md: "5rem" },
                 py: "1rem",
                 px: "1rem",
                 boxShadow: "2px 2px 2px 2px rgba(0, 0, 0, 0.1)",
@@ -69,7 +69,6 @@ const HopeFuelIDListItem = ({ data }) => {
                     {item.Email}
                   </Typography>
                 </Box>
-
                 <Box sx={{ minWidth: "150px" }}>
                   <Typography
                     sx={{
@@ -90,7 +89,6 @@ const HopeFuelIDListItem = ({ data }) => {
                     {item.TransactionDate} 09:55:00
                   </Typography>
                 </Box>
-
                 <Box sx={{ minWidth: "80px" }}>
                   <Typography
                     sx={{
@@ -111,7 +109,6 @@ const HopeFuelIDListItem = ({ data }) => {
                     {item.CurrencyCode}
                   </Typography>
                 </Box>
-
                 <Box sx={{ minWidth: "60px" }}>
                   <Typography
                     sx={{
@@ -132,7 +129,6 @@ const HopeFuelIDListItem = ({ data }) => {
                     {item.Month > 1 ? "Months" : "Month"}
                   </Typography>
                 </Box>
-
                 <Button
                   variant="outlined"
                   sx={{
@@ -151,7 +147,6 @@ const HopeFuelIDListItem = ({ data }) => {
                 >
                   View Screenshot
                 </Button>
-
                 <Box sx={{ minWidth: "100px" }}>
                   <Typography
                     sx={{
@@ -172,12 +167,11 @@ const HopeFuelIDListItem = ({ data }) => {
                     {item.ManyChatId}
                   </Typography>
                 </Box>
-
                 <Box
                   sx={{
                     minWidth: "140px",
                     width: "140px",
-                    backgroundColor: getStatusColor(item.TransactionStatus),
+                    backgroundColor: getStatusByColor(item.TransactionStatus),
                     color: "#000000",
                     px: "1rem",
                     py: ".5rem",
@@ -192,9 +186,7 @@ const HopeFuelIDListItem = ({ data }) => {
                   {item.TransactionStatus}
                 </Box>
               </Box>
-
               <Divider sx={{ my: "0.5rem", borderColor: "#CBD5E1" }} />
-
               <Box
                 sx={{
                   display: "flex",
