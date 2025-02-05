@@ -49,7 +49,7 @@ export default function ResponsiveAppBar() {
     navItems = [
       { label: "အသစ်သွင်းခြင်း", path: "/createForm" },
       { label: "သက်တမ်းတိုးခြင်း", path: "/extendUser" },
-      { label: "HOPEFUELIDLIST", path: "/hopefuelidlist" },
+      { label: "HopeFuelID List", path: "/hopefuelidlist" },
       // { label: "ရှာဖွေခြင်း", path: "/search" },
       // { label: "HopeFuelDetail", path: "/details" },
     ];
