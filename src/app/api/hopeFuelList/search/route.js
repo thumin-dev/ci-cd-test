@@ -91,6 +91,14 @@ export async function GET(req) {
 
   try {
     const result = await searchHopeFuelList(searchText);
+    
+      if (!result || result.length === 0) {
+      return NextResponse.json(
+        { error: "No matching records found" },
+        { status: 404 }
+        );
+    }
+    
     return NextResponse.json({
       status: 200,
       message: "Successfully searched in Hope Fuel List",
