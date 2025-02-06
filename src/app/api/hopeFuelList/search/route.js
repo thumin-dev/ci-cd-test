@@ -77,7 +77,7 @@ GROUP BY
     const result = await db(query, params);
     return result.map((row) => ({
       ...row,
-      ScreenShot: row.ScreenShot ? row.ScreenShot.split(", ") : [],
+      ScreenShot: typeof(row.ScreenShot )=== 'string' && row.ScreenShot ? row.ScreenShot.split(", ") : [],
     }));
   } catch (error) {
     console.error("Error searching in Hope Fuel List", error);
