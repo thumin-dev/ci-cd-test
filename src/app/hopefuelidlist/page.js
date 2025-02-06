@@ -1,12 +1,20 @@
 "use client";
 
-import { Box, Divider, TextField, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
 import { HOPEFUEL_ID_LISTS } from "../variables/const";
 
 const HopeFuelIdListPage = () => {
   const [searchText, setSearchText] = useState("");
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [loading, setLoading] = useState(false);
 
   const filteredData = useMemo(() => {
     return HOPEFUEL_ID_LISTS.filter(
@@ -15,6 +23,25 @@ const HopeFuelIdListPage = () => {
         item.Email.toLowerCase().includes(searchText.toLowerCase())
     );
   }, [searchText]);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+      visibleCount < filteredData.length &&
+      !loading
+    ) {
+      setLoading(true);
+      setTimeout(() => {
+        setVisibleCount((prev) => prev + 10);
+        setLoading(false);
+      }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [visibleCount, filteredData.length, loading]);
 
   return (
     <>
@@ -52,7 +79,12 @@ const HopeFuelIdListPage = () => {
       />
       {filteredData.length > 0 ? (
         <>
-          <HopeFuelIDListItem data={filteredData} />
+          <HopeFuelIDListItem data={filteredData.slice(0, visibleCount)} />
+          {loading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <CircularProgress />
+            </Box>
+          )}
         </>
       ) : (
         <Box
