@@ -12,7 +12,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 4,
     ManyChatId: "MANY790",
     FormFilledPerson: "Allen Mark",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -26,7 +26,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 9,
     ManyChatId: "MANY296",
     FormFilledPerson: "Taylor Joshua",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -40,7 +40,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 6,
     ManyChatId: "MANY427",
     FormFilledPerson: "Cox Daniel",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -54,7 +54,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 8,
     ManyChatId: "MANY403",
     FormFilledPerson: "Blevins April",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -68,7 +68,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 3,
     ManyChatId: "MANY788",
     FormFilledPerson: "Wilson Michael Mr.",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -82,7 +82,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 9,
     ManyChatId: "MANY687",
     FormFilledPerson: "Cobb Stacey",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -96,7 +96,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 4,
     ManyChatId: "MANY534",
     FormFilledPerson: "Strong Kathleen",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "",
   },
   {
@@ -110,7 +110,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 9,
     ManyChatId: "MANY635",
     FormFilledPerson: "Phillips Melanie",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -124,7 +124,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 7,
     ManyChatId: "MANY583",
     FormFilledPerson: "Smith Angela",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "Customer requested refund.",
   },
   {
@@ -138,7 +138,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 1,
     ManyChatId: "MANY577",
     FormFilledPerson: "Williams Michael",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "",
   },
   {
@@ -152,7 +152,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 4,
     ManyChatId: "MANY705",
     FormFilledPerson: "Gonzalez Shelly",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -166,7 +166,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 5,
     ManyChatId: "MANY919",
     FormFilledPerson: "Li Laura",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -180,7 +180,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 6,
     ManyChatId: "MANY575",
     FormFilledPerson: "Gonzalez Jennifer",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -194,7 +194,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 7,
     ManyChatId: "MANY599",
     FormFilledPerson: "Reed Heidi",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "Customer requested refund.",
   },
   {
@@ -208,7 +208,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 3,
     ManyChatId: "MANY244",
     FormFilledPerson: "Green Linda",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "Customer requested refund.",
   },
   {
@@ -222,7 +222,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 3,
     ManyChatId: "MANY814",
     FormFilledPerson: "Palmer David",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -236,7 +236,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 3,
     ManyChatId: "MANY324",
     FormFilledPerson: "Warner Michelle",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -250,7 +250,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 7,
     ManyChatId: "MANY509",
     FormFilledPerson: "Shields Crystal",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "Customer requested refund.",
   },
   {
@@ -264,7 +264,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 12,
     ManyChatId: "MANY740",
     FormFilledPerson: "Lane Amanda",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "",
   },
   {
@@ -278,7 +278,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 6,
     ManyChatId: "MANY635",
     FormFilledPerson: "Velez Amy",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -292,7 +292,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 4,
     ManyChatId: "MANY192",
     FormFilledPerson: "Robinson Jacob",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -306,7 +306,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 5,
     ManyChatId: "MANY279",
     FormFilledPerson: "Lee Dustin",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -320,7 +320,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 5,
     ManyChatId: "MANY174",
     FormFilledPerson: "Ellis Kenneth",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "Customer requested refund.",
   },
   {
@@ -334,7 +334,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 12,
     ManyChatId: "MANY433",
     FormFilledPerson: "Zamora Vincent",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -348,7 +348,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 11,
     ManyChatId: "MANY256",
     FormFilledPerson: "Stanton Donna",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -362,7 +362,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 11,
     ManyChatId: "MANY487",
     FormFilledPerson: "Johnson Jillian",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -376,7 +376,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 9,
     ManyChatId: "MANY396",
     FormFilledPerson: "Davis Christy",
-    TransactionStatus: "Pending",
+    TransactionStatus: "ဖောင်တင်သွင်းခြင်း",
     Note: "",
   },
   {
@@ -390,7 +390,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 1,
     ManyChatId: "MANY208",
     FormFilledPerson: "Flores Justin",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ငွေစစ်ဆေးပြီး",
     Note: "",
   },
   {
@@ -404,7 +404,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 2,
     ManyChatId: "MANY673",
     FormFilledPerson: "White Deborah",
-    TransactionStatus: "Failed",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "",
   },
   {
@@ -418,7 +418,7 @@ export const HOPEFUEL_ID_LISTS = [
     Month: 3,
     ManyChatId: "MANY181",
     FormFilledPerson: "Randall Stephanie",
-    TransactionStatus: "Refunded",
+    TransactionStatus: "ကတ်ထုတ်ပေးပြီး",
     Note: "Customer requested refund.",
   },
 ];

@@ -41,7 +41,7 @@ const HopeFuelIdListPage = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [visibleCount, filteredData.length, loading]);
+  }, [loading]);
 
   return (
     <>
