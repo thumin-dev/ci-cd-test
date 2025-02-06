@@ -4,12 +4,12 @@ import React from "react";
 const HopeFuelIDListItem = ({ data }) => {
   const getStatusByColor = (status) => {
     switch (status) {
-      case "Refunded":
+      case "ငွေစစ်ဆေးပြီး":
         return "#03fc73";
-      case "Pending":
-        return "#FBBF24";
+      case "ကတ်ထုတ်ပေးပြီး":
+        return "#6183E4";
       default:
-        return "#B91C1C";
+        return "#FBBF24";
     }
   };
 
@@ -143,6 +143,7 @@ const HopeFuelIDListItem = ({ data }) => {
                     "&:hover": {
                       backgroundColor: "#B91C1C",
                     },
+                    fontWeight: 600,
                   }}
                 >
                   View Screenshot
@@ -181,6 +182,7 @@ const HopeFuelIDListItem = ({ data }) => {
                     justifyContent: "center",
                     alignItems: "center",
                     whiteSpace: "nowrap",
+                    fontWeight: 600,
                   }}
                 >
                   {item.TransactionStatus}
