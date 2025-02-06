@@ -89,9 +89,16 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const searchText = searchParams.get("q").trim();
 
+  if (!searchText) {
+    return NextResponse.json(
+      { error: "Search text is required" },
+      { status: 400 }
+    );
+  }
+
   try {
     const result = await searchHopeFuelList(searchText);
-    
+
       if (!result || result.length === 0) {
       return NextResponse.json(
         { error: "No matching records found" },
