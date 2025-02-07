@@ -58,11 +58,11 @@ async function retrieveCurrentMonthHopeFuelCards(page, limit) {
     c.ManyChatId, 
     ts.TransactionStatus, 
     n.Note
-    LIMIT ${limit} OFFSET ${offset};
+    LIMIT ? OFFSET ?;
   `;
   try {
 
-    const result = await db(query);
+    const result = await db(query,[limit, offset]);
     return result;
     
   } catch (error) {
