@@ -15,6 +15,7 @@ const HopeFuelIdListPage = () => {
   const [searchText, setSearchText] = useState("");
   const [visibleCount, setVisibleCount] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [value] = useDebounce(searchText, 1000);
 
   const filteredData = useMemo(() => {
     return HOPEFUEL_ID_LISTS.filter(
