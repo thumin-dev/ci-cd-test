@@ -73,14 +73,6 @@ const HopeFuelIdListPage = () => {
     fetchData(true);
   }, [debouncedSearch]);
 
-  // const filteredData = useMemo(() => {
-  //   return HOPEFUEL_ID_LISTS.filter(
-  //     (item) =>
-  //       item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
-  //       item.Email.toLowerCase().includes(searchText.toLowerCase())
-  //   );
-  // }, [searchText]);
-
   const handleScroll = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >=
