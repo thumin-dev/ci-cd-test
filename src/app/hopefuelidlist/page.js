@@ -7,42 +7,107 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
-import { HOPEFUEL_ID_LISTS } from "../variables/const";
+import { useDebounce } from "use-debounce";
+
+const PAGE_SIZE = 10;
 
 const HopeFuelIdListPage = () => {
   const [searchText, setSearchText] = useState("");
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [value] = useDebounce(searchText, 1000);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [debouncedSearch] = useDebounce(searchText, 100);
 
-  const filteredData = useMemo(() => {
-    return HOPEFUEL_ID_LISTS.filter(
-      (item) =>
-        item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.Email.toLowerCase().includes(searchText.toLowerCase())
-    );
+  useEffect(() => {
+    setError(null);
   }, [searchText]);
 
-  const handleScroll = () => {
-    if (
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-      visibleCount < filteredData.length &&
-      !loading
-    ) {
+  const fetchData = useCallback(
+    async (isNewSearch = false) => {
+      if (!hasMore && !isNewSearch) return;
+
       setLoading(true);
-      setTimeout(() => {
-        setVisibleCount((prev) => prev + 10);
+      setError(null);
+
+      try {
+        const url = debouncedSearch
+          ? `api/hopeFuelList/search?q=${encodeURIComponent(debouncedSearch)}`
+          : `api/hopeFuelList/items?page=${page}&limit=${PAGE_SIZE}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message || `Failed to fetch data (${response.status})`
+          );
+        }
+
+        const newData = await response.json();
+
+        if (isNewSearch) {
+          setData(newData.data || []);
+        } else {
+          setData((prev) => [...prev, ...(newData.data || [])]);
+        }
+
+        setHasMore((newData.data || []).length === PAGE_SIZE);
+      } catch (error) {
+        setError(error.message);
+        setData(isNewSearch ? [] : data);
+        setHasMore(false);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
+    },
+    [debouncedSearch, page, hasMore, data]
+  );
+
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    fetchData(true);
+  }, [debouncedSearch]);
+
+  // const filteredData = useMemo(() => {
+  //   return HOPEFUEL_ID_LISTS.filter(
+  //     (item) =>
+  //       item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+  //       item.Email.toLowerCase().includes(searchText.toLowerCase())
+  //   );
+  // }, [searchText]);
+
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 100 &&
+      !loading &&
+      hasMore
+    ) {
+      setPage((prev) => prev + 1);
     }
-  };
+  }, [loading, hasMore, error]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading]);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchData();
+    }
+  }, [page]);
+
+  if (loading) {
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+      <CircularProgress />
+    </Box>;
+  }
 
   return (
     <>
@@ -78,9 +143,9 @@ const HopeFuelIdListPage = () => {
           borderColor: "#CBD5E1",
         }}
       />
-      {filteredData.length > 0 ? (
+      {data.length > 0 ? (
         <>
-          <HopeFuelIDListItem data={filteredData.slice(0, visibleCount)} />
+          <HopeFuelIDListItem data={data} onClick={() => {}} />
           {loading && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <CircularProgress />

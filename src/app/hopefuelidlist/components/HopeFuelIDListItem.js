@@ -1,7 +1,8 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, Typography } from "@mui/material";
+import moment from "moment-timezone";
 import React from "react";
 
-const HopeFuelIDListItem = ({ data }) => {
+const HopeFuelIDListItem = ({ data, onClick }) => {
   const getStatusByColor = (status) => {
     switch (status) {
       case "ငွေစစ်ဆေးပြီး":
@@ -13,12 +14,18 @@ const HopeFuelIDListItem = ({ data }) => {
     }
   };
 
+  if (!Array.isArray(data)) {
+    return null;
+  }
+
   return (
     <>
       {Array.isArray(data) &&
-        data.map((item) => (
+        data.map((item, index) => (
           <>
-            <Box
+            <Card
+              onClick={() => onClick && onClick()}
+              key={index}
               sx={{
                 backgroundColor: "#FFFFFF",
                 borderRadius: "8px",
@@ -27,6 +34,12 @@ const HopeFuelIDListItem = ({ data }) => {
                 px: "1rem",
                 boxShadow: "2px 2px 2px 2px rgba(0, 0, 0, 0.1)",
                 my: { xs: "1rem", sm: "1.5rem" },
+                transition: "0.3s",
+                "&:hover": {
+                  boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.2)",
+                  transform: "scale(1.02)",
+                  cursor: "pointer",
+                },
               }}
             >
               <Box
@@ -47,7 +60,7 @@ const HopeFuelIDListItem = ({ data }) => {
                     minWidth: "fit-content",
                   }}
                 >
-                  {item.HopeFuelID}
+                  HOPEFUEL ID - {item.HopeFuelID}
                 </Typography>
                 <Box sx={{ minWidth: "200px" }}>
                   <Typography
@@ -86,7 +99,7 @@ const HopeFuelIDListItem = ({ data }) => {
                       fontWeight: 500,
                     }}
                   >
-                    {item.TransactionDate} 09:55:00
+                    {moment(item.TransactionDate).format("DD-MM-YYYY HH:mm:ss")}
                   </Typography>
                 </Box>
                 <Box sx={{ minWidth: "80px" }}>
@@ -217,10 +230,10 @@ const HopeFuelIDListItem = ({ data }) => {
                     minWidth: "fit-content",
                   }}
                 >
-                  Note: Transaction approved.
+                  Note: {item.Note}
                 </Typography>
               </Box>
-            </Box>
+            </Card>
           </>
         ))}
     </>
