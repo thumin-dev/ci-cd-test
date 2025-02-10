@@ -4,7 +4,7 @@ import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 import { redirect } from "next/dist/server/api-utils";
-import { useAgent } from "@/app/context/AgentContext";
+import { useAgent } from "../../context/AgentContext";
 
 const ActionButtons = ({ data }) => {
   const [loading, setLoading] = React.useState(false);

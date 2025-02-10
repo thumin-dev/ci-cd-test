@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "../../utilites/db";
 
+export const dynamic = "force-dynamic";
 async function checkExistedAgent(awsId) {
   const query = `
  SELECT 
