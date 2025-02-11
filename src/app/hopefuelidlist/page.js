@@ -4,12 +4,14 @@ import {
   Box,
   CircularProgress,
   Divider,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
 import { useDebounce } from "use-debounce";
+import DetailModal from "../UI/Components/Modal";
 
 const PAGE_SIZE = 10;
 
@@ -20,6 +22,8 @@ const HopeFuelIdListPage = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+
   const [debouncedSearch] = useDebounce(searchText, 100);
 
   useEffect(() => {
@@ -101,6 +105,14 @@ const HopeFuelIdListPage = () => {
     </Box>;
   }
 
+  const handleOpen = () => {
+    setOpenModal((prev) => !prev);
+  };
+
+  const handleClose = () => {
+    setOpenModal((prev) => !prev);
+  };
+
   return (
     <>
       <Box
@@ -137,7 +149,7 @@ const HopeFuelIdListPage = () => {
       />
       {data.length > 0 ? (
         <>
-          <HopeFuelIDListItem data={data} onClick={() => {}} />
+          <HopeFuelIDListItem data={data} onClick={handleOpen} />
           {loading && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <CircularProgress />
@@ -163,6 +175,24 @@ const HopeFuelIdListPage = () => {
           </Typography>
         </Box>
       )}
+      <DetailModal direction="left" open={openModal} onClose={handleClose}>
+        <Paper
+          sx={{
+            position: "fixed",
+            right: 0,
+            top: 0,
+            width: "100%",
+            maxWidth: "600px",
+            height: "100vh",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            overflow: "auto",
+            zIndex: 1300,
+            borderTopLeftRadius: 20,
+            borderBottomLeftRadius: 20,
+          }}
+        ></Paper>
+      </DetailModal>
     </>
   );
 };
