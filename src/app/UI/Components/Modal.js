@@ -19,6 +19,7 @@ const Modal = ({
         timeout={timeout}
         mountOnEnter={mountOnEnter}
         unmountOnExit={unmountOnExit}
+        onClick={(e) => e.stopPropagation()}
         {...props}
       >
         {children}
