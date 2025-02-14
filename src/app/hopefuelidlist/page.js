@@ -10,8 +10,25 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
+import HopeFuelIDListDetails from "./components/HopeFuelIDListDetails";
 import { useDebounce } from "use-debounce";
 import DetailModal from "../UI/Components/Modal";
+
+const HOPEFUEL_ID_LISTS_DETAILS = [
+  {
+    hopeId: "HOPEID-12345",
+    name: "Maung Maung",
+    email: "maungmaung@gmail.com",
+    cardId: "12345678",
+    createTime: "28-11-2024 09:55:00",
+    month: 3,
+    amount: 600000,
+    currency: "MMK",
+    formFillingPerson: "AWS-183746ag-8760-27374ytu-hfg888-dhj86879-688",
+    manychatId: "77777777",
+    images: ["1", "2"],
+  },
+];
 
 const PAGE_SIZE = 10;
 
@@ -191,7 +208,9 @@ const HopeFuelIdListPage = () => {
             borderTopLeftRadius: 20,
             borderBottomLeftRadius: 20,
           }}
-        ></Paper>
+        >
+          <HopeFuelIDListDetails data={HOPEFUEL_ID_LISTS_DETAILS} />
+        </Paper>
       </DetailModal>
     </>
   );

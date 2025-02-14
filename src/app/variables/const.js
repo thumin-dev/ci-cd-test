@@ -422,3 +422,23 @@ export const HOPEFUEL_ID_LISTS = [
     Note: "Customer requested refund.",
   },
 ];
+
+export const HOPEFUEL_ID_LISTS_DETAILS = [
+  {
+    hopeId: "HOPEID-12345",
+    name: "Maung Maung",
+    email: "maungmaung@gmail.com",
+    cardId: "12345678",
+    createTime: "28-11-2024 09:55:00",
+    month: 3,
+    amount: 600000,
+    currency: "MMK",
+    formFillingPerson: "AWS-183746ag-8760-27374ytu-hfg888-dhj86879-688",
+    manychatId: "77777777",
+    images: [
+      "https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg",
+      "https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg",
+      "https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg",
+    ],
+  },
+];
