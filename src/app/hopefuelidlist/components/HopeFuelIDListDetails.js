@@ -1,15 +1,5 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Grid,
-  ImageList,
-  ImageListItem,
-  styled,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Divider, styled, Typography } from "@mui/material";
+import moment from "moment-timezone";
 import React from "react";
 
 const InfoRow = styled(Box)(({ theme }) => ({
@@ -60,8 +50,8 @@ const ImageItem = styled("img")({
 
 const HopeFuelIDListDetails = ({ data }) => {
   return (
-    <Container>
-      {data?.map((data, index) => (
+    <div key={data.HopeFuelID}>
+      <Container>
         <Box sx={{ maxWidth: 600, margin: "40px auto" }}>
           <InfoRow>
             <Typography
@@ -74,7 +64,7 @@ const HopeFuelIDListDetails = ({ data }) => {
               variant="h4"
               component="h1"
             >
-              {data?.hopeId}
+              HOPEFUELID - {data?.HopeFuelID}
             </Typography>
             <Box
               sx={{
@@ -91,7 +81,9 @@ const HopeFuelIDListDetails = ({ data }) => {
                   lineHeight: "18px",
                 }}
               >
-                ဝယ်ထားသည့်ပွိုင့်
+                {data.TransactionStatus
+                  ? data.TransactionStatus
+                  : "ဝယ်ထားသည့်ပွိုင့်"}
               </Typography>
             </Box>
           </InfoRow>
@@ -109,7 +101,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                   fontWeight: 700,
                 }}
               >
-                {data.name}
+                {data.Name}
               </Typography>
               <Typography
                 sx={{
@@ -119,7 +111,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                   lineHeight: "22px",
                 }}
               >
-                {data.email}
+                {data.Email}
               </Typography>
             </Box>
             <Box>
@@ -135,13 +127,14 @@ const HopeFuelIDListDetails = ({ data }) => {
               </Typography>
               <Typography
                 sx={{
+                  textAlign: "center",
                   fontSize: "28px",
                   lineHeight: "34px",
                   color: "#000000",
                   fontWeight: 700,
                 }}
               >
-                12345678
+                {data.CardID}
               </Typography>
             </Box>
           </InfoRow>
@@ -164,7 +157,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                 fontWeight: 600,
               }}
             >
-              {data.createTime}
+              {moment(data.CreateTime).format("DD-MM-YYYY HH:mm:ss")}
             </Value>
           </InfoRow>
           <InfoRow>
@@ -186,7 +179,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                 fontWeight: 600,
               }}
             >
-              {data.month}
+              {data.TimeLineInMonth}
             </Value>
           </InfoRow>
           <InfoRow>
@@ -207,7 +200,9 @@ const HopeFuelIDListDetails = ({ data }) => {
                 lineHeight: "22px",
                 fontWeight: 600,
               }}
-            >{`${data.amount.toLocaleString()} `}</Value>
+            >
+              {data.Amount}
+            </Value>
           </InfoRow>
           <InfoRow>
             <Label
@@ -228,7 +223,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                 fontWeight: 600,
               }}
             >
-              {data.currency}
+              {data.CurrencyCode}
             </Value>
           </InfoRow>
           <InfoRow>
@@ -251,7 +246,7 @@ const HopeFuelIDListDetails = ({ data }) => {
                 maxWidth: "50%",
               }}
             >
-              {data.formFillingPerson}
+              {data.FormFilledPerson}
             </Value>
           </InfoRow>
           <InfoRow>
@@ -273,12 +268,12 @@ const HopeFuelIDListDetails = ({ data }) => {
                 fontWeight: 600,
               }}
             >
-              {data.manychatId}
+              {data.ManyChatId}
             </Value>
           </InfoRow>
           <Box mt={3}>
             <ScrollableImageContainer>
-              {data.images?.map((image, idx) => (
+              {data.ScreenShot?.map((image, idx) => (
                 <>
                   <ImageItem key={idx} src={image} loading="lazy" />
                 </>
@@ -286,8 +281,8 @@ const HopeFuelIDListDetails = ({ data }) => {
             </ScrollableImageContainer>
           </Box>
         </Box>
-      ))}
-    </Container>
+      </Container>
+    </div>
   );
 };
 

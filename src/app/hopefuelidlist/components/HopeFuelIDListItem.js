@@ -21,11 +21,11 @@ const HopeFuelIDListItem = ({ data, onClick }) => {
   return (
     <>
       {Array.isArray(data) &&
-        data.map((item, index) => (
+        data.map((item) => (
           <>
             <Card
-              onClick={() => onClick && onClick()}
-              key={index}
+              onClick={() => onClick && onClick(item.HopeFuelID)}
+              key={item.FormFilledPerson}
               sx={{
                 backgroundColor: "#FFFFFF",
                 borderRadius: "8px",
@@ -220,7 +220,7 @@ const HopeFuelIDListItem = ({ data, onClick }) => {
                     minWidth: "fit-content",
                   }}
                 >
-                  AWS-1837446g-8760-27274yn-f49888-ch98879-888
+                  {item.FormFilledPerson}
                 </Typography>
                 <Typography
                   sx={{
