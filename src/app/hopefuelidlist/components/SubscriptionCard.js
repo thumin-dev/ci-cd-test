@@ -9,6 +9,7 @@ import {
   Stack,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import formatAmount from "../../libs/FormatAmount";
 
 const DateContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -109,7 +110,7 @@ const SubscriptionCard = ({ cards }) => {
                       lineHeight: "17px",
                     }}
                   >
-                    {card.MonthlyAmount}
+                    {formatAmount(card.MonthlyAmount)}
                   </Typography>
                   <Chip
                     label={card.CurrencyCode}
