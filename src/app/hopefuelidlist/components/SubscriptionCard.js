@@ -82,9 +82,7 @@ const SubscriptionCard = ({ cards }) => {
                       lineHeight: "20px",
                     }}
                   >
-                    {moment(card.ValidFromDate).format(
-                      "MMMM DD, YYYY HH:mm:ss"
-                    )}
+                    {moment(card.ValidFromDate).format("MMMM D YYYY h:mm:ss A")}
                   </Typography>
                   <Typography
                     variant="h6"
@@ -100,7 +98,7 @@ const SubscriptionCard = ({ cards }) => {
                     }}
                   >
                     {moment(card.ValidThroughDate).format(
-                      "MMMM DD, YYYY HH:mm:ss"
+                      "MMMM D YYYY h:mm:ss A"
                     )}
                   </Typography>
                 </DateContainer>
