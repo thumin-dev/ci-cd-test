@@ -10,6 +10,7 @@ import {
   styled,
   Typography,
 } from "@mui/material";
+import CopyableText from "../../UI/Components/CopyableText";
 import React from "react";
 
 const InfoRow = styled(Box)(({ theme }) => ({
@@ -265,16 +266,7 @@ const HopeFuelIDListDetails = ({ data }) => {
             >
               Manychat ID
             </Label>
-            <Value
-              sx={{
-                color: "#000000",
-                fontSize: "18px",
-                lineHeight: "22px",
-                fontWeight: 600,
-              }}
-            >
-              {data.manychatId}
-            </Value>
+            <CopyableText text={data.manychatId} />
           </InfoRow>
           <Box mt={3}>
             <ScrollableImageContainer>
