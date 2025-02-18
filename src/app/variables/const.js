@@ -449,9 +449,9 @@ export const SUBSCRIPTION_DATA = [
     TimeLineInMonth: 3,
     MonthlyAmount: 20000,
     CurrencyCode: "JPY",
-    TransactionDate: "18-12-2024 09:58:38",
-    ValidFromDate: "18-12-2024 09:58:38",
-    ValidThroughDate: "31-12-2024 09:58:38",
+    TransactionDate: "2025-02-02T02:55:00.000Z",
+    ValidFromDate: "2025-02-02T02:55:00.000Z",
+    ValidThroughDate: "2025-02-20T08:30:00.000Z",
   },
   {
     HopeFuelID: 19,
@@ -459,8 +459,8 @@ export const SUBSCRIPTION_DATA = [
     MonthlyAmount: 20000,
     CurrencyCode: "MMK",
     TransactionDate: "18-12-2024 09:58:38",
-    ValidFromDate: "01-12-2024 09:58:38",
-    ValidThroughDate: "31-12-2024 09:58:38",
+    ValidFromDate: "2025-02-10T04:50:00.000Z",
+    ValidThroughDate: "2025-02-17T08:09:29.000Z",
   },
   {
     HopeFuelID: 20,
@@ -468,7 +468,7 @@ export const SUBSCRIPTION_DATA = [
     MonthlyAmount: 20000,
     CurrencyCode: "USD",
     TransactionDate: "18-12-2024 09:58:38",
-    ValidFromDate: "01-12-2024 09:58:38",
-    ValidThroughDate: "31-12-2024 09:58:38",
+    ValidFromDate: "2025-02-17T08:14:04.000Z",
+    ValidThroughDate: "2025-02-17T08:36:25.000Z",
   },
 ];

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import formatAmount from "../../libs/FormatAmount";
+import moment from "moment-timezone";
 
 const DateContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -81,7 +82,9 @@ const SubscriptionCard = ({ cards }) => {
                       lineHeight: "20px",
                     }}
                   >
-                    {card.ValidFromDate}
+                    {moment(card.ValidFromDate).format(
+                      "MMMM DD, YYYY HH:mm:ss"
+                    )}
                   </Typography>
                   <Typography
                     variant="h6"
@@ -96,7 +99,9 @@ const SubscriptionCard = ({ cards }) => {
                       lineHeight: "20px",
                     }}
                   >
-                    {card.ValidThroughDate}
+                    {moment(card.ValidThroughDate).format(
+                      "MMMM DD, YYYY HH:mm:ss"
+                    )}
                   </Typography>
                 </DateContainer>
 

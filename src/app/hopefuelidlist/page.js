@@ -44,7 +44,7 @@ const HopeFuelIdListPage = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const [debouncedSearch] = useDebounce(searchText, 100);
-
+  console.log(data);
   useEffect(() => {
     setError(null);
   }, [searchText]);
