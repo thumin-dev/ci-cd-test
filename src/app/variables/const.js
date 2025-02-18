@@ -442,3 +442,33 @@ export const HOPEFUEL_ID_LISTS_DETAILS = [
     ],
   },
 ];
+
+export const SUBSCRIPTION_DATA = [
+  {
+    HopeFuelID: 18,
+    TimeLineInMonth: 3,
+    MonthlyAmount: 20000,
+    CurrencyCode: "JPY",
+    TransactionDate: "18-12-2024 09:58:38",
+    ValidFromDate: "18-12-2024 09:58:38",
+    ValidThroughDate: "31-12-2024 09:58:38",
+  },
+  {
+    HopeFuelID: 19,
+    TimeLineInMonth: 3,
+    MonthlyAmount: 20000,
+    CurrencyCode: "MMK",
+    TransactionDate: "18-12-2024 09:58:38",
+    ValidFromDate: "01-12-2024 09:58:38",
+    ValidThroughDate: "31-12-2024 09:58:38",
+  },
+  {
+    HopeFuelID: 20,
+    TimeLineInMonth: 3,
+    MonthlyAmount: 20000,
+    CurrencyCode: "USD",
+    TransactionDate: "18-12-2024 09:58:38",
+    ValidFromDate: "01-12-2024 09:58:38",
+    ValidThroughDate: "31-12-2024 09:58:38",
+  },
+];
