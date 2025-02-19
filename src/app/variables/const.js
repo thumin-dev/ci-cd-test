@@ -442,3 +442,36 @@ export const HOPEFUEL_ID_LISTS_DETAILS = [
     ],
   },
 ];
+
+export const HISTORY_DATA = [
+  {
+    id: 1,
+    name: "Geek Squad Studio",
+    timestamp: "28-11-2024 09:55:00",
+    status: "Form Opened",
+  },
+  {
+    id: 2,
+    name: "i4b Solutions",
+    timestamp: "28-11-2024 09:55:00",
+    status: "Form Closed",
+  },
+  {
+    id: 3,
+    name: "Queen",
+    timestamp: "28-11-2024 09:55:00",
+    status: "Form Opened",
+  },
+  {
+    id: 4,
+    name: "Nirvana",
+    timestamp: "28-11-2024 09:55:00",
+    status: "Form Closed",
+  },
+  {
+    id: 5,
+    name: "The Beatles",
+    timestamp: "28-11-2024 09:55:00",
+    status: "Form Opened",
+  },
+];
