@@ -44,7 +44,7 @@ const ScrollContainer = styled(Box)({
 
 const SubscriptionCard = ({ cards }) => {
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg">
       <Typography
         variant="h6"
         sx={{ fontWeight: 600, fontSize: "18px", lineHeight: "22px" }}
