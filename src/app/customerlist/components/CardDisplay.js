@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  Box,
-  Button,
-} from "@mui/material";
+import { Grid, Card, Typography, Chip, Box, Button } from "@mui/material";
 
 const CardDisplay = ({ id, name, status }) => {
   return (
