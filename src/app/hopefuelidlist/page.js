@@ -13,7 +13,7 @@ import HopeFuelIDListItem from "./components/HopeFuelIDListItem";
 import HopeFuelIDListDetails from "./components/HopeFuelIDListDetails";
 import { useDebounce } from "use-debounce";
 import DetailModal from "../UI/Components/Modal";
-import SubscriptionCard from "./components/SubscriptionCard";
+import SubscriptionCard from "../UI/Components/SubscriptionCard";
 import { SUBSCRIPTION_DATA } from "../variables/const";
 
 const HOPEFUEL_ID_LISTS_DETAILS = [

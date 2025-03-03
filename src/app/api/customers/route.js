@@ -26,6 +26,7 @@ export async function GET(req) {
     const  [{total}] = await db(`SELECT COUNT(*) AS total FROM Customer`);
    // console.log("totalPages::", total);
 
+
     const customers = await fetchCustomers(limit, offset);
 
     return NextResponse.json({
