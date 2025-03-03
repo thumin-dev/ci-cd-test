@@ -88,7 +88,7 @@ export async function POST(request) {
       obj["customerId"],
       obj["supportRegionId"],
       obj["walletId"],
-      parseInt(obj["amount"]),
+      obj["amount"],
       false,
       null,
       obj["noteId"],
@@ -114,11 +114,14 @@ export async function POST(request) {
   }
 
   // //update the expire date
-  const value = [nextExpireDate, obj["customerId"]];
+  const value = [nextExpireDate, obj["manyChatId"],obj["customerId"]];
   console.log("nextExpireDate is ");
   console.log(nextExpireDate);
 
-  const sql = `UPDATE Customer SET ExpireDate = ? WHERE CustomerID = ? LIMIT 1`;
+ // const sql = `UPDATE Customer SET ExpireDate = ? WHERE CustomerID = ? LIMIT 1`;
+  const sql = `UPDATE Customer 
+                SET ExpireDate = ?, ManyChatId = ? 
+                WHERE CustomerID = ?`;
   try {
     let result = await db(sql, value);
     // console.log("Result: ", result);
