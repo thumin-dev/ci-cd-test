@@ -13,6 +13,7 @@ import {
   Typography,
   CircularProgress,
   Alert,
+  FormHelperText,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
@@ -25,7 +26,7 @@ import { useAgent } from "../context/AgentContext";
 const ExtendForm = ({ userInfo, setloading }) => {
   const user = useUser();
   const agent = useAgent();
-console.log("User from ExtendForm: ", user);
+
   const formFillingPerson = user?.email || "Unknown User";
 
 
@@ -47,6 +48,9 @@ console.log("User from ExtendForm: ", user);
   const [contactLink, setContactLink] = useState("");
   const [notes, setNotes] = useState("");
   const [manyChatId, setManyChatId] = useState("");
+
+    const [error, setError] = useState({ currency: false, wallet: false });
+
 
   // Load Wallets by Currency
   useEffect(() => {
@@ -82,6 +86,11 @@ console.log("User from ExtendForm: ", user);
     setFileExist(acceptedFiles.length > 0);
     setIsUploading(false);
   };
+    const handleCurrencyChange = (e) => {
+      setCurrency(e.target.value);
+      setError((prevError) => ({ ...prevError, currency: false }));
+    };
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -91,6 +100,15 @@ console.log("User from ExtendForm: ", user);
       return;
     }
 
+    if (!currency || !wallets) {
+      setError({
+        currency: !currency,
+        wallet: !wallets,
+      });
+      return;
+    }
+  
+  
     extendFormSubmit(
       event,
       currency,
@@ -141,7 +159,10 @@ console.log("User from ExtendForm: ", user);
         id="amount"
         margin="normal"
         error={amountValidate}
-        helperText={amountValidate && "Please enter a valid amount"}
+        helperText={
+          amountValidate &&
+          "Amount should be a positive number and up to 2 decimal places"
+        }
         inputProps={{ min: "0", step: "0.01" }}
         onChange={(e) => {
           const value = e.target.value;
@@ -178,7 +199,7 @@ console.log("User from ExtendForm: ", user);
       <RadioGroup
         row
         value={currency}
-        onChange={(e) => setCurrency(e.target.value)}
+        onChange={handleCurrencyChange}
       >
         {currencies.map((item) => (
           <FormControlLabel
@@ -189,6 +210,9 @@ console.log("User from ExtendForm: ", user);
           />
         ))}
       </RadioGroup>
+      {error.currency && (
+        <FormHelperText error>Please select a currency</FormHelperText>
+      )}
 
       {/* wallet selection*/}
       <FormLabel id="wallets">Wallets</FormLabel>
@@ -207,6 +231,9 @@ console.log("User from ExtendForm: ", user);
         </RadioGroup>
       ) : (
         <h1>No wallets selected.</h1>
+      )}
+      {error.wallet && (
+        <FormHelperText error>Please select a wallet</FormHelperText>
       )}
 
       {/* Support Region Selection */}
@@ -228,10 +255,21 @@ console.log("User from ExtendForm: ", user);
         name="manyChat"
         label="ManyChat ID"
         value={manyChatId}
-        onChange={(e) => setManyChatId(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+
+          // Check if value is numeric
+          if (/^\d*$/.test(value)) {
+            setManyChatId(value);
+            setManyChatValidate(false);
+          } else {
+            setManyChatValidate(true);
+          }
+        }}
         margin="normal"
         error={manyChatValidate}
-        helperText={manyChatValidate && "Please enter a valid ManyChat ID"}
+        helperText={manyChatValidate && "ManyChatId should be a numeric value"}
+        required
       />
 
       {/* Contact Link Input */}
@@ -274,12 +312,21 @@ console.log("User from ExtendForm: ", user);
           </div>
         )}
       </Dropzone>
+      {/* Show error message when no file is uploaded */}
+      {!fileExist && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          You should provide a screenshot
+        </Alert>
+      )}
 
       {/* Uploaded Images Preview */}
       {files.length > 0 && (
         <ImageList cols={3} rowHeight={164} sx={{ mt: 2 }}>
           {files.map((file, index) => (
-            <ImageListItem key={index}>
+            <ImageListItem
+              key={index}
+              sx={{ width: "150px", height: "150px", overflow: "hidden" }}
+            >
               <img src={file.href} alt={file.name} loading="lazy" />
             </ImageListItem>
           ))}
