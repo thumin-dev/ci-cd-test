@@ -65,6 +65,7 @@ const ExtendUserForm = () => {
   const [manyChatValidate, setManyChatValidate] = useState(false);
   const [amountValidate, setAmountValidate] = useState(false);
   const [monthValidate, setMonthValidate] = useState(false);
+  const [error, setError] = useState({ currency: false, wallet: false });
 
   const formFillingPerson = user?.email || "Unknown User";
   const agentId = agent || "No Agent";
@@ -146,6 +147,10 @@ const ExtendUserForm = () => {
     await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
     setFileExist(acceptedFiles.length > 0);
   };
+    const handleCurrencyChange = (e) => {
+      setCurrency(e.target.value);
+      setError((prevError) => ({ ...prevError, currency: false }));
+    };
 
   return (
     <Box sx={{ mt: 4, marginLeft: 15, marginRight: 15 }}>
@@ -250,7 +255,10 @@ const ExtendUserForm = () => {
             required
             value={amount}
             error={amountValidate}
-            helperText={amountValidate && "Please enter a valid amount"}
+            helperText={
+              amountValidate &&
+              "Amount should be a positive number and up to 2 decimal places"
+            }
             sx={{ mt: 2 }}
             inputProps={{ min: "0", step: "0.01" }}
             onChange={(e) => {
@@ -283,7 +291,8 @@ const ExtendUserForm = () => {
           />
 
           <FormLabel>Currency</FormLabel>
-          <RadioGroup row onChange={(e) => setCurrency(e.target.value)}>
+          <RadioGroup row 
+          onChange={handleCurrencyChange}>
             {currencies.map((item) => (
               <FormControlLabel
                 key={item.CurrencyId}
@@ -293,6 +302,9 @@ const ExtendUserForm = () => {
               />
             ))}
           </RadioGroup>
+          {error.currency && (
+            <FormHelperText error>Please select a currency</FormHelperText>
+          )}
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
             <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
@@ -302,6 +314,7 @@ const ExtendUserForm = () => {
                   control={<Radio />}
                   label={wallet.WalletName}
                   key={wallet.WalletID}
+                  required
                 />
               ))}
             </RadioGroup>
@@ -310,7 +323,9 @@ const ExtendUserForm = () => {
               No wallets available for the selected currency.
             </Typography>
           )}
-
+          {error.wallet && (
+            <FormHelperText error>Please select a wallet</FormHelperText>
+          )}
           <Autocomplete
             options={supportRegions}
             getOptionLabel={(option) => option.Region || ""}
@@ -328,7 +343,20 @@ const ExtendUserForm = () => {
             name="manyChat"
             type="text"
             error={manyChatValidate}
-            helperText={manyChatValidate && "Enter a valid number"}
+            helperText={
+              manyChatValidate && "ManyChatId should be a numeric value"
+            }
+            onChange={(e) => {
+              const value = e.target.value;
+
+              // Check if value is numeric
+              if (/^\d*$/.test(value)) {
+                setManyChatId(value);
+                setManyChatValidate(false);
+              } else {
+                setManyChatValidate(true);
+              }
+            }}
           />
 
           <TextField
@@ -367,8 +395,12 @@ const ExtendUserForm = () => {
               </div>
             )}
           </Dropzone>
+
+          {/* Show error message when no file is uploaded */}
           {!fileExist && (
-            <Typography color="error">You need to upload a file</Typography>
+            <Alert severity="error" sx={{ mt: 2 }}>
+              You should provide a screenshot
+            </Alert>
           )}
           {files.length !== 0 && (
             <ImageList
@@ -376,9 +408,16 @@ const ExtendUserForm = () => {
               cols={3}
               rowHeight={164}
             >
-              {files.map((item) => (
-                <ImageListItem key={item.href}>
-                  <img src={`${item.href}`} alt="Screenshot" loading="lazy" />
+              {files.map((item, index) => (
+                <ImageListItem
+                  key={index}
+                  sx={{ width: "150px", height: "150px", overflow: "hidden" }}
+                >
+                  <img
+                    src={`${item.href}`}
+                    alt={`Uploaded ${item.index}`}
+                    loading="lazy"
+                  />
                 </ImageListItem>
               ))}
             </ImageList>
