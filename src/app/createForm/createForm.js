@@ -140,7 +140,10 @@ const CreateForm = ({ userInfo, setloading }) => {
         id="amount"
         margin="normal"
         error={amountValidate}
-        helperText={amountValidate && "Please enter a valid amount"}
+        helperText={
+          amountValidate &&
+          "Amount should be a positive number and up to 2 decimal places"
+        }
         inputProps={{ min: "0", step: "0.01" }}
         onChange={(e) => {
           const value = e.target.value;
@@ -225,10 +228,20 @@ const CreateForm = ({ userInfo, setloading }) => {
         name="manyChat"
         label="ManyChat ID"
         value={manyChatId}
-        onChange={(e) => setManyChatId(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+
+          // Check if value is numeric
+          if (/^\d*$/.test(value)) {
+            setManyChatId(value);
+            setManyChatValidate(false); 
+          } else {
+            setManyChatValidate(true); 
+          }
+        }}
         margin="normal"
         error={manyChatValidate}
-        helperText={manyChatValidate && "Please enter a valid ManyChat ID"}
+        helperText={manyChatValidate && "ManyChatId should be a numeric value"}
       />
 
       {/* Contact Link Input */}
@@ -271,12 +284,20 @@ const CreateForm = ({ userInfo, setloading }) => {
           </div>
         )}
       </Dropzone>
-
+      {/* Show error message when no file is uploaded */}
+      {!fileExist && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          You should provide a screenshot
+        </Alert>
+      )}
       {/* Uploaded Images Preview */}
       {files.length > 0 && (
         <ImageList cols={3} rowHeight={164} sx={{ mt: 2 }}>
           {files.map((file, index) => (
-            <ImageListItem key={index}>
+            <ImageListItem
+              key={index}
+              sx={{ width: "150px", height: "150px", overflow: "hidden" }}
+            >
               <img src={file.href} alt={file.name} loading="lazy" />
             </ImageListItem>
           ))}
