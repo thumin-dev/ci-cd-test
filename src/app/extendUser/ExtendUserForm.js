@@ -45,7 +45,7 @@ const ExtendUserForm = () => {
   // Form fields
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState("");
-  const [manyChat, setManyChat] = useState("");
+ const [manyChatId, setManyChatId] = useState("");
   const [contactLink, setContactLink] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -138,7 +138,8 @@ const ExtendUserForm = () => {
       fileExist,
       setFileExist,
       wallets,
-      agentId
+      agentId,
+      manyChatId,
     );
   };
 
@@ -291,8 +292,7 @@ const ExtendUserForm = () => {
           />
 
           <FormLabel>Currency</FormLabel>
-          <RadioGroup row 
-          onChange={handleCurrencyChange}>
+          <RadioGroup row onChange={handleCurrencyChange}>
             {currencies.map((item) => (
               <FormControlLabel
                 key={item.CurrencyId}
@@ -342,6 +342,7 @@ const ExtendUserForm = () => {
             required
             name="manyChat"
             type="text"
+            value={manyChatId}
             error={manyChatValidate}
             helperText={
               manyChatValidate && "ManyChatId should be a numeric value"
