@@ -224,7 +224,7 @@ const ExtendForm = ({ userInfo, setloading }) => {
               control={<Radio />}
               label={wallet.WalletName}
               key={wallet.WalletID}
-              required={true}
+              required
               sx={{ mx: 1 }}
             />
           ))}
