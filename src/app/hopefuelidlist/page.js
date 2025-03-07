@@ -15,6 +15,7 @@ import { useDebounce } from "use-debounce";
 import DetailModal from "../UI/Components/Modal";
 import SubscriptionCard from "../UI/Components/SubscriptionCard";
 import { SUBSCRIPTION_DATA } from "../variables/const";
+import ImageCarouselModal from "./components/ImageCarousel";
 
 const PAGE_SIZE = 10;
 
@@ -28,6 +29,8 @@ const HopeFuelIdListPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [details, setDetails] = useState({});
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [openScreenshotModal, setOpenScreenshotModal] = useState(false);
+  const [screenshotsLists, setScreenshotsLists] = useState([]);
 
   const [debouncedSearch] = useDebounce(searchText, 100);
 
@@ -94,6 +97,19 @@ const HopeFuelIdListPage = () => {
     } finally {
       setLoadingDetails(false);
     }
+  };
+
+  const handleOpenScreenshots = (screenshots) => {
+    console.log(typeof screenshots);
+    if (!Array.isArray(screenshots)) {
+      screenshots = [screenshots];
+    }
+    setScreenshotsLists(screenshots);
+    setOpenScreenshotModal((prev) => !prev);
+  };
+
+  const handleCloseScreenshots = () => {
+    setOpenScreenshotModal((prev) => !prev);
   };
 
   useEffect(() => {
@@ -175,7 +191,11 @@ const HopeFuelIdListPage = () => {
       />
       {data.length > 0 ? (
         <>
-          <HopeFuelIDListItem data={data} onClick={handleOpen} />
+          <HopeFuelIDListItem
+            data={data}
+            onClick={handleOpen}
+            onClickScreenShot={handleOpenScreenshots}
+          />
           {loading && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <CircularProgress />
@@ -243,9 +263,14 @@ const HopeFuelIdListPage = () => {
               </Typography>
             </Box>
           )}
-          <SubscriptionCard cards={SUBSCRIPTION_DATA} />
+          {/* <SubscriptionCard cards={SUBSCRIPTION_DATA} /> */}
         </Paper>
       </DetailModal>
+      <ImageCarouselModal
+        open={openScreenshotModal}
+        onClose={handleCloseScreenshots}
+        screenshots={screenshotsLists}
+      />
     </>
   );
 };

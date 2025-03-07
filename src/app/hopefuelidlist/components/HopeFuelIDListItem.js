@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import React from "react";
 import CopyableText from "../../UI/Components/CopyableText";
 
-const HopeFuelIDListItem = ({ data, onClick }) => {
+const HopeFuelIDListItem = ({ data, onClick, onClickScreenShot }) => {
   const getStatusByColor = (status) => {
     switch (status) {
       case "ငွေစစ်ဆေးပြီး":
@@ -144,6 +144,10 @@ const HopeFuelIDListItem = ({ data, onClick }) => {
                   </Typography>
                 </Box>
                 <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClickScreenShot(item.ScreenShot);
+                  }}
                   variant="outlined"
                   sx={{
                     backgroundColor: "#B91C1C",
