@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import db from "../../../utilites/db";
 
+
 async function retrieveCurrentMonthHopeFuelCards(page, limit) {
   const offset = (page - 1) * limit;
 
@@ -15,9 +16,9 @@ async function retrieveCurrentMonthHopeFuelCards(page, limit) {
       t.Amount,
       curr.CurrencyCode,
       t.Month,
-      GROUP_CONCAT(DISTINCT ss.ScreenShotLink SEPARATOR ', ') AS ScreenShot,
+      GROUP_CONCAT(DISTINCT ss.ScreenShotLink SEPARATOR ',') AS ScreenShot,
       c.ManyChatId,
-      GROUP_CONCAT(DISTINCT a.AwsId SEPARATOR ', ') AS 'FormFilledPerson',
+      GROUP_CONCAT(DISTINCT a.AwsId SEPARATOR ',') AS 'FormFilledPerson',
       ts.TransactionStatus,
       n.Note AS Note
     FROM Transactions t
@@ -67,17 +68,24 @@ async function retrieveCurrentMonthHopeFuelCards(page, limit) {
      
     const result = await db(query, values);
     
-    return result;
+    return result.map((row) => ({
+      ...row,
+      ScreenShot:
+        typeof row.ScreenShot === "string" && row.ScreenShot
+          ? row.ScreenShot.split(",")
+          : [],
+    }));
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Error in retrieving data from the database.");
   }
 }
 export async function GET(req) {
-  const params = new URLSearchParams(req.url);
+  const url = new URL(req.url); 
+  const params = url.searchParams;
 
-  const parsedPage = parseInt(params.get("page") || 1, 10);
-  const parsedLimit = parseInt(params.get("limit") || 10, 10);
+  const parsedPage = Number(params.get("page")) || 1;
+  const parsedLimit = Number(params.get("limit")) || 10;
 
   try {
     const result = await retrieveCurrentMonthHopeFuelCards(

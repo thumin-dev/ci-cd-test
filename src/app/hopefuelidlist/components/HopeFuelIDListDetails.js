@@ -260,16 +260,7 @@ const HopeFuelIDListDetails = ({ data }) => {
             >
               Manychat ID
             </Label>
-            <Value
-              sx={{
-                color: "#000000",
-                fontSize: "18px",
-                lineHeight: "22px",
-                fontWeight: 600,
-              }}
-            >
-              {data.ManyChatId}
-            </Value>
+            <CopyableText text={data.manychatId} />
           </InfoRow>
           <Box mt={3}>
             <ScrollableImageContainer>

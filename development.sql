@@ -172,4 +172,38 @@ CREATE TABLE FormStatus (
 );
 
 
+CREATE TABLE FormVisibilityStatus (
+    VisibilityStatusId INT AUTO_INCREMENT PRIMARY KEY,
+    AgentId INT NOT NULL,
+    IsFormOpen BOOLEAN NOT NULL,
+    FormTimeStamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (AgentId) REFERENCES Agent(AgentId) ON DELETE CASCADE
+);
+
+CREATE TABLE CustomerAuditLogs (
+    LogId INT AUTO_INCREMENT PRIMARY KEY,
+    AgentId INT NOT NULL,
+    FieldChanged ENUM('Name', 'Email', 'UserCountry') NOT NULL,
+    OldValue VARCHAR(255),
+    NewValue VARCHAR(255),
+    CustomerId INT NOT NULL,
+    ChangeDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Foreign Key Constraints
+    CONSTRAINT fk_agent FOREIGN KEY (AgentId) REFERENCES Agent(AgentId) ON DELETE CASCADE,
+    CONSTRAINT fk_customer FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId) ON DELETE CASCADE
+);
+
+CREATE TABLE ManyChat (
+    ManyChatId INT AUTO_INCREMENT PRIMARY KEY,  
+    ConversationId VARCHAR(255) NOT NULL,       
+    CustomerId INT NOT NULL,                   
+    CreateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    UpdateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
+    
+    -- Define Foreign Key Constraint
+    CONSTRAINT fk_manychat_customer FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId) ON DELETE CASCADE
+);
+
+
 

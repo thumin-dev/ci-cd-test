@@ -1,6 +1,7 @@
 import { Box, Button, Card, Divider, Typography } from "@mui/material";
 import moment from "moment-timezone";
 import React from "react";
+import CopyableText from "../../UI/Components/CopyableText";
 
 const HopeFuelIDListItem = ({ data, onClick }) => {
   const getStatusByColor = (status) => {
@@ -169,17 +170,13 @@ const HopeFuelIDListItem = ({ data, onClick }) => {
                       fontWeight: 500,
                     }}
                   >
-                    Merchant ID
+                    ManyChat ID
                   </Typography>
-                  <Typography
-                    sx={{
-                      color: "#000000",
-                      fontSize: "14px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {item.ManyChatId}
-                  </Typography>
+                  <CopyableText
+                    text={item.ManyChatId}
+                    fontSize="14px"
+                    fontWeight={500}
+                  />
                 </Box>
                 <Box
                   sx={{
