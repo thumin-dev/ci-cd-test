@@ -236,7 +236,7 @@ const ExtendForm = ({ userInfo, setloading }) => {
       </Box>
 
       {/* wallet selection*/}
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3 ,mb:3}}>
         <FormControl error={!!errors.wallet}>
           <FormLabel id="wallets">Wallets</FormLabel>
           {wallets && wallets.length > 0 ? (
