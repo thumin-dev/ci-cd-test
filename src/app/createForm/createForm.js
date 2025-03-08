@@ -3,6 +3,8 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControl,
+  FormHelperText,
   FormControlLabel,
   FormLabel,
   Radio,
@@ -14,7 +16,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback} from "react";
 import Dropzone from "react-dropzone";
 import createFormSubmit from "../utilites/createForm/createformSubmit";
 import filehandler from "../utilites/createForm/fileHandler";
@@ -25,8 +27,8 @@ const CreateForm = ({ userInfo, setloading }) => {
   //console.log("UserInfo from createForm: ", userInfo);
   const user = useUser();
   const agent = useAgent();
- // console.log("User from CreateForm: ", user);
- // console.log("Agent from CreateForm: ", agent);
+  // console.log("User from CreateForm: ", user);
+  // console.log("Agent from CreateForm: ", agent);
 
   const formFillingPerson = user?.Name || "Unknown User";
 
@@ -47,6 +49,7 @@ const CreateForm = ({ userInfo, setloading }) => {
   const [submitted, setSubmitted] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // Form Fields
   const [contactLink, setContactLink] = useState("");
@@ -86,18 +89,37 @@ const CreateForm = ({ userInfo, setloading }) => {
 
   const handleDrop = async (acceptedFiles) => {
     setIsUploading(true);
+     if (acceptedFiles.length > 0) {
+    setErrors((prev) => ({ ...prev, files: "" }));
+  } 
+  
     await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
     setFileExist(acceptedFiles.length > 0);
     setIsUploading(false);
   };
 
+  const validateForm = useCallback(() => {
+    let validationErrors = {};
+    if (!currency)
+      validationErrors.currency = "Currency selection is required.";
+    if (!walletId) validationErrors.wallet = "Wallet selection is required.";
+    if (files.length === 0)
+      {
+        validationErrors.files = "You must upload at least one file.";
+         setFileExist(false)
+        }else {
+          setFileExist(true)
+        }
+
+
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  }, [currency, walletId, files]);
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (files.length === 0) {
-      setFileExist(false);
-      return;
-    }
+    if (!validateForm()) return;
    
 
     createFormSubmit(
@@ -174,41 +196,70 @@ const CreateForm = ({ userInfo, setloading }) => {
           }
         }}
       />
+      <Box sx={{ mt: 3 }}>
+        {/* Currency Selection */}
+        <FormControl error={!!errors.currency} component="fieldset">
+          <FormLabel component="legend">Currency</FormLabel>
+          <RadioGroup
+            row
+            value={currency}
+            onChange={(e) => {
+              setCurrency(e.target.value);
+              if (errors.currency) {
+                setErrors((prev) => ({ ...prev, currency: "" }));
+              }
+            }}
+          >
+            {currencies.map((item) => (
+              <FormControlLabel
+                key={item.CurrencyId}
+                value={item.CurrencyCode}
+                control={<Radio />}
+                label={item.CurrencyCode}
+              />
+            ))}
+          </RadioGroup>
+          {errors.currency && (
+            <FormHelperText>{errors.currency}</FormHelperText>
+          )}
+        </FormControl>
+      </Box>
 
-      {/* Currency Selection */}
-      <FormLabel>Currency</FormLabel>
-      <RadioGroup
-        row
-        value={currency}
-        onChange={(e) => setCurrency(e.target.value)}
-      >
-        {currencies.map((item) => (
-          <FormControlLabel
-            key={item.CurrencyId}
-            value={item.CurrencyCode}
-            control={<Radio />}
-            label={item.CurrencyCode}
-          />
-        ))}
-      </RadioGroup>
       {/* wallet selection*/}
-      <FormLabel id="wallets">Wallets</FormLabel>
-      {wallets && wallets.length > 0 ? (
-        <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
-          {wallets.map((wallet) => (
-            <FormControlLabel
-              value={wallet.WalletID}
-              control={<Radio />}
-              label={wallet.WalletName}
-              key={wallet.WalletID}
-              required={true}
-              sx={{ mx: 1 }}
-            />
-          ))}
-        </RadioGroup>
-      ) : (
-        <h1>No wallets selected.</h1>
-      )}
+      <Box sx={{ mt: 3 }}>
+        <FormControl error={!!errors.wallet}>
+          <FormLabel id="wallets">Wallets</FormLabel>
+          {wallets && wallets.length > 0 ? (
+            <RadioGroup
+              aria-labelledby="wallets-group-label"
+              name="wallets"
+              value={walletId}
+              onChange={(e) => {
+                setWalletId(e.target.value);
+                if (errors.wallet) {
+                  setErrors((prev) => ({ ...prev, wallet: "" })); 
+                }
+              }}
+            >
+              {wallets.map((wallet) => (
+                <FormControlLabel
+                  value={wallet.WalletID}
+                  control={<Radio />}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
+                  required
+                  sx={{ mx: 1 }}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <Typography variant="body2" sx={{ color: "gray", mt: 1 }}>
+              No wallets selected.
+            </Typography>
+          )}
+          {errors.wallet && <FormHelperText>{errors.wallet}</FormHelperText>}
+        </FormControl>
+      </Box>
 
       {/* Support Region Selection */}
       <Autocomplete
@@ -234,9 +285,9 @@ const CreateForm = ({ userInfo, setloading }) => {
           // Check if value is numeric
           if (/^\d*$/.test(value)) {
             setManyChatId(value);
-            setManyChatValidate(false); 
+            setManyChatValidate(false);
           } else {
-            setManyChatValidate(true); 
+            setManyChatValidate(true);
           }
         }}
         margin="normal"
@@ -285,9 +336,9 @@ const CreateForm = ({ userInfo, setloading }) => {
         )}
       </Dropzone>
       {/* Show error message when no file is uploaded */}
-      {!fileExist && (
+      {errors.files && (
         <Alert severity="error" sx={{ mt: 2 }}>
-          You should provide a screenshot
+          {errors.files}
         </Alert>
       )}
       {/* Uploaded Images Preview */}
