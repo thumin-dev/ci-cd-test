@@ -4,6 +4,8 @@ import {
   Box,
   Button,
   FormControlLabel,
+  FormHelperText,
+  FormControl,
   FormLabel,
   Radio,
   RadioGroup,
@@ -13,9 +15,8 @@ import {
   Typography,
   CircularProgress,
   Alert,
-  FormHelperText,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import Dropzone from "react-dropzone";
 import extendFormSubmit from "../utilites/extendForm/extendFormSubmit";
 import filehandler from "../utilites/createForm/fileHandler";
@@ -49,7 +50,7 @@ const ExtendForm = ({ userInfo, setloading }) => {
   const [notes, setNotes] = useState("");
   const [manyChatId, setManyChatId] = useState("");
 
-    const [error, setError] = useState({ currency: false, wallet: false });
+  const [errors, setErrors] = useState({});
 
 
   // Load Wallets by Currency
@@ -82,31 +83,42 @@ const ExtendForm = ({ userInfo, setloading }) => {
 
   const handleDrop = async (acceptedFiles) => {
     setIsUploading(true);
+      if (acceptedFiles.length > 0) {
+        setErrors((prev) => ({ ...prev, files: "" }));
+      } 
     await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
     setFileExist(acceptedFiles.length > 0);
     setIsUploading(false);
   };
+
+
+   const validateForm = useCallback(() => {
+     let validationErrors = {};
+     if (!currency)
+       validationErrors.currency = "Currency selection is required.";
+     if (!walletId) validationErrors.wallet = "Wallet selection is required.";
+     if (files.length === 0) {
+       validationErrors.files = "You must upload at least one file.";
+       setFileExist(false);
+     } else {
+       setFileExist(true);
+     }
+
+     setErrors(validationErrors);
+     return Object.keys(validationErrors).length === 0;
+   }, [currency, walletId, files]);
+
+
     const handleCurrencyChange = (e) => {
       setCurrency(e.target.value);
-      setError((prevError) => ({ ...prevError, currency: false }));
+      setErrors((prev) => ({ ...prev, currency: "" }));
     };
 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (files.length === 0) {
-      setFileExist(false);
-      return;
-    }
-
-    if (!currency || !wallets) {
-      setError({
-        currency: !currency,
-        wallet: !wallets,
-      });
-      return;
-    }
+    if (!validateForm()) return;
+  
   
   
     extendFormSubmit(
@@ -194,47 +206,70 @@ const ExtendForm = ({ userInfo, setloading }) => {
         }}
       />
 
-      {/* Currency Selection */}
-      <FormLabel>Currency</FormLabel>
-      <RadioGroup
-        row
-        value={currency}
-        onChange={handleCurrencyChange}
-      >
-        {currencies.map((item) => (
-          <FormControlLabel
-            key={item.CurrencyId}
-            value={item.CurrencyCode}
-            control={<Radio />}
-            label={item.CurrencyCode}
-          />
-        ))}
-      </RadioGroup>
-      {error.currency && (
-        <FormHelperText error>Please select a currency</FormHelperText>
-      )}
+      <Box sx={{ mt: 3 }}>
+        {/* Currency Selection */}
+        <FormControl error={!!errors.currency} component="fieldset">
+          <FormLabel component="legend">Currency</FormLabel>
+          <RadioGroup
+            row
+            value={currency}
+            onChange={(e) => {
+              setCurrency(e.target.value);
+              if (errors.currency) {
+                setErrors((prev) => ({ ...prev, currency: "" }));
+              }
+            }}
+          >
+            {currencies.map((item) => (
+              <FormControlLabel
+                key={item.CurrencyId}
+                value={item.CurrencyCode}
+                control={<Radio />}
+                label={item.CurrencyCode}
+              />
+            ))}
+          </RadioGroup>
+          {errors.currency && (
+            <FormHelperText>{errors.currency}</FormHelperText>
+          )}
+        </FormControl>
+      </Box>
 
       {/* wallet selection*/}
-      <FormLabel id="wallets">Wallets</FormLabel>
-      {wallets && wallets.length > 0 ? (
-        <RadioGroup aria-labelledby="wallets-group-label" name="wallets">
-          {wallets.map((wallet) => (
-            <FormControlLabel
-              value={wallet.WalletID}
-              control={<Radio />}
-              label={wallet.WalletName}
-              key={wallet.WalletID}
-              required
-              sx={{ mx: 1 }}
-            />
-          ))}
-        </RadioGroup>
-      ) : (
-        <h1>No wallets selected.</h1>
-      )}
-      {error.wallet && (
-        <FormHelperText error>Please select a wallet</FormHelperText>
-      )}
+      <Box sx={{ mt: 3 }}>
+        <FormControl error={!!errors.wallet}>
+          <FormLabel id="wallets">Wallets</FormLabel>
+          {wallets && wallets.length > 0 ? (
+            <RadioGroup
+              aria-labelledby="wallets-group-label"
+              name="wallets"
+              value={walletId}
+              onChange={(e) => {
+                setWalletId(e.target.value);
+                if (errors.wallet) {
+                  setErrors((prev) => ({ ...prev, wallet: "" }));
+                }
+              }}
+            >
+              {wallets.map((wallet) => (
+                <FormControlLabel
+                  value={wallet.WalletID}
+                  control={<Radio />}
+                  label={wallet.WalletName}
+                  key={wallet.WalletID}
+                  required
+                  sx={{ mx: 1 }}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <Typography variant="body2" sx={{ color: "gray", mt: 1 }}>
+              No wallets selected.
+            </Typography>
+          )}
+          {errors.wallet && <FormHelperText>{errors.wallet}</FormHelperText>}
+        </FormControl>
+      </Box>
 
       {/* Support Region Selection */}
       <Autocomplete
@@ -313,9 +348,9 @@ const ExtendForm = ({ userInfo, setloading }) => {
         )}
       </Dropzone>
       {/* Show error message when no file is uploaded */}
-      {!fileExist && (
+      {errors.files && (
         <Alert severity="error" sx={{ mt: 2 }}>
-          You should provide a screenshot
+          {errors.files}
         </Alert>
       )}
 
