@@ -1,49 +1,14 @@
 "use client";
 
-import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import UserInfoCard from "./components/UserInfoCard";
 import CardInfo from "./components/CardInfo";
 import SubscriptionCard from "../UI/Components/SubscriptionCard";
 import { SUBSCRIPTION_DATA } from "../variables/const";
 import CardDisplay from "./components/CardDisplay";
-
-const userProfiles = Array(8).fill({
-  name: "Geek Squad Studio",
-  email: "geeksquadstudio@gmail.com",
-  id: "888888",
-});
-
-const profileData = {
-  name: "Geek Squad Studio",
-  email: "geeksquadstudio@gmail.com",
-  country: "Myanmar",
-  expiryDate: "12/31/2024",
-  myanmarId: "33.0",
-  cardId: "888888",
-  expiryDateBackup: "2024-10-31T00:00:00.000Z, 2024-12-31T00:00:00.000Z",
-};
-
-const cards = [
-  {
-    label: "Expire Date",
-    value: profileData.expiryDate,
-  },
-  {
-    label: "Myanmar ID",
-    value: profileData.myanmarId,
-  },
-  {
-    label: "Card ID",
-    value: profileData.cardId,
-  },
-  {
-    label: "Expire Date Backup",
-    value: profileData.expiryDateBackup,
-    isSmallText: true,
-  },
-];
+import { useDebounce } from "use-debounce";
 
 const mockCards = [
   {
@@ -63,28 +28,202 @@ const mockCards = [
   },
 ];
 
+const PAGE_SIZE = 10;
+
 const CustomerListPage = () => {
   const theme = useTheme();
-  const [selectedProfile, setSelectedProfile] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const [selectedProfileId, setSelectedProfileId] = useState(null);
+  const [hoveredProfileId, setHoveredProfileId] = useState(null);
+  const [customerData, setCustomerData] = useState([]);
+  const [profileDetailData, setProfileDetailData] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+
+  const initialLoadRef = useRef(false);
+  const [debouncedSearch] = useDebounce(searchText, 100);
+
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    if (!initialLoadRef.current) {
+      initialLoadRef.current = true;
+      fetchCustomerData(1, true);
+    } else if (debouncedSearch !== undefined) {
+      setPage(1);
+      setHasMore(true);
+      fetchCustomerData(1, true);
+    }
+  }, [debouncedSearch]);
+
+  // useEffect(() => {
+  //   if (customerData.length > 0 && selectedProfile < customerData.length) {
+  //     fetchProfileDetails(customerData[selectedProfile]?.id);
+  //   }
+  // }, [selectedProfile, customerData]);
+
+  const fetchCustomerData = useCallback(
+    async (pageNumber, isNewSearch = false) => {
+      if (loading) return;
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const url = debouncedSearch
+          ? `/api/customers/search?term=${encodeURIComponent(debouncedSearch)}`
+          : `/api/customers/?page=${pageNumber}&limit=${PAGE_SIZE}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message || `Failed to fetch data (${response.status})`
+          );
+        }
+
+        const result = await response.json();
+        const newCustomers = result.customers || [];
+
+        if (isNewSearch) {
+          setCustomerData(newCustomers);
+          setPage(pageNumber);
+
+          // Select the first customer by default on new search
+          if (newCustomers.length > 0) {
+            const firstCustomerId = newCustomers[0].CustomerId;
+            setSelectedProfileId(firstCustomerId);
+            setHoveredProfileId(firstCustomerId);
+            fetchProfileDetails(firstCustomerId);
+          } else {
+            setSelectedProfileId(null);
+            setHoveredProfileId(null);
+            setProfileDetailData(null);
+          }
+        } else {
+          setCustomerData((prevData) => [...prevData, ...newCustomers]);
+          setPage(pageNumber + 1);
+        }
+
+        setHasMore(newCustomers.length >= PAGE_SIZE);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+        if (isNewSearch) {
+          setCustomerData([]);
+          setSelectedProfileId(null);
+          setHoveredProfileId(null);
+          setProfileDetailData(null);
+        }
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [debouncedSearch, loading]
+  );
+
+  const fetchProfileDetails = useCallback(async (profileId) => {
+    if (!profileId) return;
+
+    setProfileLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/customers/${profileId}`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `Failed to fetch profile details (${response.status})`
+        );
+      }
+
+      const profileDetails = await response.json();
+      setProfileDetailData(profileDetails.customer);
+    } catch (err) {
+      console.error("Error fetching profile details:", err);
+      setError(`Failed to load profile details: ${err.message}`);
+
+      setProfileDetailData(null);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, []);
+
+  const handleProfileSelect = useCallback(
+    (profileId) => {
+      setSelectedProfileId(profileId);
+      setHoveredProfileId(profileId);
+      fetchProfileDetails(profileId);
+    },
+    [fetchProfileDetails]
+  );
+
+  const handleProfileHover = useCallback((profileId) => {
+    setHoveredProfileId(profileId);
+  }, []);
+
+  const handleLoadMore = useCallback(() => {
+    if (!loading && hasMore) {
+      fetchCustomerData(page, false);
+    }
+  }, [loading, hasMore, page, fetchCustomerData]);
+
+  const handleSearchChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
   return (
     <Box sx={{ p: 2, bgcolor: "background.default", minHeight: "100vh" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
           <Sidebar
-            profiles={userProfiles}
-            selectedProfile={selectedProfile}
-            setSelectedProfile={setSelectedProfile}
+            profiles={customerData}
+            selectedProfileId={selectedProfileId}
+            hoveredProfileId={hoveredProfileId}
+            onSelectedProfile={handleProfileSelect}
+            onHoverProfile={handleProfileHover}
+            onLoadMore={handleLoadMore}
+            searchValue={searchText}
+            onSearch={handleSearchChange}
+            loading={loading}
+            hasMore={hasMore}
           />
         </Grid>
 
         <Grid item xs={12} md={9}>
-          <UserInfoCard profileData={profileData} isMobile={isMobile} />
+          {profileDetailData ? (
+            <UserInfoCard
+              data={profileDetailData}
+              isMobile={isMobile}
+              // onEdit={handleEdit}
+              // onViewEditHistory={handleViewEditHistory}
+            />
+          ) : (
+            <Box sx={{ p: 2, border: "1px solid #E2E8F0", borderRadius: 1 }}>
+              <Typography variant="body1" align="center">
+                {profileLoading ? "Loading profile..." : "No profile selected"}
+              </Typography>
+            </Box>
+          )}
 
-          <Box sx={{ mt: theme.spacing(2), mx: theme.spacing(3) }}>
-            <CardInfo cards={cards} />
-          </Box>
+          {profileDetailData ? (
+            <Box sx={{ mt: theme.spacing(2), mx: theme.spacing(3) }}>
+              <CardInfo data={profileDetailData} />
+            </Box>
+          ) : (
+            <Box sx={{ p: 2, border: "1px solid #E2E8F0", borderRadius: 1 }}>
+              <Typography variant="body1" align="center">
+                {profileLoading ? "Loading profile..." : "No profile selected"}
+              </Typography>
+            </Box>
+          )}
 
           <Box sx={{ mt: theme.spacing(2) }}>
             <SubscriptionCard cards={SUBSCRIPTION_DATA} />

@@ -2,7 +2,24 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import theme from "../../UI/theme";
 
-const UserInfoCard = ({ profileData, isMobile, onEdit, onViewEditHistory }) => {
+const UserInfoCard = ({ data, isMobile, onEdit, onViewEditHistory }) => {
+  if (!data) {
+    return (
+      <Box
+        sx={{
+          border: "1px solid #E2E8F0",
+          paddingY: theme.spacing(2),
+          paddingX: theme.spacing(2),
+          borderRadius: theme.spacing(1),
+        }}
+      >
+        <Typography variant="body1" align="center">
+          No user information available
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -20,19 +37,19 @@ const UserInfoCard = ({ profileData, isMobile, onEdit, onViewEditHistory }) => {
         <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "22px" }}>
           Name:{" "}
           <span style={{ fontSize: 18, fontWeight: 400, lineHeight: "22px" }}>
-            {profileData.name}
+            {data.Name}
           </span>
         </Typography>
         <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "22px" }}>
           Email:{" "}
           <span style={{ fontSize: 18, fontWeight: 400, lineHeight: "22px" }}>
-            {profileData.email}
+            {data.Email}
           </span>
         </Typography>
         <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "22px" }}>
           Country:{" "}
           <span style={{ fontSize: 18, fontWeight: 400, lineHeight: "22px" }}>
-            {profileData.country}
+            {data.UserCountry}
           </span>
         </Typography>
       </Box>
