@@ -1,14 +1,26 @@
 "use client";
 
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  Modal,
+  Paper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import UserInfoCard from "./components/UserInfoCard";
 import CardInfo from "./components/CardInfo";
+import DetailModal from "../UI/Components/Modal";
 import SubscriptionCard from "../UI/Components/SubscriptionCard";
 import { SUBSCRIPTION_DATA } from "../variables/const";
 import CardDisplay from "./components/CardDisplay";
 import { useDebounce } from "use-debounce";
+import { useAgent } from "../context/AgentContext";
+import EditHistory from "./components/EditHistory";
 
 const mockCards = [
   {
@@ -30,6 +42,18 @@ const mockCards = [
 
 const PAGE_SIZE = 10;
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 800,
+  minHeight: 800,
+  bgcolor: "background.paper",
+  borderRadius: 5,
+  boxShadow: 24,
+};
+
 const CustomerListPage = () => {
   const theme = useTheme();
   const [searchText, setSearchText] = useState("");
@@ -40,8 +64,11 @@ const CustomerListPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
+  const [editHistoryLoading, setEditHistoryLoading] = useState(false);
+  const [editHistory, setEditHistory] = useState([]);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
 
   const initialLoadRef = useRef(false);
   const [debouncedSearch] = useDebounce(searchText, 100);
@@ -58,12 +85,6 @@ const CustomerListPage = () => {
       fetchCustomerData(1, true);
     }
   }, [debouncedSearch]);
-
-  // useEffect(() => {
-  //   if (customerData.length > 0 && selectedProfile < customerData.length) {
-  //     fetchProfileDetails(customerData[selectedProfile]?.id);
-  //   }
-  // }, [selectedProfile, customerData]);
 
   const fetchCustomerData = useCallback(
     async (pageNumber, isNewSearch = false) => {
@@ -93,7 +114,6 @@ const CustomerListPage = () => {
           setCustomerData(newCustomers);
           setPage(pageNumber);
 
-          // Select the first customer by default on new search
           if (newCustomers.length > 0) {
             const firstCustomerId = newCustomers[0].CustomerId;
             setSelectedProfileId(firstCustomerId);
@@ -156,6 +176,30 @@ const CustomerListPage = () => {
     }
   }, []);
 
+  const fetchEditHistory = useCallback(async (id) => {
+    setEditHistoryLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/customers/${id}/edit/history`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `Failed to fetch profile details (${response.status})`
+        );
+      }
+
+      const editHistory = await response.json();
+      setEditHistory(editHistory);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setEditHistoryLoading(false);
+    }
+  }, []);
+
   const handleProfileSelect = useCallback(
     (profileId) => {
       setSelectedProfileId(profileId);
@@ -177,6 +221,15 @@ const CustomerListPage = () => {
 
   const handleSearchChange = (event) => {
     setSearchText(event.target.value);
+  };
+
+  const handleViewEditHistory = (id) => {
+    fetchEditHistory(id);
+    setOpenDetailModal((prev) => !prev);
+  };
+
+  const handleCloseDetailModal = () => {
+    setOpenDetailModal((prev) => !prev);
   };
 
   return (
@@ -203,7 +256,7 @@ const CustomerListPage = () => {
               data={profileDetailData}
               isMobile={isMobile}
               // onEdit={handleEdit}
-              // onViewEditHistory={handleViewEditHistory}
+              onViewEditHistory={handleViewEditHistory}
             />
           ) : (
             <Box sx={{ p: 2, border: "1px solid #E2E8F0", borderRadius: 1 }}>
@@ -225,7 +278,7 @@ const CustomerListPage = () => {
             </Box>
           )}
 
-          <Box sx={{ mt: theme.spacing(2) }}>
+          {/* <Box sx={{ mt: theme.spacing(2) }}>
             <SubscriptionCard cards={SUBSCRIPTION_DATA} />
           </Box>
 
@@ -239,9 +292,93 @@ const CustomerListPage = () => {
                 />
               </Grid>
             ))}
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
+      <Modal
+        open={openDetailModal}
+        onClose={handleCloseDetailModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ alignSelf: "center", justifyItems: "center" }}
+      >
+        {editHistoryLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : editHistory ? (
+          <Typography>Hi</Typography>
+        ) : (
+          // <EditHistory historyData={editHistory} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography sx={{ textAlign: "center" }}>
+              No Edit History Found
+            </Typography>
+          </Box>
+        )}
+      </Modal>
+      {/* <DetailModal
+        direction="center"
+        open={openDetailModal}
+        onClose={handleCloseDetailModal}
+      >
+        <Paper
+          sx={{
+            position: "fixed",
+            right: 0,
+            top: 0,
+            width: "100%",
+            maxWidth: "600px",
+            height: "100vh",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            overflow: "auto",
+            zIndex: 1300,
+            borderTopLeftRadius: 20,
+            borderBottomLeftRadius: 20,
+          }}
+        >
+          {editHistoryLoading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : editHistory ? (
+            <Typography>Edit History Go Here</Typography>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ textAlign: "center" }}>
+                No Edit History Found
+              </Typography>
+            </Box>
+          )}
+        </Paper>
+      </DetailModal> */}
     </Box>
   );
 };

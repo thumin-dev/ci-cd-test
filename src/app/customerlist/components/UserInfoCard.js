@@ -71,7 +71,9 @@ const UserInfoCard = ({ data, isMobile, onEdit, onViewEditHistory }) => {
           Edit
         </Button>
         <Button
-          onClick={() => onViewEditHistory && onViewEditHistory()}
+          onClick={() =>
+            onViewEditHistory && onViewEditHistory(data.CustomerId)
+          }
           sx={{ borderRadius: 18 }}
           variant="outlined"
           size="small"
