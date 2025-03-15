@@ -40,7 +40,7 @@ export default function ResponsiveAppBar() {
     navItems = [
       { label: "အသစ်သွင်းခြင်း", path: "/createForm" },
       { label: "သက်တမ်းတိုးခြင်း", path: "/extendUser" },
-      // { label: "ဖောင်အဖွင့်အပိတ်", path: "/formToggle" },
+      { label: "ဖောင်အဖွင့်အပိတ်", path: "/formopenclose" },
       { label: "ငွေစစ်ဆေးခြင်း", path: "/entryForm" },
       // { label: "ရှာဖွေခြင်း", path: "/search" },
       // { label: "HopeFuelDetail", path: "/details" },
@@ -49,7 +49,7 @@ export default function ResponsiveAppBar() {
     navItems = [
       { label: "အသစ်သွင်းခြင်း", path: "/createForm" },
       { label: "သက်တမ်းတိုးခြင်း", path: "/extendUser" },
-      { label: "ဖောင်အဖွင့်အပိတ်", path: "/formopenclose" },
+      // { label: "ဖောင်အဖွင့်အပိတ်", path: "/formopenclose" },
       { label: "HopeFuelID List", path: "/hopefuelidlist" },
       { label: "Customers List", path: "/customerlist" },
 
