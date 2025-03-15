@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 Amplify.configure(awsconfig);
+import { Box } from "@mui/material";
+
+import Sidebar from "./UI/SidebarNav";
 
 function AppLayout({ children }) {
   // const router = useRouter();
@@ -41,8 +44,13 @@ export default function RootLayout({ children }) {
               <CssBaseline />
               <AgentProvider>
                 <UserProvider>
-                  <ResponsiveAppBar />
-                  {children}
+                  <Sidebar />
+                  <Box
+                    component="main"
+                    sx={{ flexGrow: 1, marginLeft: "80px", padding: 3 }}
+                  >
+                    {children}
+                  </Box>
                   {console.log(user)}
                 </UserProvider>
               </AgentProvider>
