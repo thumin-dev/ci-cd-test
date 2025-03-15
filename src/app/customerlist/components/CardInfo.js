@@ -3,7 +3,7 @@ import React from "react";
 import theme from "../../UI/theme";
 import moment from "moment-timezone";
 
-const CardInfo = ({ cards }) => {
+const CardInfo = ({ data }) => {
   return (
     <Box
       sx={{
@@ -24,7 +24,7 @@ const CardInfo = ({ cards }) => {
           <Typography
             sx={{ fontSize: 12, fontWeight: 400, lineHeight: "18px" }}
           >
-            12/31/2025
+            {moment(data.ExpireDate).format("YYYY-MM-DD HH:mm")}
           </Typography>
         </Box>
         <Box sx={{ mt: theme.spacing(2) }}>
@@ -37,7 +37,7 @@ const CardInfo = ({ cards }) => {
           <Typography
             sx={{ fontSize: 12, fontWeight: 400, lineHeight: "18px" }}
           >
-            8888888
+            {data.CardID ? data.CardID : "-"}
           </Typography>
         </Box>
       </Box>
@@ -52,7 +52,7 @@ const CardInfo = ({ cards }) => {
           <Typography
             sx={{ fontSize: 12, fontWeight: 400, lineHeight: "18px" }}
           >
-            8888888
+            {data.ManyChatId}
           </Typography>
         </Box>
         <Box sx={{ mt: theme.spacing(2) }}>
@@ -65,7 +65,7 @@ const CardInfo = ({ cards }) => {
           <Typography
             sx={{ fontSize: 12, fontWeight: 400, lineHeight: "18px" }}
           >
-            {moment("2024-10-31T00:00:00.000Z").format("YYYY-MM-DD HH:mm")}
+            {moment(data.ExpireDate).format("YYYY-MM-DD HH:mm")}
           </Typography>
         </Box>
       </Box>
