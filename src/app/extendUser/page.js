@@ -10,6 +10,8 @@ import ServiceUnavailable from "../UI/Components/ServiceUnavailable";
 
 const ExtendUserPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchFormStatus = async () => {
