@@ -109,112 +109,127 @@ const FormStatus = ({ isFormOpen, setIsFormOpen, data }) => {
         checked={isFormOpen}
         onChange={(e) => handleToggle(e.target.checked)}
       />
-      <Box
-        sx={{
-          mt: { xs: "40px", sm: "80px" },
-          width: "100%",
-          maxWidth: "800px",
-        }}
-      >
-        <Typography
-          variant="h4"
+      {data ? (
+        <Box
           sx={{
-            color: "#000000",
-            fontSize: { xs: "18px", sm: "23px" },
-            fontWeight: 700,
-            lineHeight: { xs: "22px", sm: "28px" },
-            textAlign: "center",
-            mb: { xs: 2, sm: 3 },
+            mt: { xs: "40px", sm: "80px" },
+            width: "100%",
+            maxWidth: "800px",
           }}
         >
-          History
-        </Typography>
-        <Box>
-          <TableContainer
-            component={Paper}
-            elevation={0}
-            sx={{ bgcolor: "transparent" }}
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#000000",
+              fontSize: { xs: "18px", sm: "23px" },
+              fontWeight: 700,
+              lineHeight: { xs: "22px", sm: "28px" },
+              textAlign: "center",
+              mb: { xs: 2, sm: 3 },
+            }}
           >
-            <Table
-              size="small"
-              sx={{
-                "& .MuiTableCell-root": {
-                  "@media (min-width: 600px)": {
-                    padding: "16px 16px 16px 0",
-                  },
-                },
-              }}
+            History
+          </Typography>
+          <Box>
+            <TableContainer
+              component={Paper}
+              elevation={0}
+              sx={{ bgcolor: "transparent" }}
             >
-              <TableBody>
-                {data.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      borderBottom: "1px solid #CBD5E1",
-                    }}
-                  >
-                    <TableCell
+              <Table
+                size="small"
+                sx={{
+                  "& .MuiTableCell-root": {
+                    "@media (min-width: 600px)": {
+                      padding: "16px 16px 16px 0",
+                    },
+                  },
+                }}
+              >
+                <TableBody>
+                  {data.map((row) => (
+                    <TableRow
+                      key={row.id}
                       sx={{
-                        pl: 0,
-                        borderBottom: "none",
-                        py: { xs: 1.5, sm: 2 },
-                        width: { xs: "30%", sm: "40%" },
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        borderBottom: "1px solid #CBD5E1",
                       }}
                     >
-                      <Typography
+                      <TableCell
                         sx={{
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          lineHeight: "20px",
-                          color: "#000000",
+                          pl: 0,
+                          borderBottom: "none",
+                          py: { xs: 1.5, sm: 2 },
+                          width: { xs: "30%", sm: "40%" },
                         }}
                       >
-                        {row.AgentId}
-                      </Typography>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderBottom: "none",
-                        py: { xs: 1.5, sm: 2 },
-                        width: { xs: "40%", sm: "35%" },
-                      }}
-                    >
-                      <Typography
-                        color="#000000"
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            lineHeight: "20px",
+                            color: "#000000",
+                          }}
+                        >
+                          {row.AgentId}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
                         sx={{
-                          fontSize: "14px",
-                          display: { xs: "block", sm: "block" },
-                          fontWeight: 400,
-                          lineHeight: "17px",
+                          borderBottom: "none",
+                          py: { xs: 1.5, sm: 2 },
+                          width: { xs: "40%", sm: "35%" },
                         }}
                       >
-                        <Box sx={{ display: { xs: "block", sm: "none" } }}>
-                          {row.FormTimeStamp.split(" ")[0]}
-                        </Box>
-                        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                          {moment(row.FormTimeStamp).format("DD-MM-YYYY HH:mm")}
-                        </Box>
-                      </Typography>
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{
-                        pr: 0,
-                        borderBottom: "none",
-                        py: { xs: 1.5, sm: 2 },
-                        width: { xs: "30%", sm: "25%" },
-                      }}
-                    >
-                      <StatusBadge status={row.IsFormOpen} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                        <Typography
+                          color="#000000"
+                          sx={{
+                            fontSize: "14px",
+                            display: { xs: "block", sm: "block" },
+                            fontWeight: 400,
+                            lineHeight: "17px",
+                          }}
+                        >
+                          <Box sx={{ display: { xs: "block", sm: "none" } }}>
+                            {row.FormTimeStamp.split(" ")[0]}
+                          </Box>
+                          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                            {moment(row.FormTimeStamp).format(
+                              "DD-MM-YYYY HH:mm"
+                            )}
+                          </Box>
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          pr: 0,
+                          borderBottom: "none",
+                          py: { xs: 1.5, sm: 2 },
+                          width: { xs: "30%", sm: "25%" },
+                        }}
+                      >
+                        <StatusBadge status={row.IsFormOpen} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
-      </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Typography>There is no data</Typography>
+        </Box>
+      )}
     </Box>
   );
 };
