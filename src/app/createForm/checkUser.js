@@ -18,6 +18,7 @@ export default function CheckUser({ onUserCheck, userRole }) {
   const [hasPermissionThisMonth, sethasPermissionThisMonth] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { currentUser } = useUser();
 
   useEffect(() => {
