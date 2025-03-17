@@ -314,9 +314,8 @@ const CustomerListPage = () => {
             <CircularProgress />
           </Box>
         ) : editHistory ? (
-          <Typography>Hi</Typography>
+          <EditHistory historyData={editHistory.data} />
         ) : (
-          // <EditHistory historyData={editHistory} />
           <Box
             sx={{
               display: "flex",
