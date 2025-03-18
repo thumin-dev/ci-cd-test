@@ -211,6 +211,7 @@ CREATE TABLE Fundraiser (
     FundraiserEmail VARCHAR(255) UNIQUE NOT NULL,
     FundraiserLogo VARCHAR(255),
 	BaseCountryID INT, -- Fundraiser's base country
+    FundraiserCentralID INT, -- Fundraiser's central id from central database
     FOREIGN KEY (BaseCountryID) REFERENCES BaseCountry(BaseCountryID) ON DELETE SET NULL
 );
 
