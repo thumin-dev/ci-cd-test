@@ -215,6 +215,7 @@ CREATE TABLE Fundraiser (
 );
 
 CREATE TABLE Fundraiser_AcceptedCurrencies (
+    FundraiserAcceptedCurrencyID INT PRIMARY KEY AUTO_INCREMENT,
     FundraiserID INT,
     CurrencyID INT,
     PRIMARY KEY (FundraiserID, CurrencyID),
