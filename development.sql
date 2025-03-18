@@ -219,7 +219,6 @@ CREATE TABLE Fundraiser_AcceptedCurrencies (
     FundraiserAcceptedCurrencyID INT PRIMARY KEY AUTO_INCREMENT,
     FundraiserID INT,
     CurrencyID INT,
-    PRIMARY KEY (FundraiserID, CurrencyID),
     FOREIGN KEY (FundraiserID) REFERENCES Fundraiser(FundraiserID) ON DELETE CASCADE,
     FOREIGN KEY (CurrencyID) REFERENCES Currency(CurrencyID) ON DELETE CASCADE
 );
