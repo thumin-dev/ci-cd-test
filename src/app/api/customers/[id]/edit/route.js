@@ -14,7 +14,7 @@ async function CreatelogEditHistory(agentId, customerId, field, oldValue, newVal
     throw new Error("Failed to log edit history");
   }
 }
-export async function fetchCustomerValues(customerId) {
+async function fetchCustomerValues(customerId) {
     const query = `
     SELECT * FROM Customer where CustomerId = ?
     `;
@@ -28,7 +28,7 @@ export async function fetchCustomerValues(customerId) {
 }
 }
 
-export async function UpdateCustomerField(customerId, field, newValue) {
+async function UpdateCustomerField(customerId, field, newValue) {
  
 const query = `UPDATE Customer SET ${field} = ? WHERE CustomerId = ?`;
 const values = [ newValue, customerId];
