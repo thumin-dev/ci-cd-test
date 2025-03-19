@@ -28,9 +28,7 @@ import Divider from "@mui/material/Divider";
 import { signOut } from "aws-amplify/auth";
 import { useUser } from "../context/UserContext";
 
-
 import { useRouter, usePathname } from "next/navigation";
-
 
 const drawerWidth = 250; // Full-width drawer
 const miniDrawerWidth = 80; // Mini sidebar width
@@ -40,13 +38,11 @@ const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { setUser, currentUser } = useUser();
-  
 
   // Show a loading state if user is undefined
   if (!currentUser) {
-     // console.log("User from Sidebar: ", currentUser.UserRole);
+    // console.log("User from Sidebar: ", currentUser.UserRole);
     return <p>Loading...</p>;
-  
   }
 
   // Role-Based Sidebar Navigation
@@ -99,6 +95,11 @@ const Sidebar = () => {
         text: "Customers List",
         icon: <PeopleAltOutlinedIcon />,
         path: "/customerlist",
+      },
+      {
+        text: "Fundraisers",
+        icon: <FlagIcon />,
+        path: "/fundraisers/create",
       },
     ],
     "Payment Processor": [
