@@ -7,7 +7,32 @@ async function CreateMinimumAmount(CurrencyId, Amount) {
     const values = [CurrencyId, Amount];
 
     try {
-        return await db.query(query, values);
+        const result = await db(query, values);
+        const createdId = result.insertId;
+
+        const fetchQuery = `
+            SELECT
+                *
+            FROM
+                MinimumAmount
+            JOIN
+                Currency
+            ON
+                MinimumAmount.CurrencyId = Currency.CurrencyId
+            WHERE
+                MinimumAmount.MinimumAmountId = ?
+        `;
+
+        const [createdData] = await db(fetchQuery, [createdId]);
+
+        return createdData.map(row => ({
+            MinimumAmountId: row.MinimumAmountId,
+            Currency: {
+                CurrencyId: row.CurrencyId,
+                CurrencyCode: row.CurrencyCode,
+            },
+            Amount: row.Amount
+        }));
     } catch (error) {
         throw new Error("[DB] Error creating minimum amount");
     }
@@ -15,10 +40,28 @@ async function CreateMinimumAmount(CurrencyId, Amount) {
 
 // Get All Query
 async function GetMinimumAmount() {
-    const query = `SELECT * FROM MinimumAmount`;
+    const query = `
+        SELECT
+            *
+        FROM
+            MinimumAmount
+        JOIN
+            Currency
+        ON
+            MinimumAmount.CurrencyId = Currency.CurrencyId
+    `;
 
     try {
-        return await db.query(query);
+        const results = await db(query);
+
+        return results.map(row => ({
+            MinimumAmountId: row.MinimumAmountId,
+            Currency: {
+                CurrencyId: row.CurrencyId,
+                CurrencyCode: row.CurrencyCode,
+            },
+            Amount: row.Amount
+        }));
     } catch (error) {
         throw new Error("[DB] Error getting minimum amount");
     }
@@ -27,14 +70,16 @@ async function GetMinimumAmount() {
 // Create API
 export async function POST(req) {
     try {
-        const { CurrencyId, Amount } = req.body;
+        const reqBody = await req.json();
+        const { CurrencyId, Amount } = reqBody;
 
-        const requiredFields = [CurrencyId, Amount];
-        const missingFields = requiredFields.filter((field) => !field);
+        const missingFields = ["CurrencyId", "Amount"].filter(
+            (field) => reqBody[field] == null
+        );
 
         if (missingFields.length) {
             return NextResponse.json(
-                { message: "Missing required fields" },
+                { message: `Missing required fields: ${missingFields.join(", ")}` },
                 { status: 400 }
             );
         }
@@ -43,21 +88,20 @@ export async function POST(req) {
         return NextResponse.json({ data }, { status: 201 });
     } catch (error) {
         return NextResponse.json(
-            { message: "Cannot create minimum amount" },
+            { message: "Cannot create minimum amount"},
             { status: 500 }
         );
     }
 }
 
 // Get All API
-export async function GET(req) {
+export async function GET() {
     try {
         const data = await GetMinimumAmount();
-        
         return NextResponse.json({ data }, { status: 200 });
     } catch (error) {
         return NextResponse.json(
-            { message: "Cannot get minimum amount" },
+            { message: "Cannot get minimum amount"},
             { status: 500 }
         );
     }
