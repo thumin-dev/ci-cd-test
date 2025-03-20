@@ -105,6 +105,7 @@ async function InsertTransactionLog(transactionId, agentId) {
     return;
   }
 }
+
 async function InsertFormStatus(transactionId) {
   const query = `INSERT INTO FormStatus (TransactionID, TransactionStatusID) VALUES (?, ?)`;
   const values = [transactionId, 1];
@@ -126,6 +127,58 @@ async function maxHopeFuelID() {
   return result[0]["maxHopeFuelID"];
 }
 
+// get currency by wallet ID
+async function getCurrencyByWalletId(walletId) {
+  console.log("Wallet ID: ", walletId);
+  const query = `
+    SELECT 
+      C.CurrencyId, C.CurrencyCode
+    FROM 
+      Wallet AS W
+    JOIN 
+      Currency AS C 
+    ON
+      W.CurrencyId = C.CurrencyId
+    WHERE
+      W.WalletId = ?;
+  `;
+
+  const values = [walletId];
+
+  try {
+    const result = await db(query, values);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    throw new Error("[DB] Error getting currency by wallet ID");
+  }
+}
+
+// get exchange rate by currency ID
+async function getExchangeRateByCurrencyId(currencyId) {
+  console.log("Currency ID: ", currencyId);
+  const query = `
+    SELECT
+      *
+    FROM
+      ExchangeRates
+    WHERE
+      CurrencyId = ?;
+  `;
+
+  const values = [currencyId];
+
+  try {
+    const result = await db(query, values);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    throw new Error("[DB] Error getting exchange rate by currency ID");
+  }
+}
+
+function convertCurrency(amount, exchangeRate) {
+  return amount / exchangeRate;
+}
+
 export async function POST(req) {
   try {
     if (!req.body) {
@@ -135,7 +188,7 @@ export async function POST(req) {
       );
     }
     let json = await req.json();
-    console.log(json);
+    // console.log(json);
 
     let {
       customerName,
@@ -150,6 +203,33 @@ export async function POST(req) {
       walletId,
       screenShot,
     } = json;
+
+    // Fetch currency by wallet ID
+    const currency = await getCurrencyByWalletId(walletId);
+
+    if (!currency) {
+      return NextResponse.json({ error: "Currency not found" }, { status: 404 });
+    }
+
+    if (currency.CurrencyCode !== "MMK" || currency.CurrencyCode !== "THB" || currency.CurrencyCode !== "USD") {
+      // Fetch exchange rate
+      const exchangeRateData = await getExchangeRateByCurrencyId(currency.CurrencyId);
+
+      if (!exchangeRateData) {
+        return NextResponse.json({ error: "Exchange rate not found" }, { status: 404 });
+      }
+
+      const convertedAmount = convertCurrency(amount, exchangeRateData.ExchangeRate);
+
+      const minimumAmount = month * 20;
+
+      if (convertedAmount < minimumAmount) {
+        return NextResponse.json(
+        { error: `Amount is less than the required minimum of ${minimumAmount} USD for ${month} month(s)` },
+        { status: 400 }
+        );
+      }
+    }
 
     month = parseInt(month);
 
@@ -197,8 +277,8 @@ export async function POST(req) {
      INSERT INTO Transactions   
     (CustomerID, Amount,  SupportRegionID, WalletID, TransactionDate, NoteID, Month,HopeFuelID) 
       VALUES (?, ?, ?, ?,  ? , ?, ?, ?)
-
     `;
+
     const values = [
       customerId,
       amount,
