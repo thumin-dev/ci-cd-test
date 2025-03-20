@@ -40,8 +40,8 @@ async function UpdateMinimumAmount(Id, Amount) {
     const values = [Amount, Id];
 
     try {
-        const [result] = await db(query, values);
-        return { affectedRows: result.affectedRows };
+        const result = await db(query, values);
+        return result.affectedRows > 0 ? { Id, Amount } : null;
     } catch (error) {
         throw new Error("[DB] Error updating minimum amount");
     }
@@ -53,8 +53,8 @@ async function DeleteMinimumAmount(Id) {
     const values = [Id];
 
     try {
-        const [result] = await db(query, values);
-        return { affectedRows: result.affectedRows };
+        const result = await db(query, values);
+        return result.affectedRows > 0;
     } catch (error) {
         throw new Error("[DB] Error deleting minimum amount");
     }
@@ -73,16 +73,13 @@ export async function GET(req, { params }) {
 }
 
 // Update API
-export async function PUT(req) {
+export async function PUT(req, { params }) {
     try {
-        const id = req.nextUrl.searchParams.get("id");
-        if (!id) return NextResponse.json({ message: "ID is required" }, { status: 400 });
-
         const { Amount } = await req.json();
         if (Amount == null) return NextResponse.json({ message: "Amount is required" }, { status: 400 });
 
-        const data = await UpdateMinimumAmount(id, Amount);
-        if (!data.affectedRows) return NextResponse.json({ message: "Not found" }, { status: 404 });
+        const data = await UpdateMinimumAmount(params.id, Amount);
+        if (!data) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
         return NextResponse.json({ message: "Updated successfully" }, { status: 200 });
     } catch (error) {
@@ -91,13 +88,10 @@ export async function PUT(req) {
 }
 
 // Delete API
-export async function DELETE(req) {
+export async function DELETE(req, { params }) {
     try {
-        const id = req.nextUrl.searchParams.get("id"); // ✅ Fix: Get `id` from URL
-        if (!id) return NextResponse.json({ message: "ID is required" }, { status: 400 });
-
-        const data = await DeleteMinimumAmount(id);
-        if (!data.affectedRows) return NextResponse.json({ message: "Not found" }, { status: 404 });
+        const data = await DeleteMinimumAmount(params.id);
+        if (!data) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
         return NextResponse.json({ message: "Deleted successfully" }, { status: 200 });
     } catch (error) {

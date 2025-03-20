@@ -25,14 +25,14 @@ async function CreateMinimumAmount(CurrencyId, Amount) {
 
         const [createdData] = await db(fetchQuery, [createdId]);
 
-        return createdData.map(row => ({
-            MinimumAmountId: row.MinimumAmountId,
+        return {
+            MinimumAmountId: createdData.MinimumAmountId,
             Currency: {
-                CurrencyId: row.CurrencyId,
-                CurrencyCode: row.CurrencyCode,
+                CurrencyId: createdData.CurrencyId,
+                CurrencyCode: createdData.CurrencyCode,
             },
-            Amount: row.Amount
-        }));
+            Amount: createdData.Amount
+        };
     } catch (error) {
         throw new Error("[DB] Error creating minimum amount");
     }
