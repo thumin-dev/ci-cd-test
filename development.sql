@@ -241,3 +241,27 @@ CREATE TABLE Fundraiser_ContactLinks (
     FOREIGN KEY (FundraiserID) REFERENCES Fundraiser(FundraiserID) ON DELETE CASCADE
 );
 
+-- Create Exchange Rate table
+CREATE TABLE ExchangeRates (
+    ExchangeRateId INT AUTO_INCREMENT PRIMARY KEY,
+    BaseCountryId INT NOT NULL,
+    CurrencyId INT NOT NULL,
+    ExchangeRate DECIMAL(12,5) NOT NULL,
+    CreateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Define Foreign Key Constraint
+    CONSTRAINT fk_currency FOREIGN KEY (CurrencyId) REFERENCES Currency(CurrencyId) ON DELETE CASCADE,
+    CONSTRAINT fk_basecountry FOREIGN KEY (BaseCountryId) REFERENCES BaseCountry(BaseCountryID) ON DELETE CASCADE
+);
+
+-- Create Table for Minimum Amount
+CREATE TABLE MinimumAmount (
+    MinimumAmountId INT AUTO_INCREMENT PRIMARY KEY,
+    CurrencyId INT NOT NULL,
+    Amount DECIMAL(12,2) NOT NULL,
+    CreateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (CurrencyId) REFERENCES Currency(CurrencyId) ON DELETE CASCADE
+);
