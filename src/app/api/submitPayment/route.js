@@ -175,8 +175,73 @@ async function getExchangeRateByCurrencyId(currencyId) {
   }
 }
 
+async function getMinimumAmountByCurrencyId(currencyId) {
+  const query = `
+    SELECT
+      *
+    FROM
+      MinimumAmount
+    WHERE
+      CurrencyId = ?;
+  `;
+
+  const values = [currencyId];
+
+  try {
+    const result = await db(query, values);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    throw new Error("[DB] Error getting minimum amount by currency ID");
+  }
+}
+
+async function getMinimumAmountByUSD() {
+  const query = `
+    SELECT
+      Amount 
+    FROM
+      MinimumAmount 
+    WHERE
+      CurrencyId = (SELECT CurrencyId FROM Currency WHERE CurrencyCode = 'USD')
+    LIMIT 1;
+  `;
+
+  try {
+    const result = await db(query);
+    return result.length > 0 ? result[0].Amount : 0;
+  } catch (error) {
+    throw new Error("[DB] Error getting USD minimum amount");
+  }
+}
+
 function convertCurrency(amount, exchangeRate) {
   return amount / exchangeRate;
+}
+
+async function checkMinimumAmount(amount, month, currencyId, currencyCode) {
+  let minimumAmountData = await getMinimumAmountByCurrencyId(currencyId);
+
+  if (!minimumAmountData) {
+    const usdMinimumAmount = await getMinimumAmountByUSD();
+    
+    minimumAmountData = { Amount: usdMinimumAmount }; // Use USD minimum amount
+  }
+
+  const minimumAmountByMonth = minimumAmountData.Amount * month;
+
+  // If currency is NOT MMK, THB, or USD, convert amount to USD before comparison
+  if (currencyCode !== "MMK" && currencyCode !== "THB" && currencyCode !== "USD") {
+    const exchangeRateData = await getExchangeRateByCurrencyId(currencyId);
+    
+    if (!exchangeRateData) {
+      throw new Error("Exchange rate data not found");
+    }
+
+    const convertedAmount = convertCurrency(amount, exchangeRateData.ExchangeRate);
+    return convertedAmount >= minimumAmountByMonth;
+  }
+
+  return amount >= minimumAmountByMonth;
 }
 
 export async function POST(req) {
@@ -211,24 +276,14 @@ export async function POST(req) {
       return NextResponse.json({ error: "Currency not found" }, { status: 404 });
     }
 
-    if (currency.CurrencyCode !== "MMK" || currency.CurrencyCode !== "THB" || currency.CurrencyCode !== "USD") {
-      // Fetch exchange rate
-      const exchangeRateData = await getExchangeRateByCurrencyId(currency.CurrencyId);
+    // Check if the amount is above the minimum requirement
+    const isAmountValid = await checkMinimumAmount(amount, month, currency.CurrencyId, currency.CurrencyCode);
 
-      if (!exchangeRateData) {
-        return NextResponse.json({ error: "Exchange rate not found" }, { status: 404 });
-      }
-
-      const convertedAmount = convertCurrency(amount, exchangeRateData.ExchangeRate);
-
-      const minimumAmount = month * 20;
-
-      if (convertedAmount < minimumAmount) {
-        return NextResponse.json(
-        { error: `Amount is less than the required minimum of ${minimumAmount} USD for ${month} month(s)` },
+    if (!isAmountValid) {
+      return NextResponse.json(
+        { error: `Amount is less than the required minimum ${currency.CurrencyCode} for ${month} month(s).` },
         { status: 400 }
-        );
-      }
+      );
     }
 
     month = parseInt(month);

@@ -146,6 +146,7 @@ const CreateForm = ({ userInfo, setloading }) => {
       setMinAmountError(true);
     }
 
+    setMinAmountError(false);
     setFiles([]);
     setSubmitted(true);
   };
