@@ -81,7 +81,7 @@ export async function PUT(req, { params }) {
         const data = await UpdateMinimumAmount(params.id, Amount);
         if (!data) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
-        return NextResponse.json({ message: "Updated successfully" }, { status: 200 });
+        return NextResponse.json({ message: "Minimum Amount Updated successfully" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Cannot update minimum amount" }, { status: 500 });
     }
@@ -93,7 +93,7 @@ export async function DELETE(req, { params }) {
         const data = await DeleteMinimumAmount(params.id);
         if (!data) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
-        return NextResponse.json({ message: "Deleted successfully" }, { status: 200 });
+        return NextResponse.json({ message: "Minimum Amount Deleted successfully" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Cannot delete minimum amount" }, { status: 500 });
     }
