@@ -45,11 +45,11 @@ async function CreateExchangeRate(BaseCountryId, CurrencyId, ExchangeRate) {
         // map the data into object
         return {
             ExchangeRateId: createdData.ExchangeRateId,
-            BaseCountryId: {
+            BaseCountry: {
                 BaseCountryId: createdData.BaseCountryId,
                 BaseCountryName: createdData.BaseCountryName,
             },
-            CurrencyId: {
+            Currency: {
                 CurrencyId: createdData.CurrencyId,
                 CurrencyCode: createdData.CurrencyCode,
             },
@@ -85,11 +85,11 @@ async function GetExchangeRates(page = 1, limit = 10) {
         // map the data into object
         return results.map(row => ({
             ExchangeRateId: row.ExchangeRateId,
-            BaseCountryId: {
+            BaseCountry: {
                 BaseCountryId: row.BaseCountryId,
                 BaseCountryName: row.BaseCountryName,
             },
-            CurrencyId: {
+            Currency: {
                 CurrencyId: row.CurrencyId,
                 CurrencyCode: row.CurrencyCode,
             },

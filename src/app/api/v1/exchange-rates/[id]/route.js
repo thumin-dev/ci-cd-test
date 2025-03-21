@@ -22,11 +22,11 @@ async function GetExchangeRateById(id) {
         // map the data into object
         return result.map(row => ({
             ExchangeRateId: row.ExchangeRateId,
-            BaseCountryId: {
+            BaseCountry: {
                 BaseCountryId: row.BaseCountryId,
                 BaseCountryName: row.BaseCountryName,
             },
-            CurrencyId: {
+            Currency: {
                 CurrencyId: row.CurrencyId,
                 CurrencyCode: row.CurrencyCode,
             },
