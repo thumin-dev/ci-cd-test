@@ -74,7 +74,7 @@ export default async function createFormSubmit(event, currency, supportRegion ,f
   };
   
   let answ = await fetch("/api/submitPayment/", requestOptions);
-  
+
   if (!answ.ok) {
     // console.error(`Error: ${answ.status} - ${answ.statusText}`);
     if (answ.status === 400) {

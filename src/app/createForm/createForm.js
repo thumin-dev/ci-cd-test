@@ -144,11 +144,11 @@ const CreateForm = ({ userInfo, setloading }) => {
 
     if (res.status === 400) {
       setMinAmountError(true);
+    } else {
+      setMinAmountError(false);
+      setFiles([]);
+      setSubmitted(true);
     }
-
-    setMinAmountError(false);
-    setFiles([]);
-    setSubmitted(true);
   };
 
   return (
@@ -183,7 +183,7 @@ const CreateForm = ({ userInfo, setloading }) => {
       />
 
       {minAmountError && (
-        <Alert severity="error">
+        <Alert severity="error" key={minAmountError}>
           {"The amount entered does not meet the minimum donation requirement of USD 20 (or equivalent in the selected currency) per month. Please adjust your amount or duration."}
         </Alert>
       )}
