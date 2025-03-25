@@ -35,6 +35,10 @@ const FundraisingForm = () => {
       FundraiserLogo: "",
       NewCountry: "",
       AcceptedCurrencies: [],
+      FacebookLink: "",
+      TelegramLink: "",
+      OtherLink1: "",
+      OtherLink2: "",
     },
   });
   const handleClose = () => router.back();
@@ -151,6 +155,9 @@ const FundraisingForm = () => {
           <Grid item xs={6}>
             <BaseCountry control={control} />
           </Grid>
+          <Grid item xs={12}>
+            <AcceptedCurrency control={control} errors={errors} />
+          </Grid>
 
           <Grid item xs={12}>
             <TextField
@@ -163,10 +170,46 @@ const FundraisingForm = () => {
               helperText={errors.FundraiserEmail?.message}
             />
           </Grid>
-          <Grid item xs={12}>
-            <AcceptedCurrency control={control} errors={errors} />
+          <Grid item xs={6}>
+            <TextField
+              label="Facebook Link"
+              id="FacebookLink"
+              fullWidth
+              {...register("FacebookLink")}
+              error={!!errors.FacebookLink}
+              helperText={errors.FacebookLink?.message}
+            />
           </Grid>
-
+          <Grid item xs={6}>
+            <TextField
+              label="Telegram Link"
+              id="TelegramLink"
+              fullWidth
+              {...register("TelegramLink")}
+              error={!!errors.TelegramLink}
+              helperText={errors.TelegramLink?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Other Link 1"
+              id="OtherLink1"
+              fullWidth
+              {...register("OtherLink1")}
+              error={!!errors.OtherLink1}
+              helperText={errors.OtherLink1?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Other Link 2"
+              id="OtherLink2"
+              fullWidth
+              {...register("OtherLink2")}
+              error={!!errors.OtherLink2}
+              helperText={errors.OtherLink2?.message}
+            />
+          </Grid>
           <Grid item xs={6}>
             <Button
               fullWidth
