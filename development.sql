@@ -248,10 +248,10 @@ CREATE TABLE Fundraiser_ContactLinks (
 );
 
 --data for Platform Table
-Insert into Platform(PlatformID,PlatformName)
-Values(1,"Facebook"),
-(2,"Telegram"),
-(3,"Others");
+-- Insert into Platform(PlatformID,PlatformName)
+-- Values(1,"Facebook"),
+-- (2,"Telegram"),
+-- (3,"Others");
 
 -- Create Exchange Rate table
 CREATE TABLE ExchangeRates (
