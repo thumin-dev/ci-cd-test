@@ -3,9 +3,10 @@
 import { Avatar, Box, Card, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const FundraiserCard = ({ fundraiser }) => {
+const FundraiserCard = ({ fundraiser, onClick }) => {
   return (
     <Card
+      onClick={() => onClick(fundraiser.id)}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -15,6 +16,9 @@ const FundraiserCard = ({ fundraiser }) => {
         backgroundColor: "white",
         minWidth: 298,
         height: 98,
+        ":hover": {
+          cursor: "pointer",
+        },
       }}
     >
       <Avatar
