@@ -6,6 +6,7 @@ import React from "react";
 const FundraiserCard = ({ fundraiser, onClick }) => {
   return (
     <Card
+      key={fundraiser.FundraiserID}
       onClick={() => onClick(fundraiser.id)}
       sx={{
         display: "flex",
@@ -22,7 +23,7 @@ const FundraiserCard = ({ fundraiser, onClick }) => {
       }}
     >
       <Avatar
-        src="https://www.google.com/imgres?q=image&imgurl=https%3A%2F%2Fhelpx.adobe.com%2Fcontent%2Fdam%2Fhelp%2Fen%2Fphotoshop%2Fusing%2Fconvert-color-image-black-white%2Fjcr_content%2Fmain-pars%2Fbefore_and_after%2Fimage-before%2FLandscape-Color.jpg&imgrefurl=https%3A%2F%2Fhelpx.adobe.com%2Fth_th%2Fphotoshop%2Fusing%2Fconvert-color-image-black-white.html&docid=JHNdH3GHMG45hM&tbnid=2DNOEjVi-CBaYM&vet=12ahUKEwiI4pOz-pKMAxWaU2wGHWLRL-IQM3oECHIQAA..i&w=1601&h=664&hcb=2&ved=2ahUKEwiI4pOz-pKMAxWaU2wGHWLRL-IQM3oECHIQAA"
+        src={fundraiser.FundraiserLogo}
         alt="Logo"
         sx={{
           width: 74,
@@ -36,12 +37,12 @@ const FundraiserCard = ({ fundraiser, onClick }) => {
           variant="subtitle1"
           sx={{ fontWeight: 600, color: "#0F172A", fontSize: 14 }}
         >
-          {fundraiser.name}
+          {fundraiser.FundraiserName}
         </Typography>
         <Typography sx={{ color: "#0F172A", fontSize: 14, fontWeight: 400 }}>
-          {fundraiser.id}
+          {fundraiser.FundraiserCentralID}
         </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 0.2 }}>
+        {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 0.2 }}>
           {fundraiser.tags.map((tag, index) => (
             <Typography
               key={index}
@@ -59,7 +60,7 @@ const FundraiserCard = ({ fundraiser, onClick }) => {
               {tag}
             </Typography>
           ))}
-        </Box>
+        </Box> */}
       </Box>
     </Card>
   );
