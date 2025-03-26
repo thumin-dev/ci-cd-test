@@ -40,12 +40,12 @@ const CustomInput = ({ type, options, value, onChange, error, helperText, readOn
             fontSize: "14px",
           },
         }}
-        value={value}
+        value={value ?? ""}
         onChange={onChange}
         {...props}
       >
-        {options?.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+        {options?.map((option, index) => (
+          <MenuItem key={option.value || index} value={option.value}>
             {option.label}
           </MenuItem>
         ))}
