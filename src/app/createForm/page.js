@@ -60,11 +60,11 @@ function CreateOrExtendPage() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Hope Member Registration Form
+          </Avatar> */}
+          <Typography component="h1" sx={{ fontSize: '23px' }} variant="h5" fontWeight="bold">
+            Customer Membership Registration
           </Typography>
           {loading ? (
             <Typography variant="body1">Loading...</Typography>

@@ -6,12 +6,16 @@ import {
   CircularProgress,
   TextField,
   Typography,
+  Modal,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import checkUserSubmit from "../utilites/checkUserSubmit";
 import { getCurrentUser } from "aws-amplify/auth";
 import { useUser } from "../context/UserContext";
 import ServiceUnavailable from "../UI/Components/ServiceUnavailable";
+import CustomButton from "../components/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function CheckUser({ onUserCheck, userRole }) {
   const [loading, setLoading] = useState(false);
@@ -20,6 +24,7 @@ export default function CheckUser({ onUserCheck, userRole }) {
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { currentUser } = useUser();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchFormStatus = async () => {
@@ -86,9 +91,11 @@ export default function CheckUser({ onUserCheck, userRole }) {
 
     if (!bool) {
       sethasPermissionThisMonth(bool);
+      setOpen(true);
       setLoading(bool);
       return;
     } else if (bool && user) {
+      setOpen(true);
       onUserCheck(user, true); // User exists, show ExtendForm
     } else if (!user) {
       // if user don't exist
@@ -105,35 +112,135 @@ export default function CheckUser({ onUserCheck, userRole }) {
   ) : (
     <>
       {isFormOpen ? (
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ width: 360, mx: "auto", mt: 4 }}
+        >
+          <Typography sx={{ fontSize: "12px" }}>
+            Name <span style={{ color: "red" }}>*</span>
+          </Typography>
           <TextField
-            autoFocus
-            margin="normal"
-            required
             fullWidth
+            variant="outlined"
+            placeholder="Mg Mg"
+            sx={{
+              mb: 2,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                height: "48px",
+              },
+              "& .MuiInputBase-input": {
+                height: "100%",
+                padding: "0px 0px 0px 12px",
+              },
+            }}
             name="name"
-            label="Name"
-            type="text"
             id="name"
-          />
-          <TextField
-            margin="normal"
+            type="text"
             required
-            fullWidth
-            name="email"
-            label="Email Address"
-            type="email"
-            id="email"
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
-            Check User
-          </Button>
+
+          <Typography sx={{ fontSize: "12px" }}>
+            Email <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="mgmg@gmail.com"
+            sx={{
+              mb: 4,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                height: "48px",
+              },
+              "& .MuiInputBase-input": {
+                height: "100%",
+                padding: "0px 0px 0px 12px",
+              },
+            }}
+            name="email"
+            id="email"
+            type="email"
+            required
+          />
+
+          <CustomButton
+            width={true}
+            variant="contained"
+            type="submit"
+            text="Check"
+            color="white"
+          />
         </Box>
       ) : (
         <ServiceUnavailable />
       )}
       {hasPermissionThisMonth == false && (
-        <h1>This user don't have permission this month anymore</h1>
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          aria-labelledby="error-modal"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 500,
+              bgcolor: "white",
+              borderRadius: "12px",
+              boxShadow: 24,
+              p: 4,
+              textAlign: "center",
+            }}
+          >
+            <Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>
+              Customer already existed.
+            </Typography>
+            <Typography sx={{ fontSize: "16px", mb: 3, fontWeight: "bold" }}>
+              Do you wish to extend his/her membership instead?
+            </Typography>
+
+            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+              <CustomButton
+                variant="outlined"
+                onClick={() => setOpen(false)}
+                text="Back"
+                icon={<ArrowBackIcon />}
+                sx={{
+                  borderColor: "#b71c1c",
+                  color: "#b71c1c",
+                  borderRadius: "25px",
+                  px: 3,
+                  "&:hover": {
+                    backgroundColor: "#fce8e6",
+                  },
+                  fontSize: "12px",
+                }}
+                type="button"
+              />
+
+              <CustomButton
+                variant="contained"
+                icon={<ArrowForwardIcon />}
+                text="Proceed to Membership Extension"
+                sx={{
+                  backgroundColor: "#b71c1c",
+                  color: "white",
+                  borderRadius: "25px",
+                  px: 3,
+                  "&:hover": {
+                    backgroundColor: "#9a0007",
+                  },
+                  fontSize: "12px",
+                }}
+                type="button"
+              />
+            </Box>
+          </Box>
+        </Modal>
       )}
     </>
   );
