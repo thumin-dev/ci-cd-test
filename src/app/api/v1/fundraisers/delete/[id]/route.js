@@ -22,21 +22,21 @@ export async function DELETE(req, { params }) {
 
     const deletedFundraiser = await DeleteFundraiserByFundraiserID(id);
     if (!deletedFundraiser) {
-      return NextResponse.json(
-        { message: "Fundraiser not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        status: 404,
+        message: "Fundraiser not found",
+      });
     }
 
-    return NextResponse.json(
-      { message: "Fundraiser deleted successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      status: 200,
+      message: "Fundraiser deleted successfully",
+    });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { message: "Error deleting fundraiser" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      status: 500,
+      message: "Error deleting fundraiser",
+    });
   }
 }
