@@ -45,6 +45,7 @@ const CreateForm = ({ userInfo, setloading }) => {
   const [btnDisable, setBtnDisable] = useState(true);
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
+  const [exchangeRate, setExchangeRate] = useState("")
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -114,6 +115,30 @@ const CreateForm = ({ userInfo, setloading }) => {
     setBtnDisable(Object.keys(errors).length > 0);
   }, [errors]);
 
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        if (currency != null) {
+          const response = await fetch(`/api/v1/exchange-rates/get-by-currency-id`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ currency }),
+          });
+  
+          const data = await response.json();
+          console.log("exchange rate data: ", data);
+          setExchangeRate(data.data?.ExchangeRate ?? 0);
+        }
+      } catch (error) {
+        console.error("Error fetching exchange rate: ", error);
+      }
+    };
+  
+    fetchExchangeRate();
+  }, [currency]);  
+
   // Handle File Upload
   const handleDrop = async (acceptedFiles) => {
     setIsUploading(true);
@@ -169,7 +194,6 @@ const CreateForm = ({ userInfo, setloading }) => {
     
     const res = createFormSubmit(
       event,
-      currency,
       supportRegion,
       files,
       userInfo,
@@ -244,7 +268,7 @@ const CreateForm = ({ userInfo, setloading }) => {
 
             {/* Amount Input */}
             <Box flex={3}>
-              <Typography sx={{ color: "green", textAlign: "right", fontSize: "12px", fontWeight: 600 }}>1 USD = 1.35 SGD</Typography>
+              <Typography sx={{ color: "green", textAlign: "right", fontSize: "12px", fontWeight: 600 }}>1 USD = { exchangeRate } { currency }</Typography>
               <CustomInput
                 type="text"
                 name="amount"
