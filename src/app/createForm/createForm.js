@@ -117,14 +117,10 @@ const CreateForm = ({ userInfo, setloading }) => {
   // Handle File Upload
   const handleDrop = async (acceptedFiles) => {
     setIsUploading(true);
-    setUploadProgress(0);
+    setUploadProgress("Start upload...");
+
     setUploadedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-
-    for (let i = 0; i <= 100; i += 10) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      setUploadProgress(i);
-    }
-
+    
     if (acceptedFiles.length > 0) {
       setErrors((prev) => ({ ...prev, files: "" }));
     }
