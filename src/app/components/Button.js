@@ -1,27 +1,37 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
 import { Button } from "@mui/material";
 
 const CustomButton = ({
+  width,
+  variant,
   onClick,
-  text = "Create New",
+  text,
   icon = null,
-  color = "red",
+  color,
+  fontWeight,
+  type,
+  disabled = false,
 }) => {
   return (
     <Button
-      variant="outlined"
-      startIcon={icon ? icon : null} 
+      fullWidth={width ? width : false}
+      variant={variant ? variant : "outlined"}
+      startIcon={icon ? icon : null}
       onClick={onClick}
+      type={type ? type : "button"}
+      disabled={disabled}
       sx={{
         color: color,
-        borderColor: color,
+        borderColor: disabled ? "#ccc" : color,
+        backgroundColor: disabled ? "#ccc" : color,
         borderRadius: "24px",
         padding: "8px 16px",
         textTransform: "none",
-        fontWeight: "bold",
+        fontWeight: fontWeight ? fontWeight : "bold",
         "&:hover": {
-          backgroundColor: `${color}20`, 
+          backgroundColor: `${color}20`,
           borderColor: color,
         },
       }}
