@@ -7,10 +7,13 @@ import { Box, Button, Grid, TextField, Typography ,Alert} from "@mui/material";
 import { LogoUpload } from "./LogoUpload";
 import { FundraisingSchema } from "../schema";
 import BaseCountry from "./BaseCountry";
+import { useRouter } from "next/navigation";
+import AcceptedCurrency from "./AcceptedCurrency";
 
 
 
 const FundraisingForm = () => {
+  const router = useRouter();
   
   const [logoFile, setLogoFile] = useState(null);
   const [Completed, setCompleted] = useState(false);
@@ -27,12 +30,18 @@ const FundraisingForm = () => {
     defaultValues: {
       FundraiserName: "",
       FundraiserEmail: "",
+      FundraiserCentralID: null,
       BaseCountryName: "",
       FundraiserLogo: "",
       NewCountry: "",
+      AcceptedCurrencies: [],
+      FacebookLink: "",
+      TelegramLink: "",
+      OtherLink1: "",
+      OtherLink2: "",
     },
   });
-
+  const handleClose = () => router.back();
   const onSubmit = async (data) => {
 
     if (data.BaseCountryName === "other" && data.NewCountry) {
@@ -40,11 +49,9 @@ const FundraisingForm = () => {
       delete data.NewCountry;
     }
 
-    //console.log("Form Submitted:", data);
-
     try{
       //send data to the server
-      const response = await fetch("/api/v1/fundraisers", {
+      const response = await fetch("/api/v1/fundraisers/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +60,6 @@ const FundraisingForm = () => {
         body: JSON.stringify(data),
       });
       const result = await response.json();
-      //console.log("Server Response:", result);
       if (response.ok && result) {
         reset();
         setLogoFile(null);
@@ -93,7 +99,7 @@ const FundraisingForm = () => {
     >
       <Box component="form" onSubmit={handleSubmit(onSubmit, onError)}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sx={{ textAlign: "center" }}>
+          <Grid item xs={4} sx={{ textAlign: "center", marginX: "auto" }}>
             <LogoUpload
               logoFile={logoFile}
               setLogoFile={(url) => {
@@ -110,6 +116,7 @@ const FundraisingForm = () => {
 
           <Grid item xs={12}>
             <TextField
+              required
               label="Fundraiser Name"
               fullWidth
               {...register("FundraiserName")}
@@ -117,13 +124,44 @@ const FundraisingForm = () => {
               helperText={errors.FundraiserName?.message}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              type="number"
+              required
+              label="Fundraiser ID"
+              variant="outlined"
+              fullWidth
+              {...register("FundraiserCentralID" ,{ valueAsNumber: true })}
+              error={!!errors.FundraiserCentralID}
+              helperText={errors.FundraiserCentralID?.message}
+              InputProps={{
+                inputProps: { min: 1 },
+                sx: {
+                  // Hide the arrows in Chrome, Safari, Edge
+                  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                    {
+                      WebkitAppearance: "none",
+                      margin: 0,
+                    },
+                  // Hide arrows in Firefox
+                  "& input[type=number]": {
+                    MozAppearance: "textfield",
+                  },
+                },
+              }}
+            />
+          </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <BaseCountry control={control} />
+          </Grid>
+          <Grid item xs={12}>
+            <AcceptedCurrency control={control} errors={errors} />
           </Grid>
 
           <Grid item xs={12}>
             <TextField
+              required
               label="Email"
               type="email"
               fullWidth
@@ -132,15 +170,53 @@ const FundraisingForm = () => {
               helperText={errors.FundraiserEmail?.message}
             />
           </Grid>
-
+          <Grid item xs={6}>
+            <TextField
+              label="Facebook Link"
+              id="FacebookLink"
+              fullWidth
+              {...register("FacebookLink")}
+              error={!!errors.FacebookLink}
+              helperText={errors.FacebookLink?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Telegram Link"
+              id="TelegramLink"
+              fullWidth
+              {...register("TelegramLink")}
+              error={!!errors.TelegramLink}
+              helperText={errors.TelegramLink?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Other Link 1"
+              id="OtherLink1"
+              fullWidth
+              {...register("OtherLink1")}
+              error={!!errors.OtherLink1}
+              helperText={errors.OtherLink1?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Other Link 2"
+              id="OtherLink2"
+              fullWidth
+              {...register("OtherLink2")}
+              error={!!errors.OtherLink2}
+              helperText={errors.OtherLink2?.message}
+            />
+          </Grid>
           <Grid item xs={6}>
             <Button
               fullWidth
               variant="outlined"
               color="secondary"
               onClick={() => {
-                reset();
-                setLogoFile(null);
+                handleClose();
               }}
             >
               Cancel

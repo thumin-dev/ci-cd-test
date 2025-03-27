@@ -19,6 +19,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ToggleOnOutlinedIcon from "@mui/icons-material/ToggleOnOutlined";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -28,9 +29,7 @@ import Divider from "@mui/material/Divider";
 import { signOut } from "aws-amplify/auth";
 import { useUser } from "../context/UserContext";
 
-
 import { useRouter, usePathname } from "next/navigation";
-
 
 const drawerWidth = 250; // Full-width drawer
 const miniDrawerWidth = 80; // Mini sidebar width
@@ -40,13 +39,11 @@ const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { setUser, currentUser } = useUser();
-  
 
   // Show a loading state if user is undefined
   if (!currentUser) {
-     // console.log("User from Sidebar: ", currentUser.UserRole);
+    // console.log("User from Sidebar: ", currentUser.UserRole);
     return <p>Loading...</p>;
-  
   }
 
   // Role-Based Sidebar Navigation
@@ -69,9 +66,9 @@ const Sidebar = () => {
       // },
       { text: "ငွေစစ်ဆေးခြင်း", icon: <AttachMoneyIcon />, path: "/entryForm" },
       {
-        text: "ဖောင်အဖွင့်အပိတ်",
-        icon: <ToggleOnOutlinedIcon />,
-        path: "/formopenclose",
+        text: "Admin Panel",
+        icon: <ManageAccountsIcon />,
+        path: "/admin-panel",
       },
       {
         text: "HOPEID List",
@@ -99,6 +96,11 @@ const Sidebar = () => {
         text: "Customers List",
         icon: <PeopleAltOutlinedIcon />,
         path: "/customerlist",
+      },
+      {
+        text: "Fundraisers",
+        icon: <FlagIcon />,
+        path: "/fundraisers/",
       },
     ],
     "Payment Processor": [

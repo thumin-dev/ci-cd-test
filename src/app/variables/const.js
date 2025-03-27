@@ -505,3 +505,42 @@ export const HISTORY_DATA = [
     status: "Form Opened",
   },
 ];
+
+export const FUNDRAISER_DATA = [
+  {
+    name: "Starbucks Coffee",
+    id: "12345678",
+    tags: ["POS", "THE MAIL", "USD"],
+    logo: "/starbucks-logo.png", // Replace with actual image paths
+  },
+  {
+    name: "BMW",
+    id: "12345678",
+    tags: ["LUXURY", "BY", "THE MAIL", "USD"],
+    logo: "/bmw-logo.png",
+  },
+  {
+    name: "Apple",
+    id: "12345678",
+    tags: ["RETAIL", "THE MAIL", "USD"],
+    logo: "/apple-logo.png",
+  },
+  {
+    name: "Google",
+    id: "12345678",
+    tags: ["TECH", "THE MAIL", "USD"],
+    logo: "/google-logo.png",
+  },
+  {
+    name: "Mercedes",
+    id: "34343434",
+    tags: ["TECH", "THE MAIL", "USD"],
+    logo: "/google-logo.png",
+  },
+  {
+    name: "Tesla",
+    id: "433434",
+    tags: ["TECH", "THE MAIL", "USD"],
+    logo: "/google-logo.png",
+  },
+];

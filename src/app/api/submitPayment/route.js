@@ -3,6 +3,13 @@ import db from "../../utilites/db";
 import calculateExpireDate from "../../utilites/calculateExpireDate";
 import { max } from "date-fns";
 import moment from "moment-timezone";
+
+const minimumAmounts = [
+  { currencyCode: "USD", amount: 20 },
+  { currencyCode: "MMK", amount: 30000 },
+  { currencyCode: "THB", amount: 300 },
+];
+
 //Insert Into Customer Table
 async function InsertCustomer(
   customerName,
@@ -175,43 +182,51 @@ async function getExchangeRateByCurrencyId(currencyId) {
   }
 }
 
-async function getMinimumAmountByCurrencyId(currencyId) {
-  const query = `
-    SELECT
-      *
-    FROM
-      MinimumAmount
-    WHERE
-      CurrencyId = ?;
-  `;
+// async function getMinimumAmountByCurrencyId(currencyId) {
+//   const query = `
+//     SELECT
+//       *
+//     FROM
+//       MinimumAmount
+//     WHERE
+//       CurrencyId = ?;
+//   `;
 
-  const values = [currencyId];
+//   const values = [currencyId];
 
-  try {
-    const result = await db(query, values);
-    return result.length > 0 ? result[0] : null;
-  } catch (error) {
-    throw new Error("[DB] Error getting minimum amount by currency ID");
-  }
-}
+//   try {
+//     const result = await db(query, values);
+//     return result.length > 0 ? result[0] : null;
+//   } catch (error) {
+//     throw new Error("[DB] Error getting minimum amount by currency ID");
+//   }
+// }
 
-async function getMinimumAmountByUSD() {
-  const query = `
-    SELECT
-      Amount 
-    FROM
-      MinimumAmount 
-    WHERE
-      CurrencyId = (SELECT CurrencyId FROM Currency WHERE CurrencyCode = 'USD')
-    LIMIT 1;
-  `;
+// async function getMinimumAmountByUSD() {
+//   const query = `
+//     SELECT
+//       Amount 
+//     FROM
+//       MinimumAmount 
+//     WHERE
+//       CurrencyId = (SELECT CurrencyId FROM Currency WHERE CurrencyCode = 'USD')
+//     LIMIT 1;
+//   `;
 
-  try {
-    const result = await db(query);
-    return result.length > 0 ? result[0].Amount : 0;
-  } catch (error) {
-    throw new Error("[DB] Error getting USD minimum amount");
-  }
+//   try {
+//     const result = await db(query);
+//     return result.length > 0 ? result[0].Amount : 0;
+//   } catch (error) {
+//     throw new Error("[DB] Error getting USD minimum amount");
+//   }
+// }
+
+function getMinimumAmountByCurrencyCode(currencyCode) {
+  const minimumAmount = minimumAmounts.find(
+    (item) => item.currencyCode === currencyCode
+  );
+
+  return minimumAmount ? minimumAmount.amount : 20;
 }
 
 function convertCurrency(amount, exchangeRate) {
@@ -219,15 +234,11 @@ function convertCurrency(amount, exchangeRate) {
 }
 
 async function checkMinimumAmount(amount, month, currencyId, currencyCode) {
-  let minimumAmountData = await getMinimumAmountByCurrencyId(currencyId);
+  let minimumAmountData = getMinimumAmountByCurrencyCode(currencyCode);
 
-  if (!minimumAmountData) {
-    const usdMinimumAmount = await getMinimumAmountByUSD();
-    
-    minimumAmountData = { Amount: usdMinimumAmount }; // Use USD minimum amount
-  }
+  const minimumAmountByMonth = minimumAmountData * month;
 
-  const minimumAmountByMonth = minimumAmountData.Amount * month;
+  console.log("Minimum amount by month: ", minimumAmountByMonth);
 
   // If currency is NOT MMK, THB, or USD, convert amount to USD before comparison
   if (currencyCode !== "MMK" && currencyCode !== "THB" && currencyCode !== "USD") {
