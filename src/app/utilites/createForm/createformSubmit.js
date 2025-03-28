@@ -2,7 +2,6 @@
 
 export default function createFormSubmit(
   event,
-  currency,
   supportRegion,
   files,
   userInfo,
