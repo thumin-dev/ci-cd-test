@@ -30,18 +30,25 @@ export async function POST(req) {
         const data = await GetExchangeRateByCurrency(payload.currency);
 
         if (!data) return NextResponse.json(
-            { message: "Not found" },
-            { status: 404 }
+            {
+                message: "Not found",
+                status: 404 
+            }
         );
 
         return NextResponse.json(
             { data: data[0] },
-            { status: 200 }
+            {
+                message: "Fetch exchange rate successfully.",
+                status: 200
+            }
         );
     } catch (error) {
         return NextResponse.json(
-            { message: "Cannot fetch exchange rate" },
-            { status: 500 }
+            {
+                message: "Cannot fetch exchange rate",
+                status: 500
+            }
         );
     }
 }
