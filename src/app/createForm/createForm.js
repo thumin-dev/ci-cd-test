@@ -14,7 +14,7 @@ import filehandler from "../utilites/createForm/fileHandler";
 import { useUser } from "../context/UserContext";
 import { useAgent } from "../context/AgentContext";
 
-import CustomDropzone from "../components/DropZone";
+import CustomDropzone from "../components/Dropzone";
 import CustomInput from "../components/Input";
 import CustomButton from "../components/Button";
 
