@@ -2,21 +2,37 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState,useMemo ,useEffect} from "react";
 import { Box, Button, Grid, TextField, Typography ,Alert} from "@mui/material";
 import { LogoUpload } from "./LogoUpload";
 import { FundraisingSchema } from "../schema";
 import BaseCountry from "./BaseCountry";
-import { useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import AcceptedCurrency from "./AcceptedCurrency";
 
 
-
-const FundraisingForm = () => {
+const FundraisingForm = ({defaultValues={}, onSubmitHandler}) => {
   const router = useRouter();
   
   const [logoFile, setLogoFile] = useState(null);
   const [Completed, setCompleted] = useState(false);
+  const initialValues = useMemo(
+    () => ({
+      FundraiserName: "",
+      FundraiserEmail: "",
+      FundraiserCentralID: null,
+      BaseCountryName: "",
+      FundraiserLogo:  "",
+      NewCountry: "",
+      AcceptedCurrencies: [],
+      FacebookLink: "",
+      TelegramLink: "",
+      OtherLink1: "",
+      OtherLink2: "",
+      ...defaultValues,
+    }),
+    [defaultValues]
+  );
   const {
     control,
     register,
@@ -27,23 +43,35 @@ const FundraisingForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(FundraisingSchema),
-    defaultValues: {
-      FundraiserName: "",
-      FundraiserEmail: "",
-      FundraiserCentralID: null,
-      BaseCountryName: "",
-      FundraiserLogo: "",
-      NewCountry: "",
-      AcceptedCurrencies: [],
-      FacebookLink: "",
-      TelegramLink: "",
-      OtherLink1: "",
-      OtherLink2: "",
-    },
+    defaultValues: initialValues,
   });
+
+ 
+useEffect(() => {
+  if (defaultValues?.FundraiserLogo) {
+    setLogoFile(defaultValues.FundraiserLogo);
+    setValue("FundraiserLogo", defaultValues.FundraiserLogo);
+  }
+}, [defaultValues, setValue]);
+
+
   const handleClose = () => router.back();
   const onSubmit = async (data) => {
+      if(onSubmitHandler){
+        try{
+          onSubmitHandler(data);
+          setCompleted(true);
+            setTimeout(() => {
+              setCompleted(false);
+            }, 5000);
+         
+        }catch(error){
+          console.log("Error:", error);
+          throw new Error("Failed to update fundraiser");
+        }
 
+        return ;
+      }
     if (data.BaseCountryName === "other" && data.NewCountry) {
       data.BaseCountryName = data.NewCountry.trim();
       delete data.NewCountry;
@@ -68,7 +96,6 @@ const FundraisingForm = () => {
          setTimeout(() => {
            setCompleted(false);
          }, 3000);
-        
       } else {
         setCompleted(false);
         throw new Error(result.message);
@@ -90,9 +117,8 @@ const FundraisingForm = () => {
   return (
     <Box
       sx={{
-        p: 4,
+        padding: 2,
         maxWidth: 600,
-        margin: "auto",
         bgcolor: "white",
         borderRadius: 3,
       }}
@@ -103,7 +129,7 @@ const FundraisingForm = () => {
             <LogoUpload
               logoFile={logoFile}
               setLogoFile={(url) => {
-                if (url.length === 0) {
+                if (!url) {
                   return;
                 }
                 setLogoFile(url);
@@ -131,7 +157,7 @@ const FundraisingForm = () => {
               label="Fundraiser ID"
               variant="outlined"
               fullWidth
-              {...register("FundraiserCentralID" ,{ valueAsNumber: true })}
+              {...register("FundraiserCentralID", { valueAsNumber: true })}
               error={!!errors.FundraiserCentralID}
               helperText={errors.FundraiserCentralID?.message}
               InputProps={{
@@ -224,7 +250,7 @@ const FundraisingForm = () => {
           </Grid>
           <Grid item xs={6}>
             <Button fullWidth variant="contained" color="primary" type="submit">
-              Create
+              {defaultValues ? "Save Changes" : "Create"}
             </Button>
           </Grid>
           {Completed && (
@@ -237,7 +263,9 @@ const FundraisingForm = () => {
                 marginX: "auto",
               }}
             >
-              Fundraiser created successfully!!
+              {onSubmitHandler
+                ? "Changes saved successfully!"
+                : "Fundraiser created successfully!"}
             </Alert>
           )}
         </Grid>

@@ -106,6 +106,9 @@ const FundraisingFormPage = () => {
     () => setOpenFundraiserDetailsModal((prev) => !prev),
     []
   );
+  const handleEdit = (id) => {
+      router.push(`/fundraisers/${id}/edit`);
+  }
 
   const handleOpenFundraiserDeleteModal = useCallback((id) => {
     setFundraiserID(id);
@@ -178,33 +181,39 @@ const FundraisingFormPage = () => {
         }}
       >
         {fundraisers.length > 0 ? (
-          <Container maxWidth="xl">
-            <Grid2
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-            >
-              {fundraisers.map((fundraiser, index) => (
-                <Grid2 xs={12} sm={6} md={3} lg={3} key={index}>
-                  <FundraiserCard
-                    fundraiser={fundraiser}
-                    onClick={handleOpenFundraiserDetailsModal}
-                  />
-                </Grid2>
-              ))}
-            </Grid2>
-          </Container>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography>There is no fundraisers!</Typography>
-          </Box>
-        )}
+  <Container maxWidth="xl">
+    <Grid2
+      container
+      spacing={{ xs: 2, md: 3 }}
+      columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
+    >
+      {fundraisers.map((fundraiser, index) => (
+        <Grid2 xs={12} sm={6} md={3} lg={3} key={index}>
+          <FundraiserCard
+            fundraiser={fundraiser}
+            onClick={handleOpenFundraiserDetailsModal}
+            onEdit={handleEdit} 
+          />
+        </Grid2>
+      ))}
+    </Grid2>
+  </Container>
+) : (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "300px",
+    }}
+  >
+    <Typography variant="h6" color="text.secondary">
+      There are no fundraisers!
+    </Typography>
+  </Box>
+)}
+
+
         <Modal
           open={openFundraiserDetailsModal}
           onClose={handleCloseFundraiserDetailsModal}
@@ -226,7 +235,11 @@ const FundraisingFormPage = () => {
             <FundraiserDetails
               fundraiserDetails={fundraiserDetails}
               onClose={handleCloseFundraiserDetailsModal}
+
+              onEdit={handleEdit}
+
               onDelete={handleOpenFundraiserDeleteModal}
+
             />
           )}
         </Modal>
