@@ -11,20 +11,26 @@ import {
   Button,
   CircularProgress,
   Container,
+  Divider,
   Grid2,
+  InputAdornment,
   Modal,
   Paper,
   Snackbar,
+  TextField,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import SearchIcon from "@mui/icons-material/Search";
 import FundraiserDetails from "./components/FundraiserDetails";
 import CustomButton from "../components/Button";
 
 const FundraisingFormPage = () => {
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const [fundraisers, setFundraisers] = useState([]);
+  const [filteredFundraisers, setFilteredFundraisers] = useState([]);
   const [fundraiserDetails, setFundraiserDetails] = useState(null);
   const [fundraiserID, setFundraiserID] = useState(null);
   const [fetchFundraiserLoading, setFetchFundraiserLoading] = useState(false);
@@ -40,6 +46,26 @@ const FundraisingFormPage = () => {
   useEffect(() => {
     getAllFundraisers();
   }, []);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredFundraisers(fundraisers);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = fundraisers.filter((fundraiser) => {
+      const nameMatch =
+        typeof fundraiser.FundraiserName === "string" &&
+        fundraiser.FundraiserName.toLowerCase().includes(query);
+
+      const idMatch = String(fundraiser.FundraiserCentralID).includes(query);
+
+      return nameMatch || idMatch;
+    });
+
+    setFilteredFundraisers(filtered);
+  }, [searchQuery, fundraisers]);
 
   const getAllFundraisers = useCallback(async () => {
     if (fetchFundraiserLoading) return;
@@ -57,7 +83,9 @@ const FundraisingFormPage = () => {
       }
 
       const data = await response.json();
-      setFundraisers(data.fundraisers || []);
+      const fundraisersList = data.fundraisers || [];
+      setFundraisers(fundraisersList);
+      setFilteredFundraisers(fundraisersList);
     } catch (error) {
       console.log(error);
     } finally {
@@ -107,8 +135,8 @@ const FundraisingFormPage = () => {
     []
   );
   const handleEdit = (id) => {
-      router.push(`/fundraisers/${id}/edit`);
-  }
+    router.push(`/fundraisers/${id}/edit`);
+  };
 
   const handleOpenFundraiserDeleteModal = useCallback((id) => {
     setFundraiserID(id);
@@ -155,6 +183,10 @@ const FundraisingFormPage = () => {
     setOpenSnackbar(false);
   };
 
+  const handleSearchQueryChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   if (fetchFundraiserLoading) {
     return (
       <Box
@@ -167,52 +199,84 @@ const FundraisingFormPage = () => {
 
   return (
     <>
-      <CustomButton
-        onClick={() => {
-          router.push("/fundraisers/create", { scroll: false });
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 3,
         }}
-        text="Create New"
-        icon={<AddCircleOutlineOutlinedIcon />}
-      />
+      >
+        <Typography sx={{ color: "#000000", fontSize: 34, fontWeight: 600 }}>
+          Fundraiser
+        </Typography>
+        <TextField
+          name="search"
+          placeholder="Search"
+          sx={{ width: 642 }}
+          value={searchQuery}
+          onChange={handleSearchQueryChange}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            sx: {
+              borderRadius: 20,
+              height: 40,
+            },
+          }}
+        />
+        <CustomButton
+          onClick={() => {
+            router.push("/fundraisers/create", { scroll: false });
+          }}
+          text="Create New"
+          icon={<AddCircleOutlineOutlinedIcon />}
+        />
+      </Box>
+      <Divider sx={{ mb: 3, mt: 1, backgroundColor: "#E2E8F0", height: 3 }} />
       <Box
         sx={{
           flexGrow: 1,
-          pt: 2,
         }}
       >
-        {fundraisers.length > 0 ? (
-  <Container maxWidth="xl">
-    <Grid2
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-    >
-      {fundraisers.map((fundraiser, index) => (
-        <Grid2 xs={12} sm={6} md={3} lg={3} key={index}>
-          <FundraiserCard
-            fundraiser={fundraiser}
-            onClick={handleOpenFundraiserDetailsModal}
-            onEdit={handleEdit} 
-          />
-        </Grid2>
-      ))}
-    </Grid2>
-  </Container>
-) : (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "300px",
-    }}
-  >
-    <Typography variant="h6" color="text.secondary">
-      There are no fundraisers!
-    </Typography>
-  </Box>
-)}
-
+        {filteredFundraisers.length > 0 ? (
+          <Container maxWidth="xl">
+            <Grid2
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
+            >
+              {filteredFundraisers.map((fundraiser, index) => (
+                <Grid2 xs={12} sm={6} md={3} lg={3} key={index}>
+                  <FundraiserCard
+                    fundraiser={fundraiser}
+                    onClick={handleOpenFundraiserDetailsModal}
+                    onEdit={handleEdit}
+                  />
+                </Grid2>
+              ))}
+            </Grid2>
+          </Container>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "300px",
+            }}
+          >
+            <Typography variant="h6" color="text.secondary">
+              {searchQuery
+                ? "No fundraisers match your search criteria!"
+                : "There are no fundraisers!"}
+            </Typography>
+          </Box>
+        )}
 
         <Modal
           open={openFundraiserDetailsModal}
@@ -235,11 +299,8 @@ const FundraisingFormPage = () => {
             <FundraiserDetails
               fundraiserDetails={fundraiserDetails}
               onClose={handleCloseFundraiserDetailsModal}
-
               onEdit={handleEdit}
-
               onDelete={handleOpenFundraiserDeleteModal}
-
             />
           )}
         </Modal>
