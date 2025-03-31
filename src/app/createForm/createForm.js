@@ -2,11 +2,9 @@
 import React, { useEffect, useState ,useCallback} from "react";
 import {
   Box,
-  Button,
   Typography,
   Select,
   MenuItem,
-  Modal
 } from "@mui/material";
 
 import createFormSubmit from "../utilites/createForm/createformSubmit";
@@ -19,9 +17,8 @@ import CustomInput from "../components/Input";
 import CustomButton from "../components/Button";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
-const CreateForm = ({ userInfo, setloading }) => {
+const CreateForm = ({ userInfo, setloading, onSuccess }) => {
   const user = useUser();
   const agent = useAgent();
 
@@ -44,7 +41,6 @@ const CreateForm = ({ userInfo, setloading }) => {
   const [currencies, setCurrencies] = useState([]);
   const [btnDisable, setBtnDisable] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [open, setOpen] = useState(false);
   const [exchangeRate, setExchangeRate] = useState("")
 
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -60,7 +56,7 @@ const CreateForm = ({ userInfo, setloading }) => {
   const [submitted, setSubmitted] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [minAmountError, setMinAmountError] = useState(false);
+  const [minAmountError, setMinAmountError] = useState("");
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -128,7 +124,6 @@ const CreateForm = ({ userInfo, setloading }) => {
           });
   
           const data = await response.json();
-          console.log("exchange rate data: ", data);
           setExchangeRate(data.data?.ExchangeRate ?? 0);
         }
       } catch (error) {
@@ -137,23 +132,32 @@ const CreateForm = ({ userInfo, setloading }) => {
     };
   
     fetchExchangeRate();
-  }, [currency]);  
+  }, [currency]);
 
-  // Handle File Upload
-  const handleDrop = async (acceptedFiles) => {
-    setIsUploading(true);
-    setUploadProgress("Start upload...");
+  useEffect(() => {
+    const fetchCheckMinAmount = async () => {
+      try {
+        const response = await fetch ("/api/v1/minimum-amount/check-minimum-amount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount,
+            month,
+            walletId
+          }),
+        });
 
-    setUploadedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-    
-    if (acceptedFiles.length > 0) {
-      setErrors((prev) => ({ ...prev, files: "" }));
+        const data = await response.json();
+        setMinAmountError(data.error);
+      } catch (error) {
+        console.error("Error fetching check minimum amount: ", error);
+      }
     }
-  
-    await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
-    setFileExist(acceptedFiles.length > 0);
-    setIsUploading(false);
-  };
+
+    fetchCheckMinAmount();
+  }, [walletId, amount, month])
 
   // Form Validation
   const validateForm = useCallback(() => {
@@ -185,41 +189,65 @@ const CreateForm = ({ userInfo, setloading }) => {
     return Object.keys(validationErrors).length === 0;
   }, [currency, walletId, files]);
 
+  // Handle File Upload
+  const handleDrop = async (acceptedFiles) => {
+    setIsUploading(true);
+    setUploadProgress("Start upload...");
+
+    setUploadedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+    
+    if (acceptedFiles.length > 0) {
+      setErrors((prev) => ({ ...prev, files: "" }));
+    }
+  
+    await filehandler(acceptedFiles, setFiles, files, setUploadProgress);
+    setFileExist(acceptedFiles.length > 0);
+    setIsUploading(false);
+  };
+
   // form submission
-  // TODO: add error handling later
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!validateForm()) return;
-    
-    const res = createFormSubmit(
-      event,
-      supportRegion,
-      files,
-      userInfo,
-      setloading,
-      formFillingPerson,
-      setAmountValidate,
-      setMonthValidate,
-      setManyChatValidate,
-      fileExist,
-      setFileExist,
-      agent,
-      contactLink,
-      notes,
-      manyChatId,
-      walletId,
-      amount,
-      month
-    )
 
-    setSuccess(res.success);
-    setOpen(res.success);
+    try {
+      const response = await createFormSubmit(
+        event,
+        supportRegion,
+        files,
+        userInfo,
+        setloading,
+        formFillingPerson,
+        setAmountValidate,
+        setMonthValidate,
+        setManyChatValidate,
+        fileExist,
+        setFileExist,
+        agent,
+        contactLink,
+        notes,
+        manyChatId,
+        walletId,
+        amount,
+        month
+      )
+
+      if (response.success) {
+        setSuccess(true);
+        onSuccess?.();
+      } else {
+        setSuccess(false);
+      }
+
+    } catch (error) {
+      console.error("form submitted error: ", error);
+    }
   }
 
   return (
     <Box component="form" onSubmit={(event) => handleSubmit(event)} display="flex" gap={4} sx={{ maxWidth: 900, mx: "auto", my: 4, p: 3 }}>
-      <Box display="flex" flexDirection="column" gap={2}>
+      <Box display="flex" flexDirection="column" gap={2} sx={{ maxWidth: 400 }}>
         <Box>
           {/* Name Input */}
           <Box flex={1}>
@@ -228,7 +256,7 @@ const CreateForm = ({ userInfo, setloading }) => {
               type="text"
               name="name"
               id="name"
-              placeholder="Ko Ko"
+              placeholder="Username"
               readOnly
               value={userInfo.name}
             />
@@ -241,7 +269,7 @@ const CreateForm = ({ userInfo, setloading }) => {
               type="email"
               name="email"
               id="email"
-              placeholder="koko@gmail.com"
+              placeholder="user@gmail.com"
               readOnly
               value={userInfo.email}
             />
@@ -303,6 +331,13 @@ const CreateForm = ({ userInfo, setloading }) => {
             <Box display="flex" gap={1} sx={{ color: "red" }}>
               <ErrorOutlineIcon fontSize="xs" />
               <Typography fontSize="12px">Amount should be a positive number and up to 2 decimal places.</Typography>
+            </Box>
+          }
+
+          {minAmountError &&
+            <Box display="flex" gap={1} sx={{ color: "red" }}>
+              <ErrorOutlineIcon fontSize="xs" />
+              <Typography fontSize="12px">{minAmountError}</Typography>
             </Box>
           }
         </Box>
@@ -476,7 +511,10 @@ const CreateForm = ({ userInfo, setloading }) => {
         height="auto"
       >
         {/* Screenshot Upload */}
-        <Box>
+        <Box
+          fullwidth="true"
+          sx={{ maxWidth: 280 }}
+        >
           <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Screenshot <span style={{ color: "red" }}>*</span></Typography>
           <CustomDropzone handleDrop={handleDrop} uploadProgress={uploadProgress} />
           {errors.files &&
@@ -506,44 +544,6 @@ const CreateForm = ({ userInfo, setloading }) => {
           />
         </Box>
       </Box>
-      
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="success-modal"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 300,
-            bgcolor: "white",
-            borderRadius: "12px",
-            boxShadow: 24,
-            p: 4,
-            textAlign: "center",
-          }}
-        >
-          <TaskAltIcon sx={{ fontSize: "50px" }} />
-          <Typography sx={{ fontSize: "18px", fontWeight: "bold", mt: 2, mb: 2 }}>
-            Membership Registration Successful.
-          </Typography>
-
-          <CustomButton
-            width={false}
-            variant="contained"
-            type="button"
-            text="OK"
-            fontWeight="normal"
-            onClick={() => {
-              setOpen(false);
-              location.reload();
-            }}
-          />
-        </Box>
-      </Modal>
     </Box>
   );
 };

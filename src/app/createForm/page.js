@@ -7,7 +7,7 @@ import ExtendForm from "./extendForm";
 import ExtendOrNot from "./extendOrNot";
 import { UserProvider } from "../context/UserContext";
 import { AgentProvider } from "../context/AgentContext";
-import { Avatar, Typography, Box } from "@mui/material";
+import { Avatar, Typography, Box, Modal, Button } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import getAuthCurrentUser from "../utilites/getAuthCurrentUser";
 import { withAuthenticator } from "@aws-amplify/ui-react";
@@ -18,6 +18,7 @@ function CreateOrExtendPage() {
   const [showExtendOrNot, setShowExtendOrNot] = useState(false);
   const [showExtendForm, setShowExtendForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   // Fetch the current authenticated user and their role
   const [currentUser, setCurrentUser] = useState(null);
@@ -60,9 +61,6 @@ function CreateOrExtendPage() {
             alignItems: "center",
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
           <Typography component="h1" sx={{ fontSize: '23px' }} variant="h5" fontWeight="bold">
             Customer Membership Registration
           </Typography>
@@ -73,11 +71,52 @@ function CreateOrExtendPage() {
           ) : !showCreateForm && !showExtendForm ? (
             <CheckUser onUserCheck={handleUserCheck} userRole={userRole} />
           ) : showCreateForm ? (
-            <CreateForm userInfo={userInfo} setloading={setLoading} />
+            <CreateForm
+              userInfo={userInfo}
+              setloading={setLoading}
+              onSuccess={() => setIsSuccessModalOpen(true)}
+            />
           ) : (
             <ExtendForm userInfo={userInfo} setloading={setLoading} />
           )}
         </Box>
+
+        <Modal
+          open={isSuccessModalOpen}
+          onClose={() => setIsSuccessModalOpen(false)}
+          aria-labelledby="success-modal"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 300,
+              bgcolor: "white",
+              borderRadius: "12px",
+              boxShadow: 24,
+              p: 4,
+              textAlign: "center",
+            }}
+          >
+            <LockOutlinedIcon sx={{ fontSize: "50px", color: "green" }} />
+            <Typography sx={{ fontSize: "18px", fontWeight: "bold", mt: 2, mb: 2 }}>
+              Membership Registration Successful.
+            </Typography>
+
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => {
+                setIsSuccessModalOpen(false);
+                window.location.reload();
+              }}
+            >
+              OK
+            </Button>
+          </Box>
+        </Modal>
       </UserProvider>
     </AgentProvider>
   );

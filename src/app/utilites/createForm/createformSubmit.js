@@ -1,6 +1,6 @@
 // Desc: This file contains the function that is used to submit the form data to the database
 
-export default function createFormSubmit(
+export default async function createFormSubmit(
   event,
   supportRegion,
   files,
@@ -93,13 +93,31 @@ export default function createFormSubmit(
     redirect: "follow",
   };
   
-  // TODO: handle errors later
-  fetch("/api/submitPayment/", requestOptions);
-  
-  setloading(false);
+  try {
+    const response = await fetch("/api/submitPayment/", requestOptions);
 
-  return {
-    success: true,
-    status: 200,
-  };
+    const data = await response.json();
+
+    if (response.status == 400) {
+      return {
+        success: false,
+        status: 400,
+        errorMsg: data.error
+      }
+    }
+
+    setloading(false);
+
+    return {
+      success: true,
+      status: 200
+    }
+  } catch (error) {
+    console.error("Error submitting payment", error);
+
+    return {
+      success: false,
+      status: 500
+    }
+  }
 }
