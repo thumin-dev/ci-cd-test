@@ -253,6 +253,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
           <Box flex={1}>
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Name <span style={{ color: "red" }}>*</span></Typography>
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="text"
               name="name"
               id="name"
@@ -266,6 +269,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
           <Box flex={1}>
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Email <span style={{ color: "red" }}>*</span></Typography>
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="email"
               name="email"
               id="email"
@@ -282,6 +288,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
             <Box flex={1}>
                 <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Amount<span style={{ color: "red" }}>*</span></Typography>
                 <CustomInput
+                  mb={ 2 }
+                  width="100%"
+                  fullWidth={ true }
                   type="select"
                   name="currency"
                   id="currency"
@@ -298,6 +307,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
             <Box flex={3}>
               <Typography sx={{ color: "green", textAlign: "right", fontSize: "12px", fontWeight: 600 }}>1 USD = { exchangeRate } { currency }</Typography>
               <CustomInput
+                mb={ 2 }
+                width="100%"
+                fullWidth={ true }
                 type="text"
                 name="amount"
                 id="amount"
@@ -348,6 +360,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
             {/* <FormControl error={!!errors.wallet}> */}
               <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Wallet<span style={{ color: "red" }}>*</span></Typography>
               <CustomInput
+                mb={ 2 }
+                width="100%"
+                fullWidth={ true }
                 type="select"
                 name="wallet"
                 id="wallet"
@@ -369,6 +384,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Month (Duration) <span style={{ color: "red" }}>*</span></Typography>
             <Box display="flex" alignItems="center">
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="number"
               name="month"
               id="month"
@@ -400,6 +418,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
           <Box flex={1}>
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Support Region <span style={{ color: "red" }}>*</span></Typography>
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="select"
               name="supportRegion"
               id="supportRegion"
@@ -457,6 +478,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
           <Box flex={1}>
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>ManyChat ID <span style={{ color: "red" }}>*</span></Typography>
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="number"
               name="manychatId"
               id="manychatId"
@@ -479,6 +503,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
           <Box flex={1}>
             <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Contact Person Link</Typography>
             <CustomInput
+              mb={ 2 }
+              width="100%"
+              fullWidth={ true }
               type="text"
               name="contactLink"
               id="contactLink"
@@ -493,6 +520,9 @@ const CreateForm = ({ userInfo, setloading, onSuccess }) => {
         <Box>
           <Typography sx={{ fontSize: "12px", fontWeight: 600 }}>Note</Typography>
           <CustomInput
+            mb={ 2 }
+            width="100%"
+            fullWidth={ true }
             type="text"
             name="note"
             id="note"
