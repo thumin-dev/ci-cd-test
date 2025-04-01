@@ -3,9 +3,10 @@ import { TextField, Select, MenuItem, InputAdornment, IconButton } from "@mui/ma
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-const CustomInput = ({ type, options, value, onChange, error, helperText, readOnly, min, step, endAdornment, ...props }) => {
+const CustomInput = ({ mb, type, options, value, onChange, error, helperText, readOnly, min, step, endAdornment, width, ...props }) => {
   const commonStyles = {
-    mb: 2,
+    mb: mb ?? 0,
+    width: width ?? "",
     borderRadius: "12px",
     "& .MuiOutlinedInput-root": {
       borderRadius: "12px",
@@ -62,7 +63,7 @@ const CustomInput = ({ type, options, value, onChange, error, helperText, readOn
       onChange={onChange}
       error={error}
       helperText={helperText}
-      InputProps={{
+      slotProps={{
         readOnly: readOnly,
         min: min,
         step: step,
