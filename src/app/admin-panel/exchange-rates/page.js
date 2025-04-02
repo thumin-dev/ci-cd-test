@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Typography, TextField, Divider, Button, Paper, Box } from "@mui/material";
+import {
+    Typography,
+    Divider,
+    Button,
+    Paper,
+    Box
+} from "@mui/material";
+
+import CustomInput from "../../components/Input";
 
 export default function ExchangeRates() {
     const [rates, setRates] = useState([]);
@@ -95,24 +103,18 @@ export default function ExchangeRates() {
                                 <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                                     <Typography sx={{ flex: 1, fontWeight: "bold" }}>{item.BaseCountry.BaseCountryName}</Typography>
                                     <Typography sx={{ fontWeight: "bold", minWidth: "50px" }}>{item.Currency.CurrencyCode}</Typography>
-                                    {/* TODO: use custom input */}
-                                    <TextField
+                                    <CustomInput
+                                        size="small"
+                                        type="number"
+                                        name="leftExchangeRate"
+                                        id="leftExchangeRate"
+                                        width="20%"
                                         value={
                                             isEditing
                                                 ? editableRates[index]?.ExchangeRate ?? ""
                                                 : item.ExchangeRate ?? ""
                                         }
-                                        size="small"
-                                        variant="outlined"
-                                        sx={{
-                                            width: "20%",
-                                            ml: 1,
-                                        }}
-                                        slotProps={{
-                                            input: {
-                                                readOnly: !isEditing,
-                                            }
-                                        }}
+                                        readOnly={!isEditing}
                                         onChange={(e) => handleRateChange(index, e.target.value, "left")}
                                     />
                                 </Box>
@@ -124,30 +126,24 @@ export default function ExchangeRates() {
                         {/* Right Column */}
                         <Box sx={{ flex: 1 }}>
                             {rightColumn.map((item, index) => (
-                            <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                                <Typography sx={{ flex: 1, fontWeight: "bold" }}>{item.BaseCountry.BaseCountryName}</Typography>
-                                <Typography sx={{ fontWeight: "bold", minWidth: "50px" }}>{item.Currency.CurrencyCode}</Typography>
-                                {/* TODO: use custom input */}
-                                <TextField
-                                    value={
-                                        isEditing
-                                            ? editableRates[index]?.ExchangeRate ?? ""
-                                            : item.ExchangeRate ?? ""
-                                    }
-                                    size="small"
-                                    variant="outlined"
-                                    sx={{ 
-                                        width: "160px", 
-                                        ml: 1
-                                    }}
-                                    slotProps={{
-                                        input: {
-                                            readOnly: !isEditing,
+                                <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                                    <Typography sx={{ flex: 1, fontWeight: "bold" }}>{item.BaseCountry.BaseCountryName}</Typography>
+                                    <Typography sx={{ fontWeight: "bold", minWidth: "50px" }}>{item.Currency.CurrencyCode}</Typography>
+                                    <CustomInput
+                                        size="small"
+                                        type="number"
+                                        name="rightExchangeRate"
+                                        id="rightExchangeRate"
+                                        width="20%"
+                                        value={
+                                            isEditing
+                                                ? editableRates[index + half]?.ExchangeRate ?? ""
+                                                : item.ExchangeRate ?? ""
                                         }
-                                    }}
-                                    onChange={(e) => handleRateChange(index, e.target.value, "right")}
-                                />
-                            </Box>
+                                        readOnly={!isEditing}
+                                        onChange={(e) => handleRateChange(index, e.target.value, "right")}
+                                    />
+                                </Box>
                             ))}
                         </Box>
                     </Box>
