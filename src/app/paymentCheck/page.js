@@ -54,22 +54,23 @@ const PaymentTeam = () => {
 
   const [data, setData] = React.useState([]);
 
-  const rows = data.map((row) => {
-    return createData(
-      row["HopeFuelID"],
-      row["CurrencyCode"],
-      row["Amount"],
-      row["WalletName"],
-      row["Name"],
-      row["AWSID"],
-      row["Month"],
-      row["ScreenShots"],
-      row["ManyChatID"],
-      "Pending",
-      row["Email"],
-      "Confirm"
-    );
-  });
+  const rows = Array.isArray(data)
+    ? data.map((row) => {
+      return createData(
+        row["HopeFuelID"],
+        row["CurrencyCode"],
+        row["Amount"],
+        row["WalletName"],
+        row["Name"],
+        row["AWSID"],
+        row["Month"],
+        row["ScreenShots"] || [],
+        row["ManyChatID"],
+        "Pending",
+        row["Email"]
+      );
+    })
+    : [];
 
   const handleScreenShotClick = async (url) => {
     let tmpURLObj = url;
@@ -164,8 +165,8 @@ const PaymentTeam = () => {
     fetch("/api/transactions?paymentCheckStatus=0", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-        setData(result);
+        console.log(result.paymentData);
+        setData(result.paymentData);
       })
       .catch((error) => console.error(error));
   }, []);
