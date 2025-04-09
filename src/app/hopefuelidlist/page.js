@@ -78,7 +78,7 @@ const HopeFuelIdListPage = () => {
     },
     [debouncedSearch, page, hasMore, data]
   );
-  console.log("Data==>", data);
+
   const fetchDetails = async (hopeId) => {
     setLoadingDetails(true);
     setDetails(null);
