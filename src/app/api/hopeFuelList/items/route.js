@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import db from "../../../utilites/db";
 
-
 async function retrieveCurrentMonthHopeFuelCards(page, limit) {
   const offset = (page - 1) * limit;
 
@@ -61,13 +60,11 @@ async function retrieveCurrentMonthHopeFuelCards(page, limit) {
     LIMIT ?  OFFSET ?;
 `;
 
-
-
   try {
-    const values = [`${limit}`, `${offset}`];
-     
+    const values = [limit, offset];
+
     const result = await db(query, values);
-    
+
     return result.map((row) => ({
       ...row,
       ScreenShot:
@@ -81,7 +78,7 @@ async function retrieveCurrentMonthHopeFuelCards(page, limit) {
   }
 }
 export async function GET(req) {
-  const url = new URL(req.url); 
+  const url = new URL(req.url);
   const params = url.searchParams;
 
   const parsedPage = Number(params.get("page")) || 1;
