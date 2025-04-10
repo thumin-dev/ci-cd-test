@@ -11,9 +11,13 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  Modal,
+  Button
 } from "@mui/material";
 import moment from "moment-timezone";
 import React from "react";
+import { useState } from "react";
+import Checkbox from '@mui/material/Checkbox';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 160,
@@ -57,6 +61,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 const StatusBadge = ({ status }) => {
   const isOpen = status === 1;
+
   return (
     <Box
       sx={{
@@ -78,9 +83,21 @@ const StatusBadge = ({ status }) => {
 };
 
 const FormStatus = ({ isFormOpen, setIsFormOpen, data }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+
   const handleToggle = (value) => {
-    setIsFormOpen(value);
+    if (value == true) {
+      setShowModal(true);
+    } else {
+      setIsFormOpen(value);
+    }
   };
+
+  const handleFormOpenClose = () => {
+    setIsFormOpen(true);
+    setShowModal(false);
+  }
 
   return (
     <Box
@@ -94,6 +111,61 @@ const FormStatus = ({ isFormOpen, setIsFormOpen, data }) => {
         px: { xs: 2, sm: 3, md: 4 },
       }}
     >
+      {showModal && (
+        <Modal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          aria-labelledby="warning-modal"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 350,
+              bgcolor: "white",
+              borderRadius: "12px",
+              boxShadow: 24,
+              p: 4,
+              textAlign: "center",
+            }}
+          >
+            <Typography sx={{ fontSize: "18px", fontWeight: "bold", mt: 2, mb: 2 }}>
+              Have you updated currency exchange rates for this month?
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+              <Checkbox onClick={() => setIsChecked(!isChecked)}/>
+              <Typography>
+                Yes, I have updated already.
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                disabled={isChecked}
+                sx={{ bgcolor: "#FBBF24" }}
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                Not yet? Update Now
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                disabled={!isChecked}
+                onClick={() => {
+                  handleFormOpenClose();
+                }}
+              >
+                Proceed
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      )}
       <Typography
         variant="h6"
         sx={{
@@ -149,7 +221,7 @@ const FormStatus = ({ isFormOpen, setIsFormOpen, data }) => {
                 <TableBody>
                   {data.map((row) => (
                     <TableRow
-                      key={row.id}
+                      key={row.VisibilityStatusId}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                         borderBottom: "1px solid #CBD5E1",
