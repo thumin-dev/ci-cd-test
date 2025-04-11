@@ -6,7 +6,7 @@ import FormOpenClosePage from "../formopenclose/page";
 import ExchangeRates from "./exchange-rates/page";
 
 export default function AdminPanel() {
-    const [tabIndex, setTabIndex] = useState(1);
+    const [tabIndex, setTabIndex] = useState(0);
   
     return (
         <Container>
