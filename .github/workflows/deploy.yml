@@ -28,7 +28,7 @@ jobs:
             set -e  # Stop on first error
 
             echo "📁 Navigating to app folder..."
-            cd /home/ubuntu/your-app-folder
+            cd /home/ubuntu/ci-cd-test
 
             echo "🔄 Pulling latest code from master..."
             git pull origin master
