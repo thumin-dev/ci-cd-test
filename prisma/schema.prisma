@@ -10,7 +10,7 @@ datasource db {
 
 model agent {
   AgentId              Int                    @id @default(autoincrement())
-  AwsId                String?                @db.VarChar(255)
+  AwsId                String?                @db.VarChar(191)
   UserRoleId           Int?
   userrole             userrole?              @relation(fields: [UserRoleId], references: [UserRoleID], onDelete: Restrict, onUpdate: Restrict, map: "agent_ibfk_1")
   customer             customer[]
@@ -24,7 +24,7 @@ model agent {
 
 model basecountry {
   BaseCountryID   Int             @id @default(autoincrement())
-  BaseCountryName String          @unique(map: "BaseCountryName") @db.VarChar(255)
+  BaseCountryName String          @unique(map: "BaseCountryName") @db.VarChar(191)
   exchangerates   exchangerates[]
   fundraiser      fundraiser[]
 }
@@ -40,12 +40,12 @@ model currency {
 
 model customer {
   CustomerId        Int                 @id @default(autoincrement())
-  Name              String?             @db.VarChar(255)
-  Email             String?             @db.VarChar(255)
-  ManyChatId        String?             @db.VarChar(255)
+  Name              String?             @db.VarChar(191)
+  Email             String?             @db.VarChar(191)
+  ManyChatId        String?             @db.VarChar(191)
   ExpireDate        DateTime?           @db.Date
-  UserCountry       String?             @db.VarChar(255)
-  ContactLink       String?             @db.VarChar(255)
+  UserCountry       String?             @db.VarChar(191)
+  ContactLink       String?             @db.VarChar(191)
   AgentId           Int?
   CardID            Int?
   agent             agent?              @relation(fields: [AgentId], references: [AgentId], onDelete: Restrict, onUpdate: Restrict, map: "customer_ibfk_1")
@@ -60,8 +60,8 @@ model customerauditlogs {
   LogId        Int                            @id @default(autoincrement())
   AgentId      Int
   FieldChanged customerauditlogs_FieldChanged
-  OldValue     String?                        @db.VarChar(255)
-  NewValue     String?                        @db.VarChar(255)
+  OldValue     String?                        @db.VarChar(191)
+  NewValue     String?                        @db.VarChar(191)
   CustomerId   Int
   ChangeDate   DateTime                       @default(now()) @db.Timestamp(0)
   agent        agent                          @relation(fields: [AgentId], references: [AgentId], onDelete: Cascade, onUpdate: Restrict, map: "fk_agent")
@@ -108,9 +108,9 @@ model formvisibilitystatus {
 
 model fundraiser {
   FundraiserID                  Int                             @id @default(autoincrement())
-  FundraiserName                String                          @db.VarChar(255)
-  FundraiserEmail               String                          @unique(map: "FundraiserEmail") @db.VarChar(255)
-  FundraiserLogo                String?                         @db.VarChar(255)
+  FundraiserName                String                          @db.VarChar(191)
+  FundraiserEmail               String                          @unique(map: "FundraiserEmail") @db.VarChar(191)
+  FundraiserLogo                String?                         @db.VarChar(191)
   BaseCountryID                 Int?
   FundraiserCentralID           Int?
   basecountry                   basecountry?                    @relation(fields: [BaseCountryID], references: [BaseCountryID], onUpdate: Restrict, map: "fundraiser_ibfk_1")
@@ -135,7 +135,7 @@ model fundraiser_contactlinks {
   ContactID    Int         @id @default(autoincrement())
   FundraiserID Int?
   Platform     Int?
-  ContactURL   String      @db.VarChar(255)
+  ContactURL   String      @db.VarChar(191)
   fundraiser   fundraiser? @relation(fields: [FundraiserID], references: [FundraiserID], onDelete: Cascade, onUpdate: Restrict, map: "fundraiser_contactlinks_ibfk_1")
 
   @@index([FundraiserID], map: "FundraiserID")
@@ -143,7 +143,7 @@ model fundraiser_contactlinks {
 
 model manychat {
   ManyChatId     Int      @id @default(autoincrement())
-  ConversationId String   @db.VarChar(255)
+  ConversationId String   @db.VarChar(191)
   CustomerId     Int
   CreateAt       DateTime @default(now()) @db.Timestamp(0)
   UpdateAt       DateTime @default(now()) @db.Timestamp(0)
@@ -165,7 +165,7 @@ model minimumamount {
 
 model note {
   NoteID       Int            @id @default(autoincrement())
-  Note         String?        @db.VarChar(255)
+  Note         String?        @db.VarChar(191)
   Date         DateTime?      @db.Date
   AgentID      Int?
   agent        agent?         @relation(fields: [AgentID], references: [AgentId], onDelete: Restrict, onUpdate: Restrict, map: "note_ibfk_1")
@@ -182,7 +182,7 @@ model platform {
 model screenshot {
   ScreenShotID   Int           @id @default(autoincrement())
   TransactionID  Int?
-  ScreenShotLink String?       @db.VarChar(2048)
+  ScreenShotLink String?       @db.VarChar(191)
   transactions   transactions? @relation(fields: [TransactionID], references: [TransactionID], onDelete: Restrict, onUpdate: Restrict, map: "screenshot_ibfk_1")
 
   @@index([TransactionID], map: "TransactionID")
@@ -190,7 +190,7 @@ model screenshot {
 
 model supportregion {
   SupportRegionID Int            @id @default(autoincrement())
-  Region          String?        @db.VarChar(255)
+  Region          String?        @db.VarChar(191)
   transactions    transactions[]
 }
 
@@ -215,7 +215,7 @@ model transactions {
   PaymentCheck     Boolean?
   PaymentCheckTime DateTime           @default(now()) @db.Timestamp(0)
   NoteID           Int?
-  TransactionDate  DateTime           @default(dbgenerated("(0000-00-00 00:00:00)")) @db.Timestamp(0)
+  TransactionDate  DateTime           @default(now()) @db.Timestamp(0)
   PaymentDenied    Boolean?
   Month            Int?
   HopeFuelID       Int?
@@ -235,24 +235,31 @@ model transactions {
 
 model transactionstatus {
   TransactionStatusID Int          @id @default(autoincrement())
-  TransactionStatus   String       @db.VarChar(255)
+  TransactionStatus   String       @db.VarChar(191)
   formstatus          formstatus[]
 }
 
 model userrole {
   UserRoleID Int     @id @default(autoincrement())
-  UserRole   String? @db.VarChar(255)
+  UserRole   String? @db.VarChar(191)
   agent      agent[]
 }
 
 model wallet {
   WalletId     Int            @id @default(autoincrement())
   CurrencyId   Int?
-  WalletName   String?        @db.VarChar(255)
+  WalletName   String?        @db.VarChar(191)
   transactions transactions[]
   currency     currency?      @relation(fields: [CurrencyId], references: [CurrencyId], onDelete: Restrict, onUpdate: Restrict, map: "wallet_ibfk_1")
 
   @@index([CurrencyId], map: "CurrencyId")
+}
+
+model testing_new_table {
+  Id        Int      @id @default(autoincrement())
+  Name      String   @db.VarChar(191)
+  CreatedAt DateTime @default(now()) @db.Timestamp(0)
+  UpdatedAt DateTime @default(now()) @db.Timestamp(0)
 }
 
 enum customerauditlogs_FieldChanged {
