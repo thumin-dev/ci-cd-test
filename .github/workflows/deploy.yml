@@ -36,6 +36,9 @@ jobs:
             echo "📦 Installing dependencies..."
             npm install
 
+            echo "🧬 Running Prisma migration..."
+            npx prisma migrate dev --name init
+
             echo "🏗️ Building project..."
             npm run build
 
