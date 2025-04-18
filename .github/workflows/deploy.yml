@@ -22,7 +22,7 @@ jobs:
 
       - name: 🚀 SSH and deploy
         run: |
-          ssh -tt -o ServerAliveInterval=30 -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o ConnectTimeout=60 -tt -o ServerAliveInterval=30 -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
             echo "📁 Changing to app directory..."
@@ -32,7 +32,6 @@ jobs:
             git pull origin master
 
             echo "🧬 Running Prisma migrations..."
-            npx prisma generate
             npx prisma migrate deploy
 
             echo "✅ Deployment complete!"
