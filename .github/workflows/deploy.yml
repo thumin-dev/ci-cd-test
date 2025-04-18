@@ -16,24 +16,25 @@ jobs:
       - name: 🛠 Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          printf "%s\n" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          for i in {1..5}; do ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts && break || sleep 5; done
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: 🚀 SSH and deploy
         run: |
           ssh -tt -o ServerAliveInterval=30 -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
-
-            echo "📁 Changing to app directory..."
+            echo "📁 Navigating to app folder..."
             cd /home/ubuntu/ci-cd-test
 
             echo "🔄 Pulling latest changes..."
             git pull origin master
 
-            echo "🧬 Running Prisma migrations..."
+            echo "🧬 Generating Prisma client..."
             npx prisma generate
-            npx prisma migrate deploy
+
+            echo "📦 Deploying Prisma migrations..."
+            NODE_ENV=production npx prisma migrate deploy
 
             echo "✅ Deployment complete!"
           EOF
