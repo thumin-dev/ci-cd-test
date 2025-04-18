@@ -1,21 +1,19 @@
-import { Avatar, Box, Input,Typography } from "@mui/material";
-import { useState,useEffect } from "react";
+import { Avatar, Box, Input, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
 import fileHandler from "../../utilites/createForm/fileHandler";
 import getScreenShotUrl from "../../utilites/getScreenShotUrl";
 
-
-export const LogoUpload = ({logoFile, setLogoFile, errors, clearErrors}) => {
-
+export const LogoUpload = ({ logoFile, setLogoFile, errors, clearErrors }) => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [uploadProgress, setUploadProgress] = useState("");
 
-   useEffect(() => {
-     if (!logoFile) {
-       setLogoPreview(null); 
-     }else{
-       setLogoPreview(logoFile);
-     }
-   }, [logoFile]);
+  useEffect(() => {
+    if (!logoFile) {
+      setLogoPreview(null);
+    } else {
+      setLogoPreview(logoFile);
+    }
+  }, [logoFile]);
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -25,23 +23,27 @@ export const LogoUpload = ({logoFile, setLogoFile, errors, clearErrors}) => {
     setUploadProgress("Uploading...");
 
     //upload to s3
-    const uploadedUrl = await fileHandler([file], setLogoFile, [], setUploadProgress);
+    const uploadedUrl = await fileHandler(
+      [file],
+      setLogoFile,
+      [],
+      setUploadProgress
+    );
 
-    //preview the image 
+    //preview the image
     if (uploadedUrl?.length > 0) {
-        const signedUrl = await getScreenShotUrl(uploadedUrl[0].pathname);
-       // console.log("signedUrl:::=>", `${signedUrl.origin}${signedUrl.pathname}`);
-        const url = `${signedUrl.origin}${signedUrl.pathname}`;
+      const signedUrl = await getScreenShotUrl(uploadedUrl[0].pathname);
+      // console.log("signedUrl:::=>", `${signedUrl.origin}${signedUrl.pathname}`);
+      const url = `${signedUrl.origin}${signedUrl.pathname}`;
 
-        setLogoPreview(uploadedUrl[0].href); 
-        setLogoFile(url); 
-        setUploadProgress("")
-        clearErrors("FundraiserLogo");
-        } else {
-        setUploadProgress("Upload failed, please try again.");
-        }
+      setLogoPreview(uploadedUrl[0].href);
+      setLogoFile(url);
+      setUploadProgress("");
+      clearErrors("FundraiserLogo");
+    } else {
+      setUploadProgress("Upload failed, please try again.");
+    }
   };
-
 
   return (
     <Box
@@ -78,11 +80,10 @@ export const LogoUpload = ({logoFile, setLogoFile, errors, clearErrors}) => {
         inputProps={{ accept: "image/*" }}
         sx={{ display: "none" }} // Hide default file input
         onChange={handleFileChange}
-       
       />
-      {uploadProgress  && <p>{uploadProgress}</p>}
+      {uploadProgress && <p>{uploadProgress}</p>}
       {errors?.FundraiserLogo && (
-         <Typography color="error" sx={{ fontSize: "14px", fontWeight: "bold" }}>
+        <Typography color="error" sx={{ fontSize: "14px", fontWeight: "bold" }}>
           {errors.FundraiserLogo.message}
         </Typography>
       )}
