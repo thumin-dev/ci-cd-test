@@ -143,6 +143,11 @@ export type testing_new_table3 = $Result.DefaultSelection<Prisma.$testing_new_ta
  * 
  */
 export type testing_new_table4 = $Result.DefaultSelection<Prisma.$testing_new_table4Payload>
+/**
+ * Model testing_new_table5
+ * 
+ */
+export type testing_new_table5 = $Result.DefaultSelection<Prisma.$testing_new_table5Payload>
 
 /**
  * Enums
@@ -546,6 +551,16 @@ export class PrismaClient<
     * ```
     */
   get testing_new_table4(): Prisma.testing_new_table4Delegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.testing_new_table5`: Exposes CRUD operations for the **testing_new_table5** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Testing_new_table5s
+    * const testing_new_table5s = await prisma.testing_new_table5.findMany()
+    * ```
+    */
+  get testing_new_table5(): Prisma.testing_new_table5Delegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1011,7 +1026,8 @@ export namespace Prisma {
     testing_new_table: 'testing_new_table',
     testing_new_table2: 'testing_new_table2',
     testing_new_table3: 'testing_new_table3',
-    testing_new_table4: 'testing_new_table4'
+    testing_new_table4: 'testing_new_table4',
+    testing_new_table5: 'testing_new_table5'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1030,7 +1046,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "agent" | "basecountry" | "currency" | "customer" | "customerauditlogs" | "exchangerates" | "formstatus" | "formvisibilitystatus" | "fundraiser" | "fundraiser_acceptedcurrencies" | "fundraiser_contactlinks" | "manychat" | "minimumamount" | "note" | "platform" | "screenshot" | "supportregion" | "transactionagent" | "transactions" | "transactionstatus" | "userrole" | "wallet" | "testing_new_table" | "testing_new_table2" | "testing_new_table3" | "testing_new_table4"
+      modelProps: "agent" | "basecountry" | "currency" | "customer" | "customerauditlogs" | "exchangerates" | "formstatus" | "formvisibilitystatus" | "fundraiser" | "fundraiser_acceptedcurrencies" | "fundraiser_contactlinks" | "manychat" | "minimumamount" | "note" | "platform" | "screenshot" | "supportregion" | "transactionagent" | "transactions" | "transactionstatus" | "userrole" | "wallet" | "testing_new_table" | "testing_new_table2" | "testing_new_table3" | "testing_new_table4" | "testing_new_table5"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2750,6 +2766,72 @@ export namespace Prisma {
           }
         }
       }
+      testing_new_table5: {
+        payload: Prisma.$testing_new_table5Payload<ExtArgs>
+        fields: Prisma.testing_new_table5FieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.testing_new_table5FindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.testing_new_table5FindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          findFirst: {
+            args: Prisma.testing_new_table5FindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.testing_new_table5FindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          findMany: {
+            args: Prisma.testing_new_table5FindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>[]
+          }
+          create: {
+            args: Prisma.testing_new_table5CreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          createMany: {
+            args: Prisma.testing_new_table5CreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.testing_new_table5DeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          update: {
+            args: Prisma.testing_new_table5UpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          deleteMany: {
+            args: Prisma.testing_new_table5DeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.testing_new_table5UpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.testing_new_table5UpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$testing_new_table5Payload>
+          }
+          aggregate: {
+            args: Prisma.Testing_new_table5AggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTesting_new_table5>
+          }
+          groupBy: {
+            args: Prisma.testing_new_table5GroupByArgs<ExtArgs>
+            result: $Utils.Optional<Testing_new_table5GroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.testing_new_table5CountArgs<ExtArgs>
+            result: $Utils.Optional<Testing_new_table5CountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2860,6 +2942,7 @@ export namespace Prisma {
     testing_new_table2?: testing_new_table2Omit
     testing_new_table3?: testing_new_table3Omit
     testing_new_table4?: testing_new_table4Omit
+    testing_new_table5?: testing_new_table5Omit
   }
 
   /* Types for Logging */
@@ -29141,6 +29224,911 @@ export namespace Prisma {
 
 
   /**
+   * Model testing_new_table5
+   */
+
+  export type AggregateTesting_new_table5 = {
+    _count: Testing_new_table5CountAggregateOutputType | null
+    _avg: Testing_new_table5AvgAggregateOutputType | null
+    _sum: Testing_new_table5SumAggregateOutputType | null
+    _min: Testing_new_table5MinAggregateOutputType | null
+    _max: Testing_new_table5MaxAggregateOutputType | null
+  }
+
+  export type Testing_new_table5AvgAggregateOutputType = {
+    Id: number | null
+  }
+
+  export type Testing_new_table5SumAggregateOutputType = {
+    Id: number | null
+  }
+
+  export type Testing_new_table5MinAggregateOutputType = {
+    Id: number | null
+    Name: string | null
+    CreatedAt: Date | null
+    UpdatedAt: Date | null
+  }
+
+  export type Testing_new_table5MaxAggregateOutputType = {
+    Id: number | null
+    Name: string | null
+    CreatedAt: Date | null
+    UpdatedAt: Date | null
+  }
+
+  export type Testing_new_table5CountAggregateOutputType = {
+    Id: number
+    Name: number
+    CreatedAt: number
+    UpdatedAt: number
+    _all: number
+  }
+
+
+  export type Testing_new_table5AvgAggregateInputType = {
+    Id?: true
+  }
+
+  export type Testing_new_table5SumAggregateInputType = {
+    Id?: true
+  }
+
+  export type Testing_new_table5MinAggregateInputType = {
+    Id?: true
+    Name?: true
+    CreatedAt?: true
+    UpdatedAt?: true
+  }
+
+  export type Testing_new_table5MaxAggregateInputType = {
+    Id?: true
+    Name?: true
+    CreatedAt?: true
+    UpdatedAt?: true
+  }
+
+  export type Testing_new_table5CountAggregateInputType = {
+    Id?: true
+    Name?: true
+    CreatedAt?: true
+    UpdatedAt?: true
+    _all?: true
+  }
+
+  export type Testing_new_table5AggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which testing_new_table5 to aggregate.
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of testing_new_table5s to fetch.
+     */
+    orderBy?: testing_new_table5OrderByWithRelationInput | testing_new_table5OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: testing_new_table5WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` testing_new_table5s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` testing_new_table5s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned testing_new_table5s
+    **/
+    _count?: true | Testing_new_table5CountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Testing_new_table5AvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Testing_new_table5SumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Testing_new_table5MinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Testing_new_table5MaxAggregateInputType
+  }
+
+  export type GetTesting_new_table5AggregateType<T extends Testing_new_table5AggregateArgs> = {
+        [P in keyof T & keyof AggregateTesting_new_table5]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTesting_new_table5[P]>
+      : GetScalarType<T[P], AggregateTesting_new_table5[P]>
+  }
+
+
+
+
+  export type testing_new_table5GroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: testing_new_table5WhereInput
+    orderBy?: testing_new_table5OrderByWithAggregationInput | testing_new_table5OrderByWithAggregationInput[]
+    by: Testing_new_table5ScalarFieldEnum[] | Testing_new_table5ScalarFieldEnum
+    having?: testing_new_table5ScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Testing_new_table5CountAggregateInputType | true
+    _avg?: Testing_new_table5AvgAggregateInputType
+    _sum?: Testing_new_table5SumAggregateInputType
+    _min?: Testing_new_table5MinAggregateInputType
+    _max?: Testing_new_table5MaxAggregateInputType
+  }
+
+  export type Testing_new_table5GroupByOutputType = {
+    Id: number
+    Name: string
+    CreatedAt: Date
+    UpdatedAt: Date
+    _count: Testing_new_table5CountAggregateOutputType | null
+    _avg: Testing_new_table5AvgAggregateOutputType | null
+    _sum: Testing_new_table5SumAggregateOutputType | null
+    _min: Testing_new_table5MinAggregateOutputType | null
+    _max: Testing_new_table5MaxAggregateOutputType | null
+  }
+
+  type GetTesting_new_table5GroupByPayload<T extends testing_new_table5GroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Testing_new_table5GroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Testing_new_table5GroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Testing_new_table5GroupByOutputType[P]>
+            : GetScalarType<T[P], Testing_new_table5GroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type testing_new_table5Select<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    Id?: boolean
+    Name?: boolean
+    CreatedAt?: boolean
+    UpdatedAt?: boolean
+  }, ExtArgs["result"]["testing_new_table5"]>
+
+
+
+  export type testing_new_table5SelectScalar = {
+    Id?: boolean
+    Name?: boolean
+    CreatedAt?: boolean
+    UpdatedAt?: boolean
+  }
+
+  export type testing_new_table5Omit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"Id" | "Name" | "CreatedAt" | "UpdatedAt", ExtArgs["result"]["testing_new_table5"]>
+
+  export type $testing_new_table5Payload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "testing_new_table5"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      Id: number
+      Name: string
+      CreatedAt: Date
+      UpdatedAt: Date
+    }, ExtArgs["result"]["testing_new_table5"]>
+    composites: {}
+  }
+
+  type testing_new_table5GetPayload<S extends boolean | null | undefined | testing_new_table5DefaultArgs> = $Result.GetResult<Prisma.$testing_new_table5Payload, S>
+
+  type testing_new_table5CountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<testing_new_table5FindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Testing_new_table5CountAggregateInputType | true
+    }
+
+  export interface testing_new_table5Delegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['testing_new_table5'], meta: { name: 'testing_new_table5' } }
+    /**
+     * Find zero or one Testing_new_table5 that matches the filter.
+     * @param {testing_new_table5FindUniqueArgs} args - Arguments to find a Testing_new_table5
+     * @example
+     * // Get one Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends testing_new_table5FindUniqueArgs>(args: SelectSubset<T, testing_new_table5FindUniqueArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Testing_new_table5 that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {testing_new_table5FindUniqueOrThrowArgs} args - Arguments to find a Testing_new_table5
+     * @example
+     * // Get one Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends testing_new_table5FindUniqueOrThrowArgs>(args: SelectSubset<T, testing_new_table5FindUniqueOrThrowArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Testing_new_table5 that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5FindFirstArgs} args - Arguments to find a Testing_new_table5
+     * @example
+     * // Get one Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends testing_new_table5FindFirstArgs>(args?: SelectSubset<T, testing_new_table5FindFirstArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Testing_new_table5 that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5FindFirstOrThrowArgs} args - Arguments to find a Testing_new_table5
+     * @example
+     * // Get one Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends testing_new_table5FindFirstOrThrowArgs>(args?: SelectSubset<T, testing_new_table5FindFirstOrThrowArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Testing_new_table5s that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5FindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Testing_new_table5s
+     * const testing_new_table5s = await prisma.testing_new_table5.findMany()
+     * 
+     * // Get first 10 Testing_new_table5s
+     * const testing_new_table5s = await prisma.testing_new_table5.findMany({ take: 10 })
+     * 
+     * // Only select the `Id`
+     * const testing_new_table5WithIdOnly = await prisma.testing_new_table5.findMany({ select: { Id: true } })
+     * 
+     */
+    findMany<T extends testing_new_table5FindManyArgs>(args?: SelectSubset<T, testing_new_table5FindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Testing_new_table5.
+     * @param {testing_new_table5CreateArgs} args - Arguments to create a Testing_new_table5.
+     * @example
+     * // Create one Testing_new_table5
+     * const Testing_new_table5 = await prisma.testing_new_table5.create({
+     *   data: {
+     *     // ... data to create a Testing_new_table5
+     *   }
+     * })
+     * 
+     */
+    create<T extends testing_new_table5CreateArgs>(args: SelectSubset<T, testing_new_table5CreateArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Testing_new_table5s.
+     * @param {testing_new_table5CreateManyArgs} args - Arguments to create many Testing_new_table5s.
+     * @example
+     * // Create many Testing_new_table5s
+     * const testing_new_table5 = await prisma.testing_new_table5.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends testing_new_table5CreateManyArgs>(args?: SelectSubset<T, testing_new_table5CreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Testing_new_table5.
+     * @param {testing_new_table5DeleteArgs} args - Arguments to delete one Testing_new_table5.
+     * @example
+     * // Delete one Testing_new_table5
+     * const Testing_new_table5 = await prisma.testing_new_table5.delete({
+     *   where: {
+     *     // ... filter to delete one Testing_new_table5
+     *   }
+     * })
+     * 
+     */
+    delete<T extends testing_new_table5DeleteArgs>(args: SelectSubset<T, testing_new_table5DeleteArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Testing_new_table5.
+     * @param {testing_new_table5UpdateArgs} args - Arguments to update one Testing_new_table5.
+     * @example
+     * // Update one Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends testing_new_table5UpdateArgs>(args: SelectSubset<T, testing_new_table5UpdateArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Testing_new_table5s.
+     * @param {testing_new_table5DeleteManyArgs} args - Arguments to filter Testing_new_table5s to delete.
+     * @example
+     * // Delete a few Testing_new_table5s
+     * const { count } = await prisma.testing_new_table5.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends testing_new_table5DeleteManyArgs>(args?: SelectSubset<T, testing_new_table5DeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Testing_new_table5s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5UpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Testing_new_table5s
+     * const testing_new_table5 = await prisma.testing_new_table5.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends testing_new_table5UpdateManyArgs>(args: SelectSubset<T, testing_new_table5UpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Testing_new_table5.
+     * @param {testing_new_table5UpsertArgs} args - Arguments to update or create a Testing_new_table5.
+     * @example
+     * // Update or create a Testing_new_table5
+     * const testing_new_table5 = await prisma.testing_new_table5.upsert({
+     *   create: {
+     *     // ... data to create a Testing_new_table5
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Testing_new_table5 we want to update
+     *   }
+     * })
+     */
+    upsert<T extends testing_new_table5UpsertArgs>(args: SelectSubset<T, testing_new_table5UpsertArgs<ExtArgs>>): Prisma__testing_new_table5Client<$Result.GetResult<Prisma.$testing_new_table5Payload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Testing_new_table5s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5CountArgs} args - Arguments to filter Testing_new_table5s to count.
+     * @example
+     * // Count the number of Testing_new_table5s
+     * const count = await prisma.testing_new_table5.count({
+     *   where: {
+     *     // ... the filter for the Testing_new_table5s we want to count
+     *   }
+     * })
+    **/
+    count<T extends testing_new_table5CountArgs>(
+      args?: Subset<T, testing_new_table5CountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Testing_new_table5CountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Testing_new_table5.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Testing_new_table5AggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Testing_new_table5AggregateArgs>(args: Subset<T, Testing_new_table5AggregateArgs>): Prisma.PrismaPromise<GetTesting_new_table5AggregateType<T>>
+
+    /**
+     * Group by Testing_new_table5.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {testing_new_table5GroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends testing_new_table5GroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: testing_new_table5GroupByArgs['orderBy'] }
+        : { orderBy?: testing_new_table5GroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, testing_new_table5GroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTesting_new_table5GroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the testing_new_table5 model
+   */
+  readonly fields: testing_new_table5FieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for testing_new_table5.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__testing_new_table5Client<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the testing_new_table5 model
+   */
+  interface testing_new_table5FieldRefs {
+    readonly Id: FieldRef<"testing_new_table5", 'Int'>
+    readonly Name: FieldRef<"testing_new_table5", 'String'>
+    readonly CreatedAt: FieldRef<"testing_new_table5", 'DateTime'>
+    readonly UpdatedAt: FieldRef<"testing_new_table5", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * testing_new_table5 findUnique
+   */
+  export type testing_new_table5FindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter, which testing_new_table5 to fetch.
+     */
+    where: testing_new_table5WhereUniqueInput
+  }
+
+  /**
+   * testing_new_table5 findUniqueOrThrow
+   */
+  export type testing_new_table5FindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter, which testing_new_table5 to fetch.
+     */
+    where: testing_new_table5WhereUniqueInput
+  }
+
+  /**
+   * testing_new_table5 findFirst
+   */
+  export type testing_new_table5FindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter, which testing_new_table5 to fetch.
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of testing_new_table5s to fetch.
+     */
+    orderBy?: testing_new_table5OrderByWithRelationInput | testing_new_table5OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for testing_new_table5s.
+     */
+    cursor?: testing_new_table5WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` testing_new_table5s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` testing_new_table5s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of testing_new_table5s.
+     */
+    distinct?: Testing_new_table5ScalarFieldEnum | Testing_new_table5ScalarFieldEnum[]
+  }
+
+  /**
+   * testing_new_table5 findFirstOrThrow
+   */
+  export type testing_new_table5FindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter, which testing_new_table5 to fetch.
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of testing_new_table5s to fetch.
+     */
+    orderBy?: testing_new_table5OrderByWithRelationInput | testing_new_table5OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for testing_new_table5s.
+     */
+    cursor?: testing_new_table5WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` testing_new_table5s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` testing_new_table5s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of testing_new_table5s.
+     */
+    distinct?: Testing_new_table5ScalarFieldEnum | Testing_new_table5ScalarFieldEnum[]
+  }
+
+  /**
+   * testing_new_table5 findMany
+   */
+  export type testing_new_table5FindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter, which testing_new_table5s to fetch.
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of testing_new_table5s to fetch.
+     */
+    orderBy?: testing_new_table5OrderByWithRelationInput | testing_new_table5OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing testing_new_table5s.
+     */
+    cursor?: testing_new_table5WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` testing_new_table5s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` testing_new_table5s.
+     */
+    skip?: number
+    distinct?: Testing_new_table5ScalarFieldEnum | Testing_new_table5ScalarFieldEnum[]
+  }
+
+  /**
+   * testing_new_table5 create
+   */
+  export type testing_new_table5CreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * The data needed to create a testing_new_table5.
+     */
+    data: XOR<testing_new_table5CreateInput, testing_new_table5UncheckedCreateInput>
+  }
+
+  /**
+   * testing_new_table5 createMany
+   */
+  export type testing_new_table5CreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many testing_new_table5s.
+     */
+    data: testing_new_table5CreateManyInput | testing_new_table5CreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * testing_new_table5 update
+   */
+  export type testing_new_table5UpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * The data needed to update a testing_new_table5.
+     */
+    data: XOR<testing_new_table5UpdateInput, testing_new_table5UncheckedUpdateInput>
+    /**
+     * Choose, which testing_new_table5 to update.
+     */
+    where: testing_new_table5WhereUniqueInput
+  }
+
+  /**
+   * testing_new_table5 updateMany
+   */
+  export type testing_new_table5UpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update testing_new_table5s.
+     */
+    data: XOR<testing_new_table5UpdateManyMutationInput, testing_new_table5UncheckedUpdateManyInput>
+    /**
+     * Filter which testing_new_table5s to update
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * Limit how many testing_new_table5s to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * testing_new_table5 upsert
+   */
+  export type testing_new_table5UpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * The filter to search for the testing_new_table5 to update in case it exists.
+     */
+    where: testing_new_table5WhereUniqueInput
+    /**
+     * In case the testing_new_table5 found by the `where` argument doesn't exist, create a new testing_new_table5 with this data.
+     */
+    create: XOR<testing_new_table5CreateInput, testing_new_table5UncheckedCreateInput>
+    /**
+     * In case the testing_new_table5 was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<testing_new_table5UpdateInput, testing_new_table5UncheckedUpdateInput>
+  }
+
+  /**
+   * testing_new_table5 delete
+   */
+  export type testing_new_table5DeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+    /**
+     * Filter which testing_new_table5 to delete.
+     */
+    where: testing_new_table5WhereUniqueInput
+  }
+
+  /**
+   * testing_new_table5 deleteMany
+   */
+  export type testing_new_table5DeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which testing_new_table5s to delete
+     */
+    where?: testing_new_table5WhereInput
+    /**
+     * Limit how many testing_new_table5s to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * testing_new_table5 without action
+   */
+  export type testing_new_table5DefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the testing_new_table5
+     */
+    select?: testing_new_table5Select<ExtArgs> | null
+    /**
+     * Omit specific fields from the testing_new_table5
+     */
+    omit?: testing_new_table5Omit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -29419,6 +30407,16 @@ export namespace Prisma {
   export type Testing_new_table4ScalarFieldEnum = (typeof Testing_new_table4ScalarFieldEnum)[keyof typeof Testing_new_table4ScalarFieldEnum]
 
 
+  export const Testing_new_table5ScalarFieldEnum: {
+    Id: 'Id',
+    Name: 'Name',
+    CreatedAt: 'CreatedAt',
+    UpdatedAt: 'UpdatedAt'
+  };
+
+  export type Testing_new_table5ScalarFieldEnum = (typeof Testing_new_table5ScalarFieldEnum)[keyof typeof Testing_new_table5ScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -29573,6 +30571,13 @@ export namespace Prisma {
   };
 
   export type testing_new_table4OrderByRelevanceFieldEnum = (typeof testing_new_table4OrderByRelevanceFieldEnum)[keyof typeof testing_new_table4OrderByRelevanceFieldEnum]
+
+
+  export const testing_new_table5OrderByRelevanceFieldEnum: {
+    Name: 'Name'
+  };
+
+  export type testing_new_table5OrderByRelevanceFieldEnum = (typeof testing_new_table5OrderByRelevanceFieldEnum)[keyof typeof testing_new_table5OrderByRelevanceFieldEnum]
 
 
   /**
@@ -31094,6 +32099,56 @@ export namespace Prisma {
     UpdatedAt?: DateTimeWithAggregatesFilter<"testing_new_table4"> | Date | string
   }
 
+  export type testing_new_table5WhereInput = {
+    AND?: testing_new_table5WhereInput | testing_new_table5WhereInput[]
+    OR?: testing_new_table5WhereInput[]
+    NOT?: testing_new_table5WhereInput | testing_new_table5WhereInput[]
+    Id?: IntFilter<"testing_new_table5"> | number
+    Name?: StringFilter<"testing_new_table5"> | string
+    CreatedAt?: DateTimeFilter<"testing_new_table5"> | Date | string
+    UpdatedAt?: DateTimeFilter<"testing_new_table5"> | Date | string
+  }
+
+  export type testing_new_table5OrderByWithRelationInput = {
+    Id?: SortOrder
+    Name?: SortOrder
+    CreatedAt?: SortOrder
+    UpdatedAt?: SortOrder
+    _relevance?: testing_new_table5OrderByRelevanceInput
+  }
+
+  export type testing_new_table5WhereUniqueInput = Prisma.AtLeast<{
+    Id?: number
+    AND?: testing_new_table5WhereInput | testing_new_table5WhereInput[]
+    OR?: testing_new_table5WhereInput[]
+    NOT?: testing_new_table5WhereInput | testing_new_table5WhereInput[]
+    Name?: StringFilter<"testing_new_table5"> | string
+    CreatedAt?: DateTimeFilter<"testing_new_table5"> | Date | string
+    UpdatedAt?: DateTimeFilter<"testing_new_table5"> | Date | string
+  }, "Id">
+
+  export type testing_new_table5OrderByWithAggregationInput = {
+    Id?: SortOrder
+    Name?: SortOrder
+    CreatedAt?: SortOrder
+    UpdatedAt?: SortOrder
+    _count?: testing_new_table5CountOrderByAggregateInput
+    _avg?: testing_new_table5AvgOrderByAggregateInput
+    _max?: testing_new_table5MaxOrderByAggregateInput
+    _min?: testing_new_table5MinOrderByAggregateInput
+    _sum?: testing_new_table5SumOrderByAggregateInput
+  }
+
+  export type testing_new_table5ScalarWhereWithAggregatesInput = {
+    AND?: testing_new_table5ScalarWhereWithAggregatesInput | testing_new_table5ScalarWhereWithAggregatesInput[]
+    OR?: testing_new_table5ScalarWhereWithAggregatesInput[]
+    NOT?: testing_new_table5ScalarWhereWithAggregatesInput | testing_new_table5ScalarWhereWithAggregatesInput[]
+    Id?: IntWithAggregatesFilter<"testing_new_table5"> | number
+    Name?: StringWithAggregatesFilter<"testing_new_table5"> | string
+    CreatedAt?: DateTimeWithAggregatesFilter<"testing_new_table5"> | Date | string
+    UpdatedAt?: DateTimeWithAggregatesFilter<"testing_new_table5"> | Date | string
+  }
+
   export type agentCreateInput = {
     AwsId?: string | null
     userrole?: userroleCreateNestedOneWithoutAgentInput
@@ -32393,6 +33448,52 @@ export namespace Prisma {
   }
 
   export type testing_new_table4UncheckedUpdateManyInput = {
+    Id?: IntFieldUpdateOperationsInput | number
+    Name?: StringFieldUpdateOperationsInput | string
+    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UpdatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type testing_new_table5CreateInput = {
+    Name: string
+    CreatedAt?: Date | string
+    UpdatedAt?: Date | string
+  }
+
+  export type testing_new_table5UncheckedCreateInput = {
+    Id?: number
+    Name: string
+    CreatedAt?: Date | string
+    UpdatedAt?: Date | string
+  }
+
+  export type testing_new_table5UpdateInput = {
+    Name?: StringFieldUpdateOperationsInput | string
+    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UpdatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type testing_new_table5UncheckedUpdateInput = {
+    Id?: IntFieldUpdateOperationsInput | number
+    Name?: StringFieldUpdateOperationsInput | string
+    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UpdatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type testing_new_table5CreateManyInput = {
+    Id?: number
+    Name: string
+    CreatedAt?: Date | string
+    UpdatedAt?: Date | string
+  }
+
+  export type testing_new_table5UpdateManyMutationInput = {
+    Name?: StringFieldUpdateOperationsInput | string
+    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UpdatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type testing_new_table5UncheckedUpdateManyInput = {
     Id?: IntFieldUpdateOperationsInput | number
     Name?: StringFieldUpdateOperationsInput | string
     CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33850,6 +34951,41 @@ export namespace Prisma {
   }
 
   export type testing_new_table4SumOrderByAggregateInput = {
+    Id?: SortOrder
+  }
+
+  export type testing_new_table5OrderByRelevanceInput = {
+    fields: testing_new_table5OrderByRelevanceFieldEnum | testing_new_table5OrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type testing_new_table5CountOrderByAggregateInput = {
+    Id?: SortOrder
+    Name?: SortOrder
+    CreatedAt?: SortOrder
+    UpdatedAt?: SortOrder
+  }
+
+  export type testing_new_table5AvgOrderByAggregateInput = {
+    Id?: SortOrder
+  }
+
+  export type testing_new_table5MaxOrderByAggregateInput = {
+    Id?: SortOrder
+    Name?: SortOrder
+    CreatedAt?: SortOrder
+    UpdatedAt?: SortOrder
+  }
+
+  export type testing_new_table5MinOrderByAggregateInput = {
+    Id?: SortOrder
+    Name?: SortOrder
+    CreatedAt?: SortOrder
+    UpdatedAt?: SortOrder
+  }
+
+  export type testing_new_table5SumOrderByAggregateInput = {
     Id?: SortOrder
   }
 
