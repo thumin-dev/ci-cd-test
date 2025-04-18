@@ -377,7 +377,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Thu Min\\Documents\\GitHub\\ci-cd-test\\generated\\prisma",
+      "value": "/home/aungkaungmyat/Desktop/i4b/ci-cd-test/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -386,17 +386,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-1.1.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Thu Min\\Documents\\GitHub\\ci-cd-test\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/aungkaungmyat/Desktop/i4b/ci-cd-test/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.6.0",
@@ -405,11 +404,12 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "mysql://root@127.0.0.1:3306/cicd_testing"
+        "value": null
       }
     }
   },

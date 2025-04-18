@@ -100,7 +100,6 @@ const HopeFuelIdListPage = () => {
   };
 
   const handleOpenScreenshots = (screenshots) => {
-    console.log(typeof screenshots);
     if (!Array.isArray(screenshots)) {
       screenshots = [screenshots];
     }
