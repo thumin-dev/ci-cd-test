@@ -262,6 +262,13 @@ model testing_new_table {
   UpdatedAt DateTime @default(now()) @db.Timestamp(0)
 }
 
+model testing_new_table2 {
+  Id        Int      @id @default(autoincrement())
+  Name      String   @db.VarChar(191)
+  CreatedAt DateTime @default(now()) @db.Timestamp(0)
+  UpdatedAt DateTime @default(now()) @db.Timestamp(0)
+}
+
 enum customerauditlogs_FieldChanged {
   Name
   Email

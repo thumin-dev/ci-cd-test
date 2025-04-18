@@ -34,7 +34,7 @@ jobs:
             git pull origin master
 
             echo "🧬 Running Prisma migration..."
-            npx prisma migrate dev --name init
+            npx prisma migrate deploy
 
             echo "✅ Deployment finished."
           EOF

@@ -283,6 +283,13 @@ exports.Prisma.Testing_new_tableScalarFieldEnum = {
   UpdatedAt: 'UpdatedAt'
 };
 
+exports.Prisma.Testing_new_table2ScalarFieldEnum = {
+  Id: 'Id',
+  Name: 'Name',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -363,6 +370,10 @@ exports.Prisma.walletOrderByRelevanceFieldEnum = {
 exports.Prisma.testing_new_tableOrderByRelevanceFieldEnum = {
   Name: 'Name'
 };
+
+exports.Prisma.testing_new_table2OrderByRelevanceFieldEnum = {
+  Name: 'Name'
+};
 exports.customerauditlogs_FieldChanged = exports.$Enums.customerauditlogs_FieldChanged = {
   Name: 'Name',
   Email: 'Email',
@@ -392,7 +403,8 @@ exports.Prisma.ModelName = {
   transactionstatus: 'transactionstatus',
   userrole: 'userrole',
   wallet: 'wallet',
-  testing_new_table: 'testing_new_table'
+  testing_new_table: 'testing_new_table',
+  testing_new_table2: 'testing_new_table2'
 };
 
 /**
