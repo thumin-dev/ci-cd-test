@@ -10,30 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
       - name: 🛠 Setup SSH key
         run: |
           mkdir -p ~/.ssh
+          printf "%s\n" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+          for i in {1..5}; do ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts && break || sleep 5; done
 
-      - name: 🚀 Deploy to EC2
+      - name: 🚀 SSH and deploy
         run: |
-          ssh -tt -i ~/.ssh/id_ed25519 ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            echo "📁 Navigating to app folder..."
+            echo "📁 Changing to app directory..."
             cd /home/ubuntu/ci-cd-test
 
-            echo "🔄 Pulling latest code from master..."
+            echo "🔄 Pulling latest changes..."
             git pull origin master
 
-            echo "🧬 Running Prisma migration..."
-            NODE_ENV=production npx prisma migrate deploy
+            echo "🧬 Running Prisma migrations..."
+            npx prisma generate
+            npx prisma migrate deploy
 
-            echo "✅ Deployment finished."
+            echo "✅ Deployment complete!"
           EOF
