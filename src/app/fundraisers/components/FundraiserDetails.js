@@ -7,7 +7,6 @@ import {
   IconButton,
   Avatar,
   Link,
-  Grid2,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
