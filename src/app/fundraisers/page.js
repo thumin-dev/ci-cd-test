@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { set } from "date-fns";
 import { useRouter } from "next/navigation";
 import FundraiserCard from "./components/FundraiserCard";
 import {
