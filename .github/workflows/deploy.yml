@@ -16,7 +16,6 @@ jobs:
       - name: 🛠 Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
         env:
@@ -24,8 +23,8 @@ jobs:
 
       - name: 🚀 Deploy to EC2
         run: |
-          ssh -i ~/.ssh/id_ed25519 ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e  # Stop on first error
+          ssh -tt -i ~/.ssh/id_ed25519 ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
 
             echo "📁 Navigating to app folder..."
             cd /home/ubuntu/ci-cd-test
@@ -34,7 +33,7 @@ jobs:
             git pull origin master
 
             echo "🧬 Running Prisma migration..."
-            npx prisma migrate deploy
+            NODE_ENV=production npx prisma migrate deploy
 
             echo "✅ Deployment finished."
           EOF
