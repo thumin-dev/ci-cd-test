@@ -30,7 +30,6 @@ export const LogoUpload = ({ logoFile, setLogoFile, errors, clearErrors }) => {
       setUploadProgress
     );
 
-    //preview the image
     if (uploadedUrl?.length > 0) {
       const signedUrl = await getScreenShotUrl(uploadedUrl[0].pathname);
       // console.log("signedUrl:::=>", `${signedUrl.origin}${signedUrl.pathname}`);
