@@ -13,7 +13,7 @@ async function checkExistedAgent(awsId) {
   const values = [awsId];
   try {
     const result = await db(query, values);
-    console.log("Agent exists:", result);
+    // console.log("Agent exists:", result);
     return result;
   } catch (error) {
     console.error("[DB] Error checking agentDB:", error);
